@@ -57,28 +57,30 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: Container(
           color: white,
-          padding: EdgeInsets.all(140.0),
-          margin: EdgeInsets.only(bottom: 18.0),
+          padding: EdgeInsets.only(top: 5.0),
+          margin: EdgeInsets.only(bottom: 18.0, left: 15.0, right: 15.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Padding(padding: EdgeInsets.all(30.0)),
-              RaisedButton(
-                onPressed: () {
-                  // 登録後Home画面に遷移
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => MyAuthPage()),
-                  );
-                },
-                child: Text("SignUp"),
+              Text(
+                'GOAL:',
+                style: TextStyle(
+                  fontSize: 35.0,
+                  fontFamily: "Yu Gothic",
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-              RaisedButton(
-                onPressed: () {
-                  // 登録後Home画面に遷移
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => MyLoginPage()),
-                  );
-                },
-                child: Text("Login"),
+              Center(
+                child: Text(
+                  '2ヶ月以内に５ｋｇ痩せる',
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontFamily: "Yu Gothic",
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
             ],
           ),

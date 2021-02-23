@@ -4,58 +4,61 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'signup.dart';
 import 'login.dart';
-import 'home.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
-  // This widget is the root of your application.
+class HomePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo2',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: FutureBuilder(
-        future: _fbApp,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            print('You have an error! ${snapshot.error.toString()}');
-            return Text('Something went wrong!');
-          } else if (snapshot.hasData) {
-            return HomePage();
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      )
-    );
-  }
+  _HomePageState createState() => _HomePageState();
 }
 
-class StartPage extends StatefulWidget {
-  @override
-  _StartPageState createState() => _StartPageState();
-}
+class _HomePageState extends State<HomePage> {
 
-class _StartPageState extends State<StartPage> {
+  var bgColor = Color(0xFFDA3D20);
+  var white = Color(0xFFffffff);
+  var shadow = Color(0xFF505659);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: bgColor,
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.grey),
+        title: Text(
+          'Gaman App',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: white,
+        shadowColor: shadow,
+      ),
+
+      drawer:Drawer(
+        child: ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            Card(
+              child: ListTile(
+                leading: FlutterLogo(size: 65.0),
+                title: Text('USERNAME'),
+                subtitle: Text('email-address'),
+              )
+            ),
+            Padding(padding: EdgeInsets.all(5.0)),
+            ListTile(
+              leading: const Icon(Icons.ac_unit_sharp),
+              title: Text('testtest'),
+            ),
+          ],
+        ),
+      ),
+
       body: Center(
         child: Container(
-          padding: EdgeInsets.all(32.0),
+          color: white,
+          padding: EdgeInsets.all(140.0),
+          margin: EdgeInsets.only(bottom: 18.0),
           child: Column(
             children: <Widget>[
               Padding(padding: EdgeInsets.all(30.0)),

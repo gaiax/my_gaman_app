@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                       Align(
                         alignment: Alignment(0.6, 1.0),
                         child: Text(
-                          '/ ' + wantThingPrice.toString(),
+                          '/ ￥' + wantThingPrice.toString(),
                           style: TextStyle(
                             fontSize: 25.0,
                             fontFamily: "Yu Gothic",

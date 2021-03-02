@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:wave_progress_widget/wave_progress.dart';
 
 import 'signup.dart';
 import 'login.dart';
@@ -19,6 +20,21 @@ class _HomePageState extends State<HomePage> {
   var bgColor = Color(0xFFDA3D20);
   var white = Color(0xFFffffff);
   var shadow = Color(0xFF505659);
+  var wavecolor = Color(0xFF45B5AA);
+  var waveshadow = Color(0xFF83C1BB);
+
+  var goal = '2ヶ月以内に５ｋｇ痩せる';
+  var wantThingIMG = 'image/display.jpg';
+  var wantThing = 'LG 27UL550-W 27型 4K 液晶ディスプレイ';
+
+  var username = 'USERNAME';
+  var email = 'email-address';
+
+
+
+  var _currentValue = 50.0;
+  var saving = 5000;
+  var wantThingPrice = 15000;
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +57,8 @@ class _HomePageState extends State<HomePage> {
             Card(
               child: ListTile(
                 leading: FlutterLogo(size: 65.0),
-                title: Text('USERNAME'),
-                subtitle: Text('email-address'),
+                title: Text(username),
+                subtitle: Text(email),
               )
             ),
             Padding(padding: EdgeInsets.all(5.0)),
@@ -74,7 +90,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Center(
                 child: Text(
-                  '2ヶ月以内に５ｋｇ痩せる',
+                  goal,
                   style: TextStyle(
                     fontSize: 25.0,
                     fontFamily: "Yu Gothic",
@@ -82,6 +98,67 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+              Padding(padding: EdgeInsets.all(10.0)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    width: 150.0,
+                    height: 100.0,
+                    child: Image.asset(wantThingIMG),
+                  ),
+                  Flexible(
+                    child: Text(
+                      wantThing,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontFamily: "Yu Gothic",
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ),
+                ]
+              ),
+              Padding(padding: EdgeInsets.all(15.0)),
+              Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  WaveProgress(
+                    300.0, waveshadow, wavecolor, _currentValue
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment(-0.1, 0.0),
+                        child: Text(
+                          '￥' + saving.toString(),
+                          style: TextStyle(
+                            fontSize: 40.0,
+                            fontFamily: "Yu Gothic",
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment(0.6, 1.0),
+                        child: Text(
+                          '/ ' + wantThingPrice.toString(),
+                          style: TextStyle(
+                            fontSize: 25.0,
+                            fontFamily: "Yu Gothic",
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
             ],
           ),
         ),

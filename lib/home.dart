@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -80,6 +78,7 @@ class _HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Padding(padding: EdgeInsets.all(6.0)),
               Text(
                 'GOAL:',
                 style: TextStyle(
@@ -98,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Padding(padding: EdgeInsets.all(10.0)),
+              Padding(padding: EdgeInsets.all(12.0)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
@@ -121,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ]
               ),
-              Padding(padding: EdgeInsets.all(15.0)),
+              Padding(padding: EdgeInsets.all(12.0)),
               Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
@@ -158,60 +157,32 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ],
-              )
+              ),
+              Padding(padding: EdgeInsets.all(15.0)),
+              ButtonTheme(
+                minWidth:130.0,
+                height: 50.0,
+                child: RaisedButton(
+                  child: Text(
+                    'GAMAN',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24.0,
+                      fontFamily: "Yu Gothic",
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  color: wavecolor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  onPressed: () {},
+                ),
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    DatabaseReference _testRef = FirebaseDatabase.instance.reference().child("test");
-    _testRef.set("Hello World ${Random().nextInt(100)}");
-
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

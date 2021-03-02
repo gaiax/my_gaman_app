@@ -97,7 +97,27 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Padding(padding: EdgeInsets.all(12.0)),
+              ButtonTheme(
+                height: 30.0,
+                child: RaisedButton(
+                  child: Text(
+                    'Edit',
+                    style: TextStyle(
+                      fontFamily: "Yu Gothic",
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  color: Colors.white,
+                  shape: CircleBorder(
+                    side: BorderSide(
+                      color: wavecolor,
+                      width: 1,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  onPressed: (){},
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
@@ -118,9 +138,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                ]
+                ],
               ),
-              Padding(padding: EdgeInsets.all(12.0)),
+              Padding(padding: EdgeInsets.all(5.0)),
               Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
@@ -158,7 +178,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              Padding(padding: EdgeInsets.all(15.0)),
+              Padding(padding: EdgeInsets.all(12.0)),
               ButtonTheme(
                 minWidth:130.0,
                 height: 50.0,

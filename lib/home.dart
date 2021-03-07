@@ -83,7 +83,6 @@ class _HomePageState extends State<HomePage> {
                 'GOAL:',
                 style: TextStyle(
                   fontSize: 35.0,
-                  fontFamily: "Yu Gothic",
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -92,7 +91,6 @@ class _HomePageState extends State<HomePage> {
                   goal,
                   style: TextStyle(
                     fontSize: 25.0,
-                    fontFamily: "Yu Gothic",
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -103,7 +101,6 @@ class _HomePageState extends State<HomePage> {
                   child: Text(
                     'Edit',
                     style: TextStyle(
-                      fontFamily: "Yu Gothic",
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -133,7 +130,6 @@ class _HomePageState extends State<HomePage> {
                       wantThing,
                       style: TextStyle(
                         fontSize: 14.0,
-                        fontFamily: "Yu Gothic",
                         fontWeight: FontWeight.w300,
                       ),
                     ),
@@ -158,7 +154,6 @@ class _HomePageState extends State<HomePage> {
                           '￥' + saving.toString(),
                           style: TextStyle(
                             fontSize: 40.0,
-                            fontFamily: "Yu Gothic",
                             fontWeight: FontWeight.w900,
                           ),
                         ),
@@ -169,7 +164,6 @@ class _HomePageState extends State<HomePage> {
                           '/ ￥' + wantThingPrice.toString(),
                           style: TextStyle(
                             fontSize: 25.0,
-                            fontFamily: "Yu Gothic",
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -188,7 +182,6 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24.0,
-                      fontFamily: "Yu Gothic",
                       fontWeight: FontWeight.w800,
                     ),
                   ),

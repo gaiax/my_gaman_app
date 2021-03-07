@@ -15,11 +15,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  var bgColor = Color(0xFFDA3D20);
-  var white = Color(0xFFffffff);
-  var shadow = Color(0xFF505659);
-  var wavecolor = Color(0xFF45B5AA);
-  var waveshadow = Color(0xFF83C1BB);
+  final Color bgColor = Color(0xFFDA3D20);
+  final Color white = Color(0xFFffffff);
+  final Color shadow = Color(0xFF505659);
+  final Color wavecolor = Color(0xFF45B5AA);
+  final Color waveshadow = Color(0xFF83C1BB);
 
   var goal = '2ヶ月以内に５ｋｇ痩せる';
   var wantThingIMG = 'image/display.jpg';
@@ -27,8 +27,6 @@ class _HomePageState extends State<HomePage> {
 
   var username = 'USERNAME';
   var email = 'email-address';
-
-
 
   var _currentValue = 50.0;
   var saving = 5000;

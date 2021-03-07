@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:wave_progress_widget/wave_progress.dart';
 
 import 'signup.dart';
 import 'login.dart';
@@ -16,9 +15,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  var bgColor = Color(0xFFDA3D20);
-  var white = Color(0xFFffffff);
-  var shadow = Color(0xFF505659);
+  final Color bgColor = Color(0xFFDA3D20);
+  final Color white = Color(0xFFffffff);
+  final Color shadow = Color(0xFF505659);
+  final Color wavecolor = Color(0xFF45B5AA);
+  final Color waveshadow = Color(0xFF83C1BB);
+
+  var goal = '2ヶ月以内に５ｋｇ痩せる';
+  var wantThingIMG = 'image/display.jpg';
+  var wantThing = 'LG 27UL550-W 27型 4K 液晶ディスプレイ';
+
+  var username = 'USERNAME';
+  var email = 'email-address';
+
+  var _currentValue = 50.0;
+  var saving = 5000;
+  var wantThingPrice = 15000;
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +53,8 @@ class _HomePageState extends State<HomePage> {
             Card(
               child: ListTile(
                 leading: FlutterLogo(size: 65.0),
-                title: Text('USERNAME'),
-                subtitle: Text('email-address'),
+                title: Text(username),
+                subtitle: Text(email),
               )
             ),
             Padding(padding: EdgeInsets.all(5.0)),
@@ -57,82 +69,131 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: Container(
           color: white,
-          padding: EdgeInsets.all(140.0),
-          margin: EdgeInsets.only(bottom: 18.0),
+          padding: EdgeInsets.only(top: 5.0),
+          margin: EdgeInsets.only(bottom: 18.0, left: 15.0, right: 15.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Padding(padding: EdgeInsets.all(30.0)),
-              RaisedButton(
-                onPressed: () {
-                  // 登録後Home画面に遷移
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => MyAuthPage()),
-                  );
-                },
-                child: Text("SignUp"),
+              Padding(padding: EdgeInsets.all(6.0)),
+              Text(
+                'GOAL:',
+                style: TextStyle(
+                  fontSize: 35.0,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-              RaisedButton(
-                onPressed: () {
-                  // 登録後Home画面に遷移
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => MyLoginPage()),
-                  );
-                },
-                child: Text("Login"),
+              Center(
+                child: Text(
+                  goal,
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              ButtonTheme(
+                height: 30.0,
+                child: RaisedButton(
+                  child: Text(
+                    'Edit',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  color: Colors.white,
+                  shape: CircleBorder(
+                    side: BorderSide(
+                      color: wavecolor,
+                      width: 1,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  onPressed: (){},
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    width: 150.0,
+                    height: 100.0,
+                    child: Image.asset(wantThingIMG),
+                  ),
+                  Flexible(
+                    child: Text(
+                      wantThing,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(padding: EdgeInsets.all(5.0)),
+              Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  WaveProgress(
+                    300.0, waveshadow, wavecolor, _currentValue
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment(-0.1, 0.0),
+                        child: Text(
+                          '￥' + saving.toString(),
+                          style: TextStyle(
+                            fontSize: 40.0,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment(0.6, 1.0),
+                        child: Text(
+                          '/ ￥' + wantThingPrice.toString(),
+                          style: TextStyle(
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Padding(padding: EdgeInsets.all(12.0)),
+              ButtonTheme(
+                minWidth:130.0,
+                height: 50.0,
+                child: RaisedButton(
+                  child: Text(
+                    'GAMAN',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  color: wavecolor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  onPressed: () {},
+                ),
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    DatabaseReference _testRef = FirebaseDatabase.instance.reference().child("test");
-    _testRef.set("Hello World ${Random().nextInt(100)}");
-
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

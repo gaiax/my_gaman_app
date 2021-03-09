@@ -32,11 +32,11 @@ class _HomePageState extends State<HomePage> {
   var _currentValue = 0.0;
   var saving = 0;
   var wantThingPrice = 15000;
-
-  final controller = TextEditingController();
-  final controller2 = TextEditingController();
   var gaman_price;
   var gaman_text;
+
+  TextEditingController controller = new TextEditingController();
+  TextEditingController controller2 = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -207,15 +207,19 @@ class _HomePageState extends State<HomePage> {
   void submitGaman() {
     showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) => Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Padding(padding: EdgeInsets.all(6.0)),
-            Text(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      builder: (BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Padding(padding: EdgeInsets.all(10.0)),
+          Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Text(
               'PRICE',
               style: TextStyle(
                 fontSize: 22.0,
@@ -223,16 +227,21 @@ class _HomePageState extends State<HomePage> {
                 color: shadow,
               ),
             ),
-            TextField(
+          ),
+          Padding(
+            padding: EdgeInsets.all(20.0),
+            child: TextField(
               controller: controller,
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.w400,
               ),
               keyboardType: TextInputType.number,
             ),
-            Padding(padding: EdgeInsets.all(20.0)),
-            Text(
+          ),
+          Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Text(
               'DESCRIPTION',
               style: TextStyle(
                 fontSize: 22.0,
@@ -240,16 +249,22 @@ class _HomePageState extends State<HomePage> {
                 color: shadow,
               ),
             ),
-            TextField(
+          ),
+          Padding(
+            padding: EdgeInsets.all(20.0),
+            child: TextField(
               controller: controller2,
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.w400,
               ),
             ),
-            Padding(padding: EdgeInsets.all(50.0),),
-            Align(
-              alignment: Alignment.bottomRight,
+          ),
+          Padding(padding: EdgeInsets.all(100.0),),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: EdgeInsets.all(25.0),
               child: RaisedButton(
                 child: Text(
                   'SUBMIT',
@@ -266,17 +281,20 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   void submitPressed() {
+    Navigator.pop(context);
     setState(() {
       gaman_price = controller.text;
       saving += int.parse(gaman_price);
       gaman_text = controller2.text;
+      controller = new TextEditingController();
+      controller2 = new TextEditingController();
     });
   }
 }

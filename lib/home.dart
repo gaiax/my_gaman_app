@@ -291,7 +291,9 @@ class _HomePageState extends State<HomePage> {
     Navigator.pop(context);
     setState(() {
       gaman_price = controller.text;
-      saving += int.parse(gaman_price);
+      if ((saving + int.parse(gaman_price)) <= wantThingPrice) {
+        saving += int.parse(gaman_price);
+      }
       gaman_text = controller2.text;
       controller = new TextEditingController();
       controller2 = new TextEditingController();

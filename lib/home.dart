@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
+import 'dart:math';
 
 import 'signup.dart';
 import 'login.dart';
@@ -28,12 +29,18 @@ class _HomePageState extends State<HomePage> {
   var username = 'USERNAME';
   var email = 'email-address';
 
-  var _currentValue = 50.0;
-  var saving = 5000;
+  var _currentValue = 0.0;
+  var saving = 0;
   var wantThingPrice = 15000;
+
+  final controller = TextEditingController();
+  final controller2 = TextEditingController();
+  var gaman_price;
+  var gaman_text;
 
   @override
   Widget build(BuildContext context) {
+    _currentValue = (saving.toInt() / wantThingPrice.toInt()) * 100;
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
@@ -187,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  onPressed: () {},
+                  onPressed: submitGaman,
                 ),
               ),
             ],
@@ -195,5 +202,81 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void submitGaman() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) => Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Padding(padding: EdgeInsets.all(6.0)),
+            Text(
+              'PRICE',
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.w500,
+                color: shadow,
+              ),
+            ),
+            TextField(
+              controller: controller,
+              style: TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.w400,
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            Padding(padding: EdgeInsets.all(20.0)),
+            Text(
+              'DESCRIPTION',
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.w500,
+                color: shadow,
+              ),
+            ),
+            TextField(
+              controller: controller2,
+              style: TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            Padding(padding: EdgeInsets.all(50.0),),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: RaisedButton(
+                child: Text(
+                  'SUBMIT',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                onPressed: submitPressed,
+                color: wavecolor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void submitPressed() {
+    setState(() {
+      gaman_price = controller.text;
+      saving += int.parse(gaman_price);
+      gaman_text = controller2.text;
+    });
   }
 }

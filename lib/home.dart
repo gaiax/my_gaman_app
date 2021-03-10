@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     _currentValue = (saving.toInt() / wantThingPrice.toInt()) * 100;
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
@@ -84,62 +84,59 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Padding(padding: EdgeInsets.all(6.0)),
-              Text(
-                'GOAL:',
-                style: TextStyle(
-                  fontSize: 35.0,
-                  fontWeight: FontWeight.w600,
+              RaisedButton(
+                onPressed: () {},
+                color: white,
+                clipBehavior: Clip.antiAlias,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                 ),
-              ),
-              Center(
-                child: Text(
-                  goal,
-                  style: TextStyle(
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              ButtonTheme(
-                height: 30.0,
-                child: RaisedButton(
-                  child: Text(
-                    'Edit',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  color: Colors.white,
-                  shape: CircleBorder(
-                    side: BorderSide(
-                      color: wavecolor,
-                      width: 1,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                  onPressed: (){},
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    width: 150.0,
-                    height: 100.0,
-                    child: Image.asset(wantThingIMG),
-                  ),
-                  Flexible(
-                    child: Text(
-                      wantThing,
+                elevation: 8,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(padding: EdgeInsets.all(7.0)),
+                    Text(
+                      'GOAL',
                       style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w300,
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                ],
+                    Center(
+                      child: Text(
+                        goal,
+                        style: TextStyle(
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.all(8.0)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          width: 150.0,
+                          height: 100.0,
+                          child: Image.asset(wantThingIMG),
+                        ),
+                        Flexible(
+                          child: Text(
+                            wantThing,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(padding: EdgeInsets.all(7.0)),
+                  ],
+                ),
               ),
               Padding(padding: EdgeInsets.all(5.0)),
               Stack(

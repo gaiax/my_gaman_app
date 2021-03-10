@@ -35,8 +35,8 @@ class _HomePageState extends State<HomePage> {
   var gaman_price;
   var gaman_text;
 
-  TextEditingController controller = new TextEditingController();
-  TextEditingController controller2 = new TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              Padding(padding: EdgeInsets.all(5.0)),
+              Padding(padding: EdgeInsets.all(12.0)),
               Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
@@ -208,15 +208,14 @@ class _HomePageState extends State<HomePage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      builder: (BuildContext context) => Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(padding: EdgeInsets.all(10.0)),
-          Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Text(
+      builder: (BuildContext context) => Container(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
               'PRICE',
               style: TextStyle(
                 fontSize: 22.0,
@@ -224,21 +223,16 @@ class _HomePageState extends State<HomePage> {
                 color: shadow,
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(20.0),
-            child: TextField(
-              controller: controller,
+            TextField(
+              controller: priceController,
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w400,
               ),
               keyboardType: TextInputType.number,
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Text(
+            SizedBox(height: 40.0),
+            Text(
               'DESCRIPTION',
               style: TextStyle(
                 fontSize: 22.0,
@@ -246,22 +240,17 @@ class _HomePageState extends State<HomePage> {
                 color: shadow,
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(20.0),
-            child: TextField(
-              controller: controller2,
+            TextField(
+              controller: descriptionController,
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w400,
               ),
             ),
-          ),
-          Padding(padding: EdgeInsets.all(100.0),),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: EdgeInsets.all(25.0),
+            Padding(padding: EdgeInsets.all(100.0),),
+            Container(
+              alignment: Alignment.bottomRight,
+              padding: EdgeInsets.all(10.0),
               child: RaisedButton(
                 child: Text(
                   'SUBMIT',
@@ -278,8 +267,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -287,13 +276,13 @@ class _HomePageState extends State<HomePage> {
   void submitPressed() {
     Navigator.pop(context);
     setState(() {
-      gaman_price = controller.text;
+      gaman_price = priceController.text;
       if ((saving + int.parse(gaman_price)) <= wantThingPrice) {
         saving += int.parse(gaman_price);
       }
-      gaman_text = controller2.text;
-      controller = new TextEditingController();
-      controller2 = new TextEditingController();
+      gaman_text = descriptionController.text;
+      priceController =TextEditingController();
+      descriptionController = TextEditingController();
     });
   }
 }

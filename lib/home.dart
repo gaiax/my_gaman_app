@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
+import 'dart:math';
 
 import 'signup.dart';
 import 'login.dart';
@@ -28,14 +29,20 @@ class _HomePageState extends State<HomePage> {
   var username = 'USERNAME';
   var email = 'email-address';
 
-  var _currentValue = 50.0;
-  var saving = 5000;
+  var _currentValue = 0.0;
+  var saving = 0;
   var wantThingPrice = 15000;
+  var gaman_price;
+  var gaman_text;
+
+  TextEditingController priceController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    _currentValue = (saving.toInt() / wantThingPrice.toInt()) * 100;
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
@@ -77,64 +84,61 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Padding(padding: EdgeInsets.all(6.0)),
-              Text(
-                'GOAL:',
-                style: TextStyle(
-                  fontSize: 35.0,
-                  fontWeight: FontWeight.w600,
+              RaisedButton(
+                onPressed: () {},
+                color: white,
+                clipBehavior: Clip.antiAlias,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                 ),
-              ),
-              Center(
-                child: Text(
-                  goal,
-                  style: TextStyle(
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              ButtonTheme(
-                height: 30.0,
-                child: RaisedButton(
-                  child: Text(
-                    'Edit',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  color: Colors.white,
-                  shape: CircleBorder(
-                    side: BorderSide(
-                      color: wavecolor,
-                      width: 1,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                  onPressed: (){},
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    width: 150.0,
-                    height: 100.0,
-                    child: Image.asset(wantThingIMG),
-                  ),
-                  Flexible(
-                    child: Text(
-                      wantThing,
+                elevation: 8,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(padding: EdgeInsets.all(7.0)),
+                    Text(
+                      'GOAL',
                       style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w300,
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                ],
+                    Center(
+                      child: Text(
+                        goal,
+                        style: TextStyle(
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.all(8.0)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          width: 150.0,
+                          height: 100.0,
+                          child: Image.asset(wantThingIMG),
+                        ),
+                        Flexible(
+                          child: Text(
+                            wantThing,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(padding: EdgeInsets.all(7.0)),
+                  ],
+                ),
               ),
-              Padding(padding: EdgeInsets.all(5.0)),
+              Padding(padding: EdgeInsets.all(12.0)),
               Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
@@ -187,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  onPressed: () {},
+                  onPressed: submitGaman,
                 ),
               ),
             ],
@@ -195,5 +199,90 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void submitGaman() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      builder: (BuildContext context) => Container(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              'PRICE',
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.w500,
+                color: shadow,
+              ),
+            ),
+            TextField(
+              controller: priceController,
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w400,
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 40.0),
+            Text(
+              'DESCRIPTION',
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.w500,
+                color: shadow,
+              ),
+            ),
+            TextField(
+              controller: descriptionController,
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            Padding(padding: EdgeInsets.all(100.0),),
+            Container(
+              alignment: Alignment.bottomRight,
+              padding: EdgeInsets.all(10.0),
+              child: RaisedButton(
+                child: Text(
+                  'SUBMIT',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                onPressed: submitPressed,
+                color: wavecolor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void submitPressed() {
+    Navigator.pop(context);
+    setState(() {
+      gaman_price = priceController.text;
+      if ((saving + int.parse(gaman_price)) <= wantThingPrice) {
+        saving += int.parse(gaman_price);
+      }
+      gaman_text = descriptionController.text;
+      priceController =TextEditingController();
+      descriptionController = TextEditingController();
+    });
   }
 }

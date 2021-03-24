@@ -273,7 +273,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void submitPressed() {
+  void submitPressed() async {
     Navigator.pop(context);
     setState(() {
       gaman_price = priceController.text;
@@ -284,5 +284,12 @@ class _HomePageState extends State<HomePage> {
       priceController =TextEditingController();
       descriptionController = TextEditingController();
     });
+    await FirebaseFirestore.instance
+      .collection('gamans')
+      .doc()
+      .set({
+        'price': gaman_price,
+        'text': gaman_text
+      });
   }
 }

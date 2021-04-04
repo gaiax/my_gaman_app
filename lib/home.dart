@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
-import 'dart:math';
+import 'package:intl/intl.dart';
 
 import 'signup.dart';
 import 'login.dart';
@@ -34,13 +34,23 @@ class _HomePageState extends State<HomePage> {
   var wantThingPrice = 15000;
   var gaman_price;
   var gaman_text;
+  var date;
+  var createdAt;
 
   TextEditingController priceController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
+  var user = FirebaseAuth.instance.currentUser;
+  var userEmail;
+
   @override
   Widget build(BuildContext context) {
     _currentValue = (saving.toInt() / wantThingPrice.toInt()) * 100;
+
+    if (user != null) {
+      userEmail = user.email;
+    }
+
     return Scaffold(
       backgroundColor: white,
       appBar: AppBar(
@@ -247,7 +257,7 @@ class _HomePageState extends State<HomePage> {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            Padding(padding: EdgeInsets.all(100.0),),
+            Padding(padding: EdgeInsets.all(60.0),),
             Container(
               alignment: Alignment.bottomRight,
               padding: EdgeInsets.all(10.0),
@@ -281,6 +291,8 @@ class _HomePageState extends State<HomePage> {
         saving += int.parse(gaman_price);
       }
       gaman_text = descriptionController.text;
+      date = DateTime.now(); // 現在の日時
+      createdAt = DateFormat.yMMMMEEEEd().add_jms().format(date);
       priceController =TextEditingController();
       descriptionController = TextEditingController();
     });
@@ -288,8 +300,10 @@ class _HomePageState extends State<HomePage> {
       .collection('gamans')
       .doc()
       .set({
+        'userEmail': userEmail,
         'price': gaman_price,
-        'text': gaman_text
+        'text': gaman_text,
+        'createdAt' : createdAt,
       });
   }
 }

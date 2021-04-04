@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'home.dart';
 
 class MyAuthPage extends StatefulWidget {
   @override
@@ -52,7 +52,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
 
                     // 登録後Home画面に遷移
                     await Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => MyHomePage(title: "My_Gaman_App")),
+                      MaterialPageRoute(builder: (context) => HomePage()),
                     );
                   } catch (e) {
                     // 登録に失敗した場合

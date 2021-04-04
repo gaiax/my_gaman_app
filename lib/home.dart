@@ -32,8 +32,8 @@ class _HomePageState extends State<HomePage> {
   var _currentValue = 0.0;
   var saving = 0;
   var wantThingPrice = 15000;
-  var gaman_price;
-  var gaman_text;
+  var gamanPrice;
+  var gamanText;
   var date;
   var createdAt;
 
@@ -42,6 +42,8 @@ class _HomePageState extends State<HomePage> {
 
   var user = FirebaseAuth.instance.currentUser;
   var userEmail;
+  var userName;
+  var userPhoto;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,8 @@ class _HomePageState extends State<HomePage> {
 
     if (user != null) {
       userEmail = user.email;
+      userName = user.displayName;
+      userPhoto = user.photoURL;
     }
 
     return Scaffold(
@@ -70,8 +74,8 @@ class _HomePageState extends State<HomePage> {
             Card(
               child: ListTile(
                 leading: FlutterLogo(size: 65.0),
-                title: Text(username),
-                subtitle: Text(email),
+                title: Text(userName),
+                subtitle: Text(userEmail),
               )
             ),
             Padding(padding: EdgeInsets.all(5.0)),
@@ -286,11 +290,11 @@ class _HomePageState extends State<HomePage> {
   void submitPressed() async {
     Navigator.pop(context);
     setState(() {
-      gaman_price = priceController.text;
-      if ((saving + int.parse(gaman_price)) <= wantThingPrice) {
-        saving += int.parse(gaman_price);
+      gamanPrice = priceController.text;
+      if ((saving + int.parse(gamanPrice)) <= wantThingPrice) {
+        saving += int.parse(gamanPrice);
       }
-      gaman_text = descriptionController.text;
+      gamanText = descriptionController.text;
       date = DateTime.now(); // 現在の日時
       createdAt = DateFormat.yMMMMEEEEd().add_jms().format(date);
       priceController =TextEditingController();
@@ -301,8 +305,10 @@ class _HomePageState extends State<HomePage> {
       .doc()
       .set({
         'userEmail': userEmail,
-        'price': gaman_price,
-        'text': gaman_text,
+        'userName': userName,
+        'userPhotoUrl': userPhoto,
+        'price': gamanPrice,
+        'text': gamanText,
         'createdAt' : createdAt,
       });
   }

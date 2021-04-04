@@ -13,9 +13,21 @@ class _MyLoginPageState extends State<MyLoginPage> {
   String loginUserPassword = "";
   String infoText = "";
 
+  final Color white = Color(0xFFffffff);
+  final Color shadow = Color(0xFF505659);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.grey),
+        title: Text(
+          'Gaman App',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: white,
+        shadowColor: shadow,
+      ),
       body: Center(
         child: Container(
           padding: EdgeInsets.all(32.0),
@@ -41,7 +53,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 },
               ),
               Padding(padding: EdgeInsets.all(30.0)),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () async {
                   try {
                     // メールとパスワードでユーザー登録

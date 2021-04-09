@@ -1,5 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,17 +11,10 @@ class GoalSetPage extends StatefulWidget {
 
 class _GoalSetPageState extends State<GoalSetPage> {
 
-  final Color bgColor = Color(0xFFDA3D20);
   final Color white = Color(0xFFffffff);
   final Color shadow = Color(0xFF505659);
   final Color wavecolor = Color(0xFF45B5AA);
-  final Color waveshadow = Color(0xFF83C1BB);
 
-  var wantThingIMG = 'image/display.jpg';
-
-  var saving = 0;
-  var wantThingPrice = 15000;
-  var gamanPrice;
   var goalText;
   var wantThing;
   var date;

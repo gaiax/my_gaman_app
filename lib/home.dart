@@ -1,13 +1,8 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
 import 'package:intl/intl.dart';
-
-import 'signup.dart';
-import 'login.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -25,9 +20,6 @@ class _HomePageState extends State<HomePage> {
   var goal = '2ヶ月以内に５ｋｇ痩せる';
   var wantThingIMG = 'image/display.jpg';
   var wantThing = 'LG 27UL550-W 27型 4K 液晶ディスプレイ';
-
-  var username = 'USERNAME';
-  var email = 'email-address';
 
   var _currentValue = 0.0;
   var saving = 0;
@@ -230,7 +222,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              'PRICE',
+              '価格',
               style: TextStyle(
                 fontSize: 22.0,
                 fontWeight: FontWeight.w500,
@@ -247,7 +239,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 40.0),
             Text(
-              'DESCRIPTION',
+              '内容',
               style: TextStyle(
                 fontSize: 22.0,
                 fontWeight: FontWeight.w500,
@@ -267,7 +259,7 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.all(10.0),
               child: RaisedButton(
                 child: Text(
-                  'SUBMIT',
+                  '登録',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24.0,

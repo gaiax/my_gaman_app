@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
+import 'goalset.dart';
 
 class MyAuthPage extends StatefulWidget {
   @override
@@ -82,7 +83,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
 
                     // 登録後Home画面に遷移
                     await Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => HomePage()),
+                      MaterialPageRoute(builder: (context) => GoalSetPage()),
                     );
                   } catch (e) {
                     // 登録に失敗した場合

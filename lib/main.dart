@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             print('You have an error! ${snapshot.error.toString()}');
             return Text('Something went wrong!');
           } else if (snapshot.hasData) {
-            return GoalSetPage();
+            return StartPage();
           } else {
             return Center(
               child: CircularProgressIndicator(),

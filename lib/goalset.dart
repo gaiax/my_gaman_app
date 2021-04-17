@@ -147,8 +147,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
 
   void submitPressed() async {
     final createdAt = DateFormat.yMMMMEEEEd().add_jms().format(DateTime.now());
-    goalTextController.clear();
-    wantThingController.clear();
 
     await FirebaseFirestore.instance
       .collection('goals')
@@ -161,6 +159,9 @@ class _GoalSetPageState extends State<GoalSetPage> {
         'wantThing': wantThingController.text,
         'createdAt' : createdAt,
       });
+
+    goalTextController.clear();
+    wantThingController.clear();
 
     await Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => HomePage()),

@@ -301,8 +301,6 @@ class _HomePageState extends State<HomePage> {
     });
 
     final createdAt = DateFormat.yMMMMEEEEd().add_jms().format(DateTime.now());
-    priceController.clear();
-    descriptionController.clear();
 
     await FirebaseFirestore.instance
       .collection('gamans')
@@ -315,5 +313,8 @@ class _HomePageState extends State<HomePage> {
         'text': descriptionController.text,
         'createdAt' : createdAt,
       });
+
+    priceController.clear();
+    descriptionController.clear();
   }
 }

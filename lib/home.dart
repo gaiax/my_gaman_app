@@ -1,13 +1,8 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
-import 'dart:math';
-
-import 'signup.dart';
-import 'login.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -26,21 +21,44 @@ class _HomePageState extends State<HomePage> {
   var wantThingIMG = 'image/display.jpg';
   var wantThing = 'LG 27UL550-W 27型 4K 液晶ディスプレイ';
 
-  var username = 'USERNAME';
-  var email = 'email-address';
-
   var _currentValue = 0.0;
   var saving = 0;
   var wantThingPrice = 15000;
-  var gaman_price;
-  var gaman_text;
+  var gamanPrice;
 
   TextEditingController priceController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
+  var user = FirebaseAuth.instance.currentUser;
+  var userEmail;
+  var userName;
+  var userPhoto;
+
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (user != null) {
+      userEmail = user.email;
+      userName = user.displayName;
+      userPhoto = user.photoURL;
+    }
+    setState(() {
+      _loading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     _currentValue = (saving.toInt() / wantThingPrice.toInt()) * 100;
+
+    if (_loading) {
+      return Center(
+        child: CircularProgressIndicator()
+      );
+    }
+
     return Scaffold(
       backgroundColor: white,
       appBar: AppBar(
@@ -60,8 +78,8 @@ class _HomePageState extends State<HomePage> {
             Card(
               child: ListTile(
                 leading: FlutterLogo(size: 65.0),
-                title: Text(username),
-                subtitle: Text(email),
+                title: Text(userName),
+                subtitle: Text(userEmail),
               )
             ),
             Padding(padding: EdgeInsets.all(5.0)),
@@ -216,7 +234,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              'PRICE',
+              '価格',
               style: TextStyle(
                 fontSize: 22.0,
                 fontWeight: FontWeight.w500,
@@ -233,7 +251,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 40.0),
             Text(
-              'DESCRIPTION',
+              '内容',
               style: TextStyle(
                 fontSize: 22.0,
                 fontWeight: FontWeight.w500,
@@ -247,13 +265,13 @@ class _HomePageState extends State<HomePage> {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            Padding(padding: EdgeInsets.all(100.0),),
+            Padding(padding: EdgeInsets.all(60.0),),
             Container(
               alignment: Alignment.bottomRight,
               padding: EdgeInsets.all(10.0),
               child: RaisedButton(
                 child: Text(
-                  'SUBMIT',
+                  '登録',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24.0,
@@ -273,16 +291,30 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void submitPressed() {
+  void submitPressed() async {
     Navigator.pop(context);
     setState(() {
-      gaman_price = priceController.text;
-      if ((saving + int.parse(gaman_price)) <= wantThingPrice) {
-        saving += int.parse(gaman_price);
+      gamanPrice = priceController.text;
+      if ((saving + int.parse(gamanPrice)) <= wantThingPrice) {
+        saving += int.parse(gamanPrice);
       }
-      gaman_text = descriptionController.text;
-      priceController =TextEditingController();
-      descriptionController = TextEditingController();
     });
+
+    final createdAt = DateFormat.yMMMMEEEEd().add_jms().format(DateTime.now());
+
+    await FirebaseFirestore.instance
+      .collection('gamans')
+      .doc()
+      .set({
+        'userEmail': userEmail,
+        'userName': userName,
+        'userPhotoUrl': userPhoto,
+        'price': gamanPrice,
+        'text': descriptionController.text,
+        'createdAt' : createdAt,
+      });
+
+    priceController.clear();
+    descriptionController.clear();
   }
 }

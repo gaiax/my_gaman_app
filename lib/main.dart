@@ -1,13 +1,8 @@
-import 'dart:math';
-
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'signup.dart';
 import 'login.dart';
-import 'home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +28,7 @@ class MyApp extends StatelessWidget {
             print('You have an error! ${snapshot.error.toString()}');
             return Text('Something went wrong!');
           } else if (snapshot.hasData) {
-            return HomePage();
+            return StartPage();
           } else {
             return Center(
               child: CircularProgressIndicator(),
@@ -51,28 +46,40 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
+  final Color white = Color(0xFFffffff);
+  final Color shadow = Color(0xFF505659);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.grey),
+        title: Text(
+          'Gaman App',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: white,
+        shadowColor: shadow,
+      ),
       body: Center(
         child: Container(
           padding: EdgeInsets.all(32.0),
           child: Column(
             children: <Widget>[
               Padding(padding: EdgeInsets.all(30.0)),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   // 登録後Home画面に遷移
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => MyAuthPage()),
                   );
                 },
                 child: Text("SignUp"),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   // 登録後Home画面に遷移
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => MyLoginPage()),
                   );
                 },
@@ -82,55 +89,6 @@ class _StartPageState extends State<StartPage> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    DatabaseReference _testRef = FirebaseDatabase.instance.reference().child("test");
-    _testRef.set("Hello World ${Random().nextInt(100)}");
-
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

@@ -1,7 +1,6 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'home.dart';
 
 class MyLoginPage extends StatefulWidget {
   @override
@@ -13,9 +12,21 @@ class _MyLoginPageState extends State<MyLoginPage> {
   String loginUserPassword = "";
   String infoText = "";
 
+  final Color white = Color(0xFFffffff);
+  final Color shadow = Color(0xFF505659);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.grey),
+        title: Text(
+          'Gaman App',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: white,
+        shadowColor: shadow,
+      ),
       body: Center(
         child: Container(
           padding: EdgeInsets.all(32.0),
@@ -41,7 +52,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 },
               ),
               Padding(padding: EdgeInsets.all(30.0)),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () async {
                   try {
                     // メールとパスワードでユーザー登録
@@ -52,7 +63,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
                     // 登録後Home画面に遷移
                     await Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => MyHomePage(title: "My_Gaman_App")),
+                      MaterialPageRoute(builder: (context) => HomePage()),
                     );
                   } catch (e) {
                     // 登録に失敗した場合

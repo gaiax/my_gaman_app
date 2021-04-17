@@ -25,9 +25,6 @@ class _HomePageState extends State<HomePage> {
   var saving = 0;
   var wantThingPrice = 15000;
   var gamanPrice;
-  var gamanText;
-  var date;
-  var createdAt;
 
   TextEditingController priceController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -37,14 +34,29 @@ class _HomePageState extends State<HomePage> {
   var userName;
   var userPhoto;
 
-  @override
-  Widget build(BuildContext context) {
-    _currentValue = (saving.toInt() / wantThingPrice.toInt()) * 100;
+  bool _loading = true;
 
+  @override
+  void initState() {
+    super.initState();
     if (user != null) {
       userEmail = user.email;
       userName = user.displayName;
       userPhoto = user.photoURL;
+    }
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _currentValue = (saving.toInt() / wantThingPrice.toInt()) * 100;
+
+    if (_loading) {
+      return Center(
+        child: CircularProgressIndicator()
+      );
     }
 
     return Scaffold(
@@ -286,12 +298,12 @@ class _HomePageState extends State<HomePage> {
       if ((saving + int.parse(gamanPrice)) <= wantThingPrice) {
         saving += int.parse(gamanPrice);
       }
-      gamanText = descriptionController.text;
-      date = DateTime.now(); // 現在の日時
-      createdAt = DateFormat.yMMMMEEEEd().add_jms().format(date);
-      priceController =TextEditingController();
-      descriptionController = TextEditingController();
     });
+
+    final createdAt = DateFormat.yMMMMEEEEd().add_jms().format(DateTime.now());
+    priceController.clear();
+    descriptionController.clear();
+
     await FirebaseFirestore.instance
       .collection('gamans')
       .doc()
@@ -300,7 +312,7 @@ class _HomePageState extends State<HomePage> {
         'userName': userName,
         'userPhotoUrl': userPhoto,
         'price': gamanPrice,
-        'text': gamanText,
+        'text': descriptionController.text,
         'createdAt' : createdAt,
       });
   }

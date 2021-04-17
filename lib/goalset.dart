@@ -15,11 +15,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
   final Color shadow = Color(0xFF505659);
   final Color wavecolor = Color(0xFF45B5AA);
 
-  var goalText;
-  var wantThing;
-  var date;
-  var createdAt;
-
   TextEditingController goalTextController = TextEditingController();
   TextEditingController wantThingController = TextEditingController();
 
@@ -28,12 +23,27 @@ class _GoalSetPageState extends State<GoalSetPage> {
   var userName;
   var userPhoto;
 
+  bool _loading = true;
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     if (user != null) {
       userEmail = user.email;
       userName = user.displayName;
       userPhoto = user.photoURL;
+    }
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) {
+      return Center(
+        child: CircularProgressIndicator()
+      );
     }
 
     return Scaffold(
@@ -136,14 +146,9 @@ class _GoalSetPageState extends State<GoalSetPage> {
   }
 
   void submitPressed() async {
-    setState(() {
-      goalText = goalTextController.text;
-      wantThing = wantThingController.text;
-      date = DateTime.now(); // 現在の日時
-      createdAt = DateFormat.yMMMMEEEEd().add_jms().format(date);
-      goalTextController =TextEditingController();
-      wantThingController = TextEditingController();
-    });
+    final createdAt = DateFormat.yMMMMEEEEd().add_jms().format(DateTime.now());
+    goalTextController.clear();
+    wantThingController.clear();
 
     await FirebaseFirestore.instance
       .collection('goals')
@@ -152,8 +157,8 @@ class _GoalSetPageState extends State<GoalSetPage> {
         'userEmail': userEmail,
         'userName': userName,
         'userPhotoUrl': userPhoto,
-        'goalText': goalText,
-        'wantThing': wantThing,
+        'goalText': goalTextController.text,
+        'wantThing': wantThingController.text,
         'createdAt' : createdAt,
       });
 

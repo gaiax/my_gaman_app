@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'home.dart';
+import 'package:universal_html/controller.dart';
 
 class GoalSetPage extends StatefulWidget {
   @override
@@ -148,6 +149,15 @@ class _GoalSetPageState extends State<GoalSetPage> {
   void submitPressed() async {
     final createdAt = DateFormat.yMMMMEEEEd().add_jms().format(DateTime.now());
 
+    final controller = WindowController();
+    await controller.openHttp(
+      uri: Uri.parse(wantThingController.text),
+    );
+
+    final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
+    final wantThingImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
+    final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
+
     await FirebaseFirestore.instance
       .collection('goals')
       .doc()
@@ -156,7 +166,8 @@ class _GoalSetPageState extends State<GoalSetPage> {
         'userName': userName,
         'userPhotoUrl': userPhoto,
         'goalText': goalTextController.text,
-        'wantThing': wantThingController.text,
+        'wantThingImg': wantThingImg,
+        'wantThingPrice': wantThingPrice,
         'createdAt' : createdAt,
       });
 

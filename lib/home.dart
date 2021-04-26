@@ -44,13 +44,18 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     if (user != null) {
-      userEmail = user.email;
-      userName = user.displayName;
-      userPhoto = user.photoURL;
-      userPhotoRef = storage.ref(userPhoto);
-      userPhotoUrl = getDownloadUrl();
-      print(userPhotoUrl);
+      setData();
     }
+  }
+
+  void setData() async {
+    userEmail = user.email;
+    userName = user.displayName;
+    userPhoto = user.photoURL;
+    userPhotoRef = storage.ref(userPhoto);
+    await getDownloadUrl();
+    print(userPhotoUrl);
+
     setState(() {
       _loading = false;
     });
@@ -236,9 +241,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<String> getDownloadUrl() async {
+  Future<void> getDownloadUrl() async {
     userPhotoUrl = await userPhotoRef.getDownloadURL();
-    return await userPhotoUrl;
   }
 
   void submitGaman() {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class HomePage extends StatefulWidget {
   @override
@@ -28,11 +29,14 @@ class _HomePageState extends State<HomePage> {
 
   TextEditingController priceController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance; 
 
   var user = FirebaseAuth.instance.currentUser;
   var userEmail;
   var userName;
   var userPhoto;
+  var userPhotoRef;
+  var userPhotoUrl;
 
   bool _loading = true;
 
@@ -43,6 +47,9 @@ class _HomePageState extends State<HomePage> {
       userEmail = user.email;
       userName = user.displayName;
       userPhoto = user.photoURL;
+      userPhotoRef = storage.ref(userPhoto);
+      userPhotoUrl = getDownloadUrl();
+      print(userPhotoUrl);
     }
     setState(() {
       _loading = false;
@@ -77,7 +84,17 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             Card(
               child: ListTile(
-                leading: FlutterLogo(size: 65.0),
+                leading: Container(
+                  height: 65.0,
+                  width: 65.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image:NetworkImage(userPhotoUrl),
+                    ),
+                  ),
+                ),
                 title: Text(userName),
                 subtitle: Text(userEmail),
               )
@@ -217,6 +234,11 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Future<String> getDownloadUrl() async {
+    userPhotoUrl = await userPhotoRef.getDownloadURL();
+    return await userPhotoUrl;
   }
 
   void submitGaman() {

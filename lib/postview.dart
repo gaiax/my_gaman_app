@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class PostViewPage extends StatefulWidget {
@@ -16,7 +15,7 @@ class _PostViewPageState extends State<PostViewPage> {
   final Color shadow = Color(0xFF505659);
   final Color wavecolor = Color(0xFF45B5AA);
   final Color waveshadow = Color(0xFF83C1BB);
-  final Color first = Color(0xFF44AAD6);
+  final Color priceColor = Color(0xFF44AAD6);
   final Color textColor = Color(0xFF332F2E);
 
   var saving = 0;
@@ -111,16 +110,29 @@ class _PostViewPageState extends State<PostViewPage> {
                                   ),
                                 ),
                               ),
-                              title: Text(
-                                document['userName'],
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    document['userName'],
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Text(
+                                    document['createdAt'],
+                                    style: TextStyle(
+                                      fontSize: 9.0,
+                                      fontWeight: FontWeight.w300,
+                                    )
+                                  ),
+                                ],
                               ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
+                                  Padding(padding: EdgeInsets.all(3.0)),
                                   Text(
                                     document['text'],
                                     style: TextStyle(
@@ -134,7 +146,7 @@ class _PostViewPageState extends State<PostViewPage> {
                               trailing: Text(
                                 document['price'],
                                 style: TextStyle(
-                                  color: first,
+                                  color: priceColor,
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.w700,
                                 ),

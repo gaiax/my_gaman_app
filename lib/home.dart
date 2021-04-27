@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'postview.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -35,8 +36,6 @@ class _HomePageState extends State<HomePage> {
   var userEmail;
   var userName;
   var userPhoto;
-  var userPhotoRef;
-  var userPhotoUrl;
 
   bool _loading = true;
 
@@ -52,9 +51,6 @@ class _HomePageState extends State<HomePage> {
     userEmail = user.email;
     userName = user.displayName;
     userPhoto = user.photoURL;
-    userPhotoRef = storage.ref(userPhoto);
-    await getDownloadUrl();
-    print(userPhotoUrl);
 
     setState(() {
       _loading = false;
@@ -96,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       fit: BoxFit.fill,
-                      image:NetworkImage(userPhotoUrl),
+                      image:NetworkImage(userPhoto),
                     ),
                   ),
                 ),
@@ -107,7 +103,10 @@ class _HomePageState extends State<HomePage> {
             Padding(padding: EdgeInsets.all(5.0)),
             ListTile(
               leading: const Icon(Icons.ac_unit_sharp),
-              title: Text('testtest'),
+              title: Text('タイムライン'),
+              onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => PostViewPage()),
+                          ),
             ),
           ],
         ),
@@ -239,10 +238,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  Future<void> getDownloadUrl() async {
-    userPhotoUrl = await userPhotoRef.getDownloadURL();
   }
 
   void submitGaman() {

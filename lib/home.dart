@@ -104,9 +104,12 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: const Icon(Icons.ac_unit_sharp),
               title: Text('タイムライン'),
-              onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => PostViewPage()),
-                          ),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => PostViewPage()),
+                );
+              },
             ),
           ],
         ),

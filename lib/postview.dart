@@ -75,39 +75,6 @@ class _PostViewPageState extends State<PostViewPage> {
         shadowColor: shadow,
       ),
 
-      drawer:Drawer(
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            Card(
-              child: ListTile(
-                leading: Container(
-                  height: 65.0,
-                  width: 65.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image:NetworkImage(userPhoto),
-                    ),
-                  ),
-                ),
-                title: Text(userName),
-                subtitle: Text(userEmail),
-              )
-            ),
-            Padding(padding: EdgeInsets.all(5.0)),
-            ListTile(
-              leading: const Icon(Icons.ac_unit_sharp),
-              title: Text('タイムライン'),
-              onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => PostViewPage()),
-                          ),
-            ),
-          ],
-        ),
-      ),
-
       body: Container(
         color: bgColor,
         margin: EdgeInsets.only(top: 20),

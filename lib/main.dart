@@ -46,8 +46,15 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
+  final Color bgColor = Color(0xFFF2FBFE);
   final Color white = Color(0xFFffffff);
+  final Color curtain = Color(0x80ffffff);
   final Color shadow = Color(0xFF505659);
+  final Color wavecolor = Color(0xFF97DDFA);
+  final Color waveshadow = Color(0xFF83C1BB);
+  final Color goalTextColor = Color(0xFF2870A0);
+  final Color priceColor = Color(0xFF44AAD6);
+  final Color textColor = Color(0xFF332F2E);
 
   @override
   Widget build(BuildContext context) {
@@ -67,23 +74,37 @@ class _StartPageState extends State<StartPage> {
           child: Column(
             children: <Widget>[
               Padding(padding: EdgeInsets.all(30.0)),
-              ElevatedButton(
-                onPressed: () {
-                  // 登録後Home画面に遷移
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => MyAuthPage()),
-                  );
-                },
-                child: Text("SignUp"),
+              SizedBox(
+                width: 100,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // 登録後Home画面に遷移
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => MyAuthPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: wavecolor,
+                    onPrimary: textColor,
+                  ),
+                  child: Text("SignUp"),
+                ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  // 登録後Home画面に遷移
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => MyLoginPage()),
-                  );
-                },
-                child: Text("Login"),
+              SizedBox(
+                width: 100,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // 登録後Home画面に遷移
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => MyLoginPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: wavecolor,
+                    onPrimary: textColor,
+                  ),
+                  child: Text("Login"),
+                ),
               ),
             ],
           ),

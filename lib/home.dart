@@ -111,8 +111,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(padding: EdgeInsets.all(5.0)),
             ListTile(
-              leading: const Icon(Icons.ac_unit_sharp),
-              title: Text('タイムライン'),
+              title: Text('　タイムライン'),
               onTap: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(
@@ -136,13 +135,13 @@ class _HomePageState extends State<HomePage> {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     fit: BoxFit.fill,
-                    image: AssetImage('image/SliverAppBar.png'),
+                    image: AssetImage('image/SliverAppBar2.png'),
                   ),
                 ),
                 padding: EdgeInsets.only(top: 14.0),
                 child: Row(
                   children: <Widget>[
-                    Padding(padding: EdgeInsets.all(16.0)),
+                    Padding(padding: EdgeInsets.all(17.0)),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                         Text(
                           '目標金額',
                           style: TextStyle(
-                            color: goalTextColor,
+                            color: priceColor,
                             fontSize: 15.0,
                             fontWeight: FontWeight.w400,
                           ),
@@ -163,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               formatter.format(int.parse(wantThingPrice)),
                               style: TextStyle(
-                                color: goalTextColor,
+                                color: priceColor,
                                 fontSize: 30.0,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -171,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               '円',
                               style: TextStyle(
-                                color: goalTextColor,
+                                color: priceColor,
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.w300,
                               )
@@ -181,16 +180,21 @@ class _HomePageState extends State<HomePage> {
                         Padding(padding: EdgeInsets.all(12.0)),
                       ],
                     ),
-                    Padding(padding: EdgeInsets.all(4.0)),
-                    Container(
-                      width: 200.0,
-                      height: 180.0,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.contain,
-                          image: NetworkImage(wantThingImg),
+                    Padding(padding: EdgeInsets.all(7.0)),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Container(
+                          width: 208.0,
+                          height: 200.0,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.contain,
+                              image: NetworkImage(wantThingImg),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
@@ -277,7 +281,7 @@ class _HomePageState extends State<HomePage> {
                     '最近の我慢履歴',
                     style: TextStyle(
                       color: textColor,
-                      fontSize: 12.0,
+                      fontSize: 14.0,
                       fontWeight: FontWeight.w500,
                     )
                   ),
@@ -292,31 +296,13 @@ class _HomePageState extends State<HomePage> {
                         child: Padding(
                           padding: EdgeInsets.all(7.0),
                           child: ListTile(
-                            leading: Container(
-                              height: 55.0,
-                              width: 55.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                image: DecorationImage(
-                                  image: NetworkImage(document['userPhotoUrl']),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  document['userName'],
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                Text(
                                   document['createdAt'],
                                   style: TextStyle(
-                                    fontSize: 9.0,
+                                    fontSize: 12.0,
                                     fontWeight: FontWeight.w300,
                                   )
                                 ),
@@ -330,7 +316,7 @@ class _HomePageState extends State<HomePage> {
                                   document['text'],
                                   style: TextStyle(
                                     color: textColor,
-                                    fontSize: 15.0,
+                                    fontSize: 18.0,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -366,7 +352,7 @@ class _HomePageState extends State<HomePage> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        backgroundColor: wavecolor,
+        backgroundColor: priceColor,
       ),
     );
   }
@@ -427,11 +413,11 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24.0,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 onPressed: submitPressed,
-                color: wavecolor,
+                color: priceColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -445,14 +431,9 @@ class _HomePageState extends State<HomePage> {
 
   void submitPressed() async {
     Navigator.pop(context);
-    setState(() {
-      gamanPrice = priceController.text;
-      if ((saving + int.parse(gamanPrice)) <= int.parse(wantThingPrice)) {
-        saving += int.parse(gamanPrice);
-      }
-    });
 
     final createdAt = DateFormat.yMMMMEEEEd().add_jms().format(DateTime.now());
+    gamanPrice = priceController.text;
 
     await FirebaseFirestore.instance
       .collection('gamans')
@@ -466,6 +447,15 @@ class _HomePageState extends State<HomePage> {
         'createdAt' : createdAt,
       });
 
+    gamanSnapshot = await FirebaseFirestore.instance.collection('gamans').where('userName', isEqualTo: userName).get();
+    documents = gamanSnapshot.docs;
+
+    setState(() {
+      if ((saving + int.parse(gamanPrice)) <= int.parse(wantThingPrice)) {
+        saving += int.parse(gamanPrice);
+      }
+    });
+    
     priceController.clear();
     descriptionController.clear();
   }

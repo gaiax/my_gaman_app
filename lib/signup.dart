@@ -13,6 +13,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
   var newUserPassword = "";
   var infoText = "";
   var userName = "";
+  var userPhotoUrl = "";
 
   final Color white = Color(0xFFffffff);
   final Color shadow = Color(0xFF505659);
@@ -74,9 +75,11 @@ class _MyAuthPageState extends State<MyAuthPage> {
                     final User user = authResult.user;
 
                     final FirebaseStorage storage = FirebaseStorage.instance;
-                    var photo = storage.ref().child('userPhoto.png').fullPath;
+                    var photo = storage.ref().child('slime.png').fullPath;
+                    var photoRef = storage.ref(photo);
+                    userPhotoUrl = await getDownloadUrl(photoRef);
                     
-                    await user.updateProfile(displayName: userName, photoURL: photo);
+                    await user.updateProfile(displayName: userName, photoURL: userPhotoUrl);
                     await user.reload();
 
                     // 登録後Home画面に遷移
@@ -98,5 +101,8 @@ class _MyAuthPageState extends State<MyAuthPage> {
         ),
       ),
     );
+  }
+  Future<String> getDownloadUrl(userPhotoRef) async {
+    return await userPhotoRef.getDownloadURL();
   }
 }

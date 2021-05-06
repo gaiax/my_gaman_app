@@ -87,83 +87,83 @@ class _PostViewPageState extends State<PostViewPage> {
                   .orderBy('createdAt')
                   .get(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final List<DocumentSnapshot> documents = snapshot.data.docs;
-                    return ListView(
-                      children: documents.map((document) {
-                        //final othersPhoto = storage.ref(document['userPhoto']);
-                        //final othersPhotoUrl = getDownloadUrl(othersPhoto);
-                        return Card(
-                          margin: EdgeInsets.all(0.5),
-                          elevation: 2.0,
-                          child: Padding(
-                            padding: EdgeInsets.all(7.0),
-                            child: ListTile(
-                              leading: Container(
-                                height: 55.0,
-                                width: 55.0,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  image: DecorationImage(
-                                    image: NetworkImage(document['userPhotoUrl']),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    document['userName'],
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  Text(
-                                    document['createdAt'],
-                                    style: TextStyle(
-                                      fontSize: 9.0,
-                                      fontWeight: FontWeight.w300,
-                                    )
-                                  ),
-                                ],
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(padding: EdgeInsets.all(3.0)),
-                                  Text(
-                                    document['text'],
-                                    style: TextStyle(
-                                      color: textColor,
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              trailing: Text(
-                                document['price'],
-                                style: TextStyle(
-                                  color: priceColor,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            )
-                          )
-                        );
-                      }).toList(),
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator()
                     );
                   }
-                  return Center(
-                    child: CircularProgressIndicator()
+                  final List<DocumentSnapshot> documents = snapshot.data.docs;
+                  return ListView(
+                    children: documents.map((document) {
+                      //final othersPhoto = storage.ref(document['userPhoto']);
+                      //final othersPhotoUrl = getDownloadUrl(othersPhoto);
+                      return Card(
+                        margin: EdgeInsets.all(0.5),
+                        elevation: 2.0,
+                        child: Padding(
+                          padding: EdgeInsets.all(7.0),
+                          child: ListTile(
+                            leading: Container(
+                              height: 55.0,
+                              width: 55.0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                                image: DecorationImage(
+                                  image: NetworkImage(document['userPhotoUrl']),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  document['userName'],
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                Text(
+                                  document['createdAt'],
+                                  style: TextStyle(
+                                    fontSize: 9.0,
+                                    fontWeight: FontWeight.w300,
+                                  )
+                                ),
+                              ],
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(padding: EdgeInsets.all(3.0)),
+                                Text(
+                                  document['text'],
+                                  style: TextStyle(
+                                    color: textColor,
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            trailing: Text(
+                              document['price'],
+                              style: TextStyle(
+                                color: priceColor,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          )
+                        )
+                      );
+                    }).toList(),
                   );
                 },
               ),
-            )
-          ]
+            ),
+          ],
         ),
       ),
     );

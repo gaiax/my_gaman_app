@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import '../configs/colors.dart';
 
 class PostViewPage extends StatefulWidget {
   @override
@@ -10,16 +11,7 @@ class PostViewPage extends StatefulWidget {
 
 class _PostViewPageState extends State<PostViewPage> {
 
-  final Color bgColor = Color(0xFFF2FBFE);
-  final Color white = Color(0xFFffffff);
-  final Color shadow = Color(0xFF505659);
-  final Color wavecolor = Color(0xFF45B5AA);
-  final Color waveshadow = Color(0xFF83C1BB);
-  final Color priceColor = Color(0xFF44AAD6);
-  final Color textColor = Color(0xFF332F2E);
-
   var saving = 0;
-  var wantThingPrice = 15000;
   var gamanPrice;
 
   TextEditingController priceController = TextEditingController();

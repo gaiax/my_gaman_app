@@ -1,22 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'goalset.dart';
+import 'home.dart';
+import '../configs/colors.dart';
 
-class MyAuthPage extends StatefulWidget {
+class MyLoginPage extends StatefulWidget {
   @override
-  _MyAuthPageState createState() => _MyAuthPageState();
+  _MyLoginPageState createState() => _MyLoginPageState();
 }
 
-class _MyAuthPageState extends State<MyAuthPage> {
-  var newUserEmail = "";
-  var newUserPassword = "";
-  var infoText = "";
-  var userName = "";
-  var userPhotoUrl = "";
-
-  final Color white = Color(0xFFffffff);
-  final Color shadow = Color(0xFF505659);
+class _MyLoginPageState extends State<MyLoginPage> {
+  String loginUserEmail = "";
+  String loginUserPassword = "";
+  String infoText = "";
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +35,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                 decoration: InputDecoration(labelText: "メールアドレス"),
                 onChanged: (String value) {
                   setState(() {
-                    newUserEmail = value;
-                  });
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: "ユーザーネーム"),
-                onChanged: (String value) {
-                  setState(() {
-                    userName = value;
+                    loginUserEmail = value;
                   });
                 },
               ),
@@ -58,7 +45,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                 obscureText: true,
                 onChanged: (String value) {
                   setState(() {
-                    newUserPassword = value;
+                    loginUserPassword = value;
                   });
                 },
               ),
@@ -68,23 +55,13 @@ class _MyAuthPageState extends State<MyAuthPage> {
                   try {
                     // メールとパスワードでユーザー登録
                     final FirebaseAuth auth = FirebaseAuth.instance;
-                    final UserCredential authResult = await auth.createUserWithEmailAndPassword(
-                      email: newUserEmail, password: newUserPassword,
+                    await auth.signInWithEmailAndPassword(
+                      email: loginUserEmail, password: loginUserPassword,
                     );
-
-                    final User user = authResult.user;
-
-                    final FirebaseStorage storage = FirebaseStorage.instance;
-                    var photo = storage.ref().child('slime.png').fullPath;
-                    var photoRef = storage.ref(photo);
-                    userPhotoUrl = await getDownloadUrl(photoRef);
-                    
-                    await user.updateProfile(displayName: userName, photoURL: userPhotoUrl);
-                    await user.reload();
 
                     // 登録後Home画面に遷移
                     await Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => GoalSetPage()),
+                      MaterialPageRoute(builder: (context) => HomePage()),
                     );
                   } catch (e) {
                     // 登録に失敗した場合
@@ -93,7 +70,11 @@ class _MyAuthPageState extends State<MyAuthPage> {
                     });
                   }
                 },
-                child: Text("SignUp"),
+                child: Text("Login"),
+                style: ElevatedButton.styleFrom(
+                  primary: wavecolor,
+                  onPrimary: textColor,
+                ),
               ),
               Text(infoText)
             ],
@@ -101,8 +82,5 @@ class _MyAuthPageState extends State<MyAuthPage> {
         ),
       ),
     );
-  }
-  Future<String> getDownloadUrl(userPhotoRef) async {
-    return await userPhotoRef.getDownloadURL();
   }
 }

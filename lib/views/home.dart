@@ -5,6 +5,7 @@ import 'package:wave_progress_widget/wave_progress.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'postview.dart';
+import '../configs/colors.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,21 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  final Color bgColor = Color(0xFFF2FBFE);
-  final Color white = Color(0xFFffffff);
-  final Color curtain = Color(0x80ffffff);
-  final Color shadow = Color(0xFF505659);
-  final Color wavecolor = Color(0xFF97DDFA);
-  final Color waveshadow = Color(0xFF83C1BB);
-  final Color goalTextColor = Color(0xFF2870A0);
-  final Color priceColor = Color(0xFF44AAD6);
-  final Color textColor = Color(0xFF332F2E);
-
-  var goal = '2ヶ月以内に５ｋｇ痩せる';
-  var wantThingIMG = 'image/display.jpg';
-  var wantThing = 'LG 27UL550-W 27型 4K 液晶ディスプレイ';
-  var price = 15000;
 
   var _currentValue = 0.0;
   var saving = 0;

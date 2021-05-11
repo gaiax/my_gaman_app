@@ -1,26 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'goalset.dart';
+import '../configs/colors.dart';
 
-class MyLoginPage extends StatefulWidget {
+class MyAuthPage extends StatefulWidget {
   @override
-  _MyLoginPageState createState() => _MyLoginPageState();
+  _MyAuthPageState createState() => _MyAuthPageState();
 }
 
-class _MyLoginPageState extends State<MyLoginPage> {
-  String loginUserEmail = "";
-  String loginUserPassword = "";
-  String infoText = "";
-
-  final Color bgColor = Color(0xFFF2FBFE);
-  final Color white = Color(0xFFffffff);
-  final Color curtain = Color(0x80ffffff);
-  final Color shadow = Color(0xFF505659);
-  final Color wavecolor = Color(0xFF97DDFA);
-  final Color waveshadow = Color(0xFF83C1BB);
-  final Color goalTextColor = Color(0xFF2870A0);
-  final Color priceColor = Color(0xFF44AAD6);
-  final Color textColor = Color(0xFF332F2E);
+class _MyAuthPageState extends State<MyAuthPage> {
+  var newUserEmail = "";
+  var newUserPassword = "";
+  var infoText = "";
+  var userName = "";
+  var userPhotoUrl = "";
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +38,15 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 decoration: InputDecoration(labelText: "メールアドレス"),
                 onChanged: (String value) {
                   setState(() {
-                    loginUserEmail = value;
+                    newUserEmail = value;
+                  });
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: "ユーザーネーム"),
+                onChanged: (String value) {
+                  setState(() {
+                    userName = value;
                   });
                 },
               ),
@@ -54,7 +56,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 obscureText: true,
                 onChanged: (String value) {
                   setState(() {
-                    loginUserPassword = value;
+                    newUserPassword = value;
                   });
                 },
               ),
@@ -64,13 +66,23 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   try {
                     // メールとパスワードでユーザー登録
                     final FirebaseAuth auth = FirebaseAuth.instance;
-                    await auth.signInWithEmailAndPassword(
-                      email: loginUserEmail, password: loginUserPassword,
+                    final UserCredential authResult = await auth.createUserWithEmailAndPassword(
+                      email: newUserEmail, password: newUserPassword,
                     );
+
+                    final User user = authResult.user;
+
+                    final FirebaseStorage storage = FirebaseStorage.instance;
+                    var photo = storage.ref().child('slime.png').fullPath;
+                    var photoRef = storage.ref(photo);
+                    userPhotoUrl = await getDownloadUrl(photoRef);
+                    
+                    await user.updateProfile(displayName: userName, photoURL: userPhotoUrl);
+                    await user.reload();
 
                     // 登録後Home画面に遷移
                     await Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => HomePage()),
+                      MaterialPageRoute(builder: (context) => GoalSetPage()),
                     );
                   } catch (e) {
                     // 登録に失敗した場合
@@ -79,11 +91,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     });
                   }
                 },
-                child: Text("Login"),
-                style: ElevatedButton.styleFrom(
-                  primary: wavecolor,
-                  onPrimary: textColor,
-                ),
+                child: Text("SignUp"),
               ),
               Text(infoText)
             ],
@@ -91,5 +99,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
         ),
       ),
     );
+  }
+  Future<String> getDownloadUrl(userPhotoRef) async {
+    return await userPhotoRef.getDownloadURL();
   }
 }

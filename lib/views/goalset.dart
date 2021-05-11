@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'home.dart';
 import 'package:universal_html/controller.dart';
+import '../configs/colors.dart';
 
 class GoalSetPage extends StatefulWidget {
   @override
@@ -11,10 +12,6 @@ class GoalSetPage extends StatefulWidget {
 }
 
 class _GoalSetPageState extends State<GoalSetPage> {
-
-  final Color white = Color(0xFFffffff);
-  final Color shadow = Color(0xFF505659);
-  final Color wavecolor = Color(0xFF45B5AA);
 
   TextEditingController goalTextController = TextEditingController();
   TextEditingController wantThingController = TextEditingController();

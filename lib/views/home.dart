@@ -25,11 +25,13 @@ class _HomePageState extends State<HomePage> {
   final formatter = NumberFormat('#,##0', 'ja_JP');
 
   var user = FirebaseAuth.instance.currentUser;
+  var cloud = FirebaseFirestore.instance;
   var userEmail;
   var userName;
   var userPhoto;
   var wantThingPrice;
   var wantThingImg;
+  var goalId;
 
   QuerySnapshot gamanSnapshot;
   List<DocumentSnapshot> documents = [];
@@ -48,23 +50,28 @@ class _HomePageState extends State<HomePage> {
     userEmail = user.email;
     userName = user.displayName;
     userPhoto = user.photoURL;
-    QuerySnapshot goalSnapshot = await FirebaseFirestore.instance.collection('goals').limit(1).where('userName', isEqualTo: userName).get();
+    QuerySnapshot goalSnapshot = await cloud.collection('goals').limit(1).where('userName', isEqualTo: userName).get();
     wantThingPrice = goalSnapshot.docs[0].data()['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
     wantThingImg = goalSnapshot.docs[0].data()['wantThingImg'];
+    goalId = goalSnapshot.docs[0].id;
 
-    gamanSnapshot = await FirebaseFirestore.instance.collection('gamans').where('userName', isEqualTo: userName).get();
+    gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).get();
     documents = gamanSnapshot.docs;
+    documents.forEach((document) {
+      saving = saving + int.parse(document['price']);
+    });
+    if (saving >= int.parse(wantThingPrice)) {
+      saving = int.parse(wantThingPrice);
+    }
+    _currentValue = (saving / int.parse(wantThingPrice)) * 100; 
 
     setState(() {
       _loading = false;
     });
-    print(wantThingImg);
   }
 
   @override
   Widget build(BuildContext context) {
-    _currentValue = (saving.toInt() / int.parse(wantThingPrice)) * 100;
-
     if (_loading) {
       return Center(
         child: CircularProgressIndicator()
@@ -430,16 +437,19 @@ class _HomePageState extends State<HomePage> {
         'userPhotoUrl': userPhoto,
         'price': gamanPrice,
         'text': descriptionController.text,
-        'createdAt' : createdAt,
+        'createdAt': createdAt,
+        'goalId': goalId, 
       });
 
-    gamanSnapshot = await FirebaseFirestore.instance.collection('gamans').where('userName', isEqualTo: userName).get();
+    gamanSnapshot = await FirebaseFirestore.instance.collection('gamans').where('goalId', isEqualTo: goalId).get();
     documents = gamanSnapshot.docs;
 
     setState(() {
-      if ((saving + int.parse(gamanPrice)) <= int.parse(wantThingPrice)) {
-        saving += int.parse(gamanPrice);
+      saving = saving + int.parse(gamanPrice);
+      if (saving >= int.parse(wantThingPrice)) {
+        saving = int.parse(wantThingPrice);
       }
+      _currentValue = (saving / int.parse(wantThingPrice)) * 100;
     });
     
     priceController.clear();

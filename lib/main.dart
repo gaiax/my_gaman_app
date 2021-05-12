@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'views/signup.dart';
 import 'views/login.dart';
+import 'models/users.dart';
 import 'configs/colors.dart';
 
 Future<void> main() async {
@@ -12,6 +14,8 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
+  //final UserState userState = UserState();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

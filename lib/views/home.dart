@@ -115,15 +115,15 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               title: Text('　プロフィール設定'),
-              onTap: () {
+              onTap: () async {
                 Navigator.of(context).pop();
-                Navigator.of(context).push(
+                await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SettingPage()),
-                ).then((value) {
-                  setState((){
-                    userName = user.displayName;
-                    userPhoto = user.photoURL; 
-                  });
+                );
+                setState(() {
+                  user = FirebaseAuth.instance.currentUser;
+                  userName = user.displayName;
+                  userPhoto = user.photoURL;
                 });
               },
             ), 

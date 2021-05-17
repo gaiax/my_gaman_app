@@ -75,40 +75,40 @@ class _SettingPageState extends State<SettingPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Container(
-                  height: 55.0,
-                  width: 55.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    image: DecorationImage(
-                      image: NetworkImage(userPhoto),
-                      fit: BoxFit.cover,
+            GestureDetector(
+              onTap: uploadImage,
+              child: Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  Container(
+                    height: 55.0,
+                    width: 55.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      image: DecorationImage(
+                        image: NetworkImage(userPhoto),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  width: 55.0,
-                  height: 55.0,
-                  decoration: BoxDecoration(
-                    color: curtain,
-                    borderRadius: BorderRadius.circular(8.0),
+                  Container(
+                    width: 55.0,
+                    height: 55.0,
+                    decoration: BoxDecoration(
+                      color: curtain,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
                   ),
-                  child: GestureDetector(
-                    onTap: uploadImage,
+                  Text(
+                    '+',
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 40.0,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                Text(
-                  '+',
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 40.0,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
             Padding(padding: EdgeInsets.all(10.0)),
             Text(
@@ -146,17 +146,18 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void uploadImage() async {
-    File image = await getImage(true);
+    var image = await getImage(true);
+    _loading = true;
     await uploadFile(image, userEmail);
     userPhoto = await storage.ref('userImages/'+userEmail+'.png').getDownloadURL();
+    setState(() {
+      _loading = false;
+    });
   }
 
   void saveUsers() async {
+    await user.updateProfile(displayName: userNameController.text, photoURL: userPhoto);
+    await user.reload();
     Navigator.of(context).pop();
-    userNameController.clear();
-    setState(() async {
-      await user.updateProfile(displayName: userNameController.text, photoURL: userPhoto);
-      await user.reload();
-    });
   }
 }

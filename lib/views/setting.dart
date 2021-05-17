@@ -66,11 +66,11 @@ class _SettingPageState extends State<SettingPage> {
 
       body: Container(
         color: bgColor,
-        margin: EdgeInsets.only(top: 20),
-        padding: EdgeInsets.only(left: 10, right: 10),
+        margin: EdgeInsets.only(top: 30),
+        padding: EdgeInsets.only(left: 20, right: 20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Stack(
@@ -92,24 +92,25 @@ class _SettingPageState extends State<SettingPage> {
                   height: 55.0,
                   decoration: BoxDecoration(
                     color: curtain,
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(8.0),
                   )
                 ),
                 Text(
                   '+',
                   style: TextStyle(
-                    color: white,
-                    fontSize: 45.0,
+                    color: textColor,
+                    fontSize: 40.0,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
+            Padding(padding: EdgeInsets.all(10.0)),
             Text(
               'ユーザー名',
               style: TextStyle(
                 color: shadow,
-                fontSize: 18.0,
+                fontSize: 14.0,
                 fontWeight: FontWeight.w200,
               ),
             ),
@@ -117,7 +118,7 @@ class _SettingPageState extends State<SettingPage> {
               controller: userNameController,
               style: TextStyle(
                 color: textColor,
-                fontSize: 20.0,
+                fontSize: 18.0,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -125,8 +126,8 @@ class _SettingPageState extends State<SettingPage> {
             Container(
               alignment: Alignment.bottomRight,
               child: ElevatedButton(
-                onPressed: (){},
-                child: Text("Login"),
+                onPressed: saveUsers,
+                child: Text("保存"),
                 style: ElevatedButton.styleFrom(
                   primary: wavecolor,
                   onPrimary: textColor,

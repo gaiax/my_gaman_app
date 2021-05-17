@@ -5,6 +5,7 @@ import 'package:wave_progress_widget/wave_progress.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'postview.dart';
+import 'setting.dart';
 import '../configs/colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -112,6 +113,15 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
+            ListTile(
+              title: Text('　プロフィール設定'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SettingPage()),
+                );
+              },
+            ), 
           ],
         ),
       ),

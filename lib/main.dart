@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import 'views/signup.dart';
 import 'views/login.dart';
-import 'models/users.dart';
 import 'configs/colors.dart';
 
 Future<void> main() async {

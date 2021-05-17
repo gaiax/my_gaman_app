@@ -26,6 +26,5 @@ Future getImage(bool gallery) async {
 
 Future<void> uploadFile(imagePath, userEmail) async {
   File file = File(imagePath);
-
   await storage.ref('userImages/'+userEmail+'.png').putFile(file);
 }

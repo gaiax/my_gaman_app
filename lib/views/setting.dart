@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../configs/colors.dart';
+import '../models/upload_image.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -54,10 +56,10 @@ class _SettingPageState extends State<SettingPage> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
-          'プロフィール編集',
+          'プロフィール設定',
           style: TextStyle(
             color:textColor,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w400,
           ),
         ),
         backgroundColor: white,
@@ -93,7 +95,10 @@ class _SettingPageState extends State<SettingPage> {
                   decoration: BoxDecoration(
                     color: curtain,
                     borderRadius: BorderRadius.circular(8.0),
-                  )
+                  ),
+                  child: GestureDetector(
+                    onTap: uploadImage,
+                  ),
                 ),
                 Text(
                   '+',
@@ -140,9 +145,18 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  void uploadImage() async {
+    File image = await getImage(true);
+    await uploadFile(image, userEmail);
+    userPhoto = await storage.ref('userImages/'+userEmail+'.png').getDownloadURL();
+  }
+
   void saveUsers() async {
     Navigator.of(context).pop();
-    await user.updateProfile(displayName: userNameController.text);
-    
+    userNameController.clear();
+    setState(() async {
+      await user.updateProfile(displayName: userNameController.text, photoURL: userPhoto);
+      await user.reload();
+    });
   }
 }

@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
     userEmail = user.email;
     userName = user.displayName;
     userPhoto = user.photoURL;
-    QuerySnapshot goalSnapshot = await cloud.collection('goals').limit(1).where('userName', isEqualTo: userName).get();
+    QuerySnapshot goalSnapshot = await cloud.collection('goals').limit(1).where('userEmail', isEqualTo: userEmail).get();
     wantThingPrice = goalSnapshot.docs[0].data()['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
     wantThingImg = goalSnapshot.docs[0].data()['wantThingImg'];
     goalId = goalSnapshot.docs[0].id;
@@ -119,7 +119,12 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SettingPage()),
-                );
+                ).then((value) {
+                  setState((){
+                    userName = user.displayName;
+                    userPhoto = user.photoURL; 
+                  });
+                });
               },
             ), 
           ],

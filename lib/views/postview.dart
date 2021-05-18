@@ -52,22 +52,22 @@ class _PostViewPageState extends State<PostViewPage> {
     }
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: AppColor.bgColor,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
           'タイムライン',
           style: TextStyle(
-            color:textColor,
+            color:AppColor.textColor,
             fontWeight: FontWeight.w600,
           ),
         ),
-        backgroundColor: white,
-        shadowColor: shadow,
+        backgroundColor: AppColor.white,
+        shadowColor: AppColor.shadow,
       ),
 
       body: Container(
-        color: bgColor,
+        color: AppColor.bgColor,
         margin: EdgeInsets.only(top: 20),
         padding: EdgeInsets.only(left: 10, right: 10),
         child: Column(
@@ -132,7 +132,7 @@ class _PostViewPageState extends State<PostViewPage> {
                                 Text(
                                   document['text'],
                                   style: TextStyle(
-                                    color: textColor,
+                                    color: AppColor.textColor,
                                     fontSize: 15.0,
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -142,7 +142,7 @@ class _PostViewPageState extends State<PostViewPage> {
                             trailing: Text(
                               document['price'],
                               style: TextStyle(
-                                color: priceColor,
+                                color: AppColor.priceColor,
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.w700,
                               ),

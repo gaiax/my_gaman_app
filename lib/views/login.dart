@@ -22,8 +22,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
           'Gaman App',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: white,
-        shadowColor: shadow,
+        backgroundColor: AppColor.white,
+        shadowColor: AppColor.shadow,
       ),
       body: Center(
         child: Container(
@@ -72,8 +72,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 },
                 child: Text("Login"),
                 style: ElevatedButton.styleFrom(
-                  primary: wavecolor,
-                  onPrimary: textColor,
+                  primary: AppColor.wavecolor,
+                  onPrimary: AppColor.textColor,
                 ),
               ),
               Text(infoText)

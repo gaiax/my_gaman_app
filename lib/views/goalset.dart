@@ -45,15 +45,15 @@ class _GoalSetPageState extends State<GoalSetPage> {
     }
 
     return Scaffold(
-      backgroundColor: white,
+      backgroundColor: AppColor.white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
           'Gaman App',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: white,
-        shadowColor: shadow,
+        backgroundColor: AppColor.white,
+        shadowColor: AppColor.shadow,
       ),
 
       drawer:Drawer(
@@ -78,7 +78,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
 
       body: Center(
         child: Container(
-          color: white,
+          color: AppColor.white,
           padding: EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -90,7 +90,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.w500,
-                  color: shadow,
+                  color: AppColor.shadow,
                 ),
               ),
               TextField(
@@ -106,7 +106,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.w500,
-                  color: shadow,
+                  color: AppColor.shadow,
                 ),
               ),
               TextField(
@@ -130,7 +130,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                     ),
                   ),
                   onPressed: submitPressed,
-                  color: wavecolor,
+                  color: AppColor.wavecolor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

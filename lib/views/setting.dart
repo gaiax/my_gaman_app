@@ -52,22 +52,22 @@ class _SettingPageState extends State<SettingPage> {
     }
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: AppColor.bgColor,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
           'プロフィール設定',
           style: TextStyle(
-            color:textColor,
+            color:AppColor.textColor,
             fontWeight: FontWeight.w400,
           ),
         ),
-        backgroundColor: white,
-        shadowColor: shadow,
+        backgroundColor: AppColor.white,
+        shadowColor: AppColor.shadow,
       ),
 
       body: Container(
-        color: bgColor,
+        color: AppColor.bgColor,
         margin: EdgeInsets.only(top: 30),
         padding: EdgeInsets.only(left: 20, right: 20),
         child: Column(
@@ -95,14 +95,14 @@ class _SettingPageState extends State<SettingPage> {
                     width: 55.0,
                     height: 55.0,
                     decoration: BoxDecoration(
-                      color: curtain,
+                      color: AppColor.curtain,
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
                   Text(
                     '+',
                     style: TextStyle(
-                      color: textColor,
+                      color: AppColor.textColor,
                       fontSize: 40.0,
                       fontWeight: FontWeight.w500,
                     ),
@@ -114,7 +114,7 @@ class _SettingPageState extends State<SettingPage> {
             Text(
               'ユーザー名',
               style: TextStyle(
-                color: shadow,
+                color: AppColor.shadow,
                 fontSize: 14.0,
                 fontWeight: FontWeight.w200,
               ),
@@ -122,7 +122,7 @@ class _SettingPageState extends State<SettingPage> {
             TextField(
               controller: userNameController,
               style: TextStyle(
-                color: textColor,
+                color: AppColor.textColor,
                 fontSize: 18.0,
                 fontWeight: FontWeight.w400,
               ),
@@ -134,8 +134,8 @@ class _SettingPageState extends State<SettingPage> {
                 onPressed: saveUsers,
                 child: Text("保存"),
                 style: ElevatedButton.styleFrom(
-                  primary: wavecolor,
-                  onPrimary: textColor,
+                  primary: AppColor.wavecolor,
+                  onPrimary: AppColor.textColor,
                 ),
               ),
             )

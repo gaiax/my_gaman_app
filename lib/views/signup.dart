@@ -25,8 +25,8 @@ class _MyAuthPageState extends State<MyAuthPage> {
           'Gaman App',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: white,
-        shadowColor: shadow,
+        backgroundColor: AppColor.white,
+        shadowColor: AppColor.shadow,
       ),
       body: Center(
         child: Container(

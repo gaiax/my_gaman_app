@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: AppColor.bgColor,
 
       drawer:Drawer(
         child: ListView(
@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
         slivers: <Widget>[
           SliverAppBar(
             expandedHeight: 200.0,
-            backgroundColor: wavecolor,
+            backgroundColor: AppColor.wavecolor,
             floating: true,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                         Text(
                           '目標金額',
                           style: TextStyle(
-                            color: priceColor,
+                            color: AppColor.priceColor,
                             fontSize: 15.0,
                             fontWeight: FontWeight.w400,
                           ),
@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               formatter.format(int.parse(wantThingPrice)),
                               style: TextStyle(
-                                color: priceColor,
+                                color: AppColor.priceColor,
                                 fontSize: 30.0,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -178,7 +178,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               '円',
                               style: TextStyle(
-                                color: priceColor,
+                                color: AppColor.priceColor,
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.w300,
                               )
@@ -225,18 +225,18 @@ class _HomePageState extends State<HomePage> {
                           width: 320,
                           height: 320,
                           decoration: BoxDecoration(
-                            color: white,
+                            color: AppColor.white,
                             shape: BoxShape.circle,
                           ),
                         ),
                         WaveProgress(
-                          310.0, white, wavecolor, _currentValue
+                          310.0, AppColor.white, AppColor.wavecolor, _currentValue
                         ),
                         Container(
                           width: 220,
                           height: 220,
                           decoration: BoxDecoration(
-                            color: curtain,
+                            color: AppColor.curtain,
                             shape: BoxShape.circle,
                           )
                         ),
@@ -248,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               '現在の貯金額',
                               style: TextStyle(
-                                color: priceColor,
+                                color: AppColor.priceColor,
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -261,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                                 Text(
                                   formatter.format(saving),
                                   style: TextStyle(
-                                    color: priceColor,
+                                    color: AppColor.priceColor,
                                     fontSize: 45.0,
                                     fontWeight: FontWeight.w800,
                                   ),
@@ -269,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                                 Text(
                                   '円',
                                   style: TextStyle(
-                                    color: priceColor,
+                                    color: AppColor.priceColor,
                                     fontSize: 20.0,
                                     fontWeight: FontWeight.w300,
                                   )
@@ -288,7 +288,7 @@ class _HomePageState extends State<HomePage> {
                   child: Text(
                     '最近の我慢履歴',
                     style: TextStyle(
-                      color: textColor,
+                      color: AppColor.textColor,
                       fontSize: 14.0,
                       fontWeight: FontWeight.w500,
                     )
@@ -323,7 +323,7 @@ class _HomePageState extends State<HomePage> {
                                 Text(
                                   document['text'],
                                   style: TextStyle(
-                                    color: textColor,
+                                    color: AppColor.textColor,
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -333,7 +333,7 @@ class _HomePageState extends State<HomePage> {
                             trailing: Text(
                               document['price'],
                               style: TextStyle(
-                                color: priceColor,
+                                color: AppColor.priceColor,
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -355,12 +355,12 @@ class _HomePageState extends State<HomePage> {
         child: Text(
           '+',
           style: TextStyle(
-            color: white,
+            color: AppColor.white,
             fontSize: 45.0,
             fontWeight: FontWeight.w500,
           ),
         ),
-        backgroundColor: priceColor,
+        backgroundColor: AppColor.priceColor,
       ),
     );
   }
@@ -384,7 +384,7 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 fontSize: 22.0,
                 fontWeight: FontWeight.w500,
-                color: shadow,
+                color: AppColor.shadow,
               ),
             ),
             TextField(
@@ -401,7 +401,7 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 fontSize: 22.0,
                 fontWeight: FontWeight.w500,
-                color: shadow,
+                color: AppColor.shadow,
               ),
             ),
             TextField(
@@ -425,7 +425,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 onPressed: submitPressed,
-                color: priceColor,
+                color: AppColor.priceColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),

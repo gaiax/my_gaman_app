@@ -60,8 +60,8 @@ class _StartPageState extends State<StartPage> {
           'Gaman App',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: white,
-        shadowColor: shadow,
+        backgroundColor: AppColor.white,
+        shadowColor: AppColor.shadow,
       ),
       body: Center(
         child: Container(
@@ -79,8 +79,8 @@ class _StartPageState extends State<StartPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: wavecolor,
-                    onPrimary: textColor,
+                    primary: AppColor.wavecolor,
+                    onPrimary: AppColor.textColor,
                   ),
                   child: Text("SignUp"),
                 ),
@@ -95,8 +95,8 @@ class _StartPageState extends State<StartPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: wavecolor,
-                    onPrimary: textColor,
+                    primary: AppColor.wavecolor,
+                    onPrimary: AppColor.textColor,
                   ),
                   child: Text("Login"),
                 ),

@@ -5,6 +5,8 @@ import 'package:wave_progress_widget/wave_progress.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'postview.dart';
+import 'setting.dart';
+import '../configs/colors.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,21 +14,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  final Color bgColor = Color(0xFFF2FBFE);
-  final Color white = Color(0xFFffffff);
-  final Color curtain = Color(0x80ffffff);
-  final Color shadow = Color(0xFF505659);
-  final Color wavecolor = Color(0xFF97DDFA);
-  final Color waveshadow = Color(0xFF83C1BB);
-  final Color goalTextColor = Color(0xFF2870A0);
-  final Color priceColor = Color(0xFF44AAD6);
-  final Color textColor = Color(0xFF332F2E);
-
-  var goal = '2ヶ月以内に５ｋｇ痩せる';
-  var wantThingIMG = 'image/display.jpg';
-  var wantThing = 'LG 27UL550-W 27型 4K 液晶ディスプレイ';
-  var price = 15000;
 
   var _currentValue = 0.0;
   var saving = 0;
@@ -39,11 +26,13 @@ class _HomePageState extends State<HomePage> {
   final formatter = NumberFormat('#,##0', 'ja_JP');
 
   var user = FirebaseAuth.instance.currentUser;
+  var cloud = FirebaseFirestore.instance;
   var userEmail;
   var userName;
   var userPhoto;
   var wantThingPrice;
   var wantThingImg;
+  var goalId;
 
   QuerySnapshot gamanSnapshot;
   List<DocumentSnapshot> documents = [];
@@ -62,23 +51,28 @@ class _HomePageState extends State<HomePage> {
     userEmail = user.email;
     userName = user.displayName;
     userPhoto = user.photoURL;
-    QuerySnapshot goalSnapshot = await FirebaseFirestore.instance.collection('goals').limit(1).where('userName', isEqualTo: userName).get();
+    QuerySnapshot goalSnapshot = await cloud.collection('goals').limit(1).where('userEmail', isEqualTo: userEmail).get();
     wantThingPrice = goalSnapshot.docs[0].data()['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
     wantThingImg = goalSnapshot.docs[0].data()['wantThingImg'];
+    goalId = goalSnapshot.docs[0].id;
 
-    gamanSnapshot = await FirebaseFirestore.instance.collection('gamans').where('userName', isEqualTo: userName).get();
+    gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).get();
     documents = gamanSnapshot.docs;
+    documents.forEach((document) {
+      saving = saving + int.parse(document['price']);
+    });
+    if (saving >= int.parse(wantThingPrice)) {
+      saving = int.parse(wantThingPrice);
+    }
+    _currentValue = (saving / int.parse(wantThingPrice)) * 100; 
 
     setState(() {
       _loading = false;
     });
-    print(wantThingImg);
   }
 
   @override
   Widget build(BuildContext context) {
-    _currentValue = (saving.toInt() / int.parse(wantThingPrice)) * 100;
-
     if (_loading) {
       return Center(
         child: CircularProgressIndicator()
@@ -86,7 +80,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: AppColor.bgColor,
 
       drawer:Drawer(
         child: ListView(
@@ -119,6 +113,20 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
+            ListTile(
+              title: Text('　プロフィール設定'),
+              onTap: () async {
+                Navigator.of(context).pop();
+                await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SettingPage()),
+                );
+                setState(() {
+                  user = FirebaseAuth.instance.currentUser;
+                  userName = user.displayName;
+                  userPhoto = user.photoURL;
+                });
+              },
+            ), 
           ],
         ),
       ),
@@ -127,7 +135,7 @@ class _HomePageState extends State<HomePage> {
         slivers: <Widget>[
           SliverAppBar(
             expandedHeight: 200.0,
-            backgroundColor: wavecolor,
+            backgroundColor: AppColor.wavecolor,
             floating: true,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
@@ -149,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                         Text(
                           '目標金額',
                           style: TextStyle(
-                            color: priceColor,
+                            color: AppColor.priceColor,
                             fontSize: 15.0,
                             fontWeight: FontWeight.w400,
                           ),
@@ -162,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               formatter.format(int.parse(wantThingPrice)),
                               style: TextStyle(
-                                color: priceColor,
+                                color: AppColor.priceColor,
                                 fontSize: 30.0,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -170,7 +178,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               '円',
                               style: TextStyle(
-                                color: priceColor,
+                                color: AppColor.priceColor,
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.w300,
                               )
@@ -217,18 +225,18 @@ class _HomePageState extends State<HomePage> {
                           width: 320,
                           height: 320,
                           decoration: BoxDecoration(
-                            color: white,
+                            color: AppColor.white,
                             shape: BoxShape.circle,
                           ),
                         ),
                         WaveProgress(
-                          310.0, white, wavecolor, _currentValue
+                          310.0, AppColor.white, AppColor.wavecolor, _currentValue
                         ),
                         Container(
                           width: 220,
                           height: 220,
                           decoration: BoxDecoration(
-                            color: curtain,
+                            color: AppColor.curtain,
                             shape: BoxShape.circle,
                           )
                         ),
@@ -240,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               '現在の貯金額',
                               style: TextStyle(
-                                color: priceColor,
+                                color: AppColor.priceColor,
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -253,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                                 Text(
                                   formatter.format(saving),
                                   style: TextStyle(
-                                    color: priceColor,
+                                    color: AppColor.priceColor,
                                     fontSize: 45.0,
                                     fontWeight: FontWeight.w800,
                                   ),
@@ -261,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                                 Text(
                                   '円',
                                   style: TextStyle(
-                                    color: priceColor,
+                                    color: AppColor.priceColor,
                                     fontSize: 20.0,
                                     fontWeight: FontWeight.w300,
                                   )
@@ -280,7 +288,7 @@ class _HomePageState extends State<HomePage> {
                   child: Text(
                     '最近の我慢履歴',
                     style: TextStyle(
-                      color: textColor,
+                      color: AppColor.textColor,
                       fontSize: 14.0,
                       fontWeight: FontWeight.w500,
                     )
@@ -315,7 +323,7 @@ class _HomePageState extends State<HomePage> {
                                 Text(
                                   document['text'],
                                   style: TextStyle(
-                                    color: textColor,
+                                    color: AppColor.textColor,
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -325,7 +333,7 @@ class _HomePageState extends State<HomePage> {
                             trailing: Text(
                               document['price'],
                               style: TextStyle(
-                                color: priceColor,
+                                color: AppColor.priceColor,
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -347,12 +355,12 @@ class _HomePageState extends State<HomePage> {
         child: Text(
           '+',
           style: TextStyle(
-            color: white,
+            color: AppColor.white,
             fontSize: 45.0,
             fontWeight: FontWeight.w500,
           ),
         ),
-        backgroundColor: priceColor,
+        backgroundColor: AppColor.priceColor,
       ),
     );
   }
@@ -376,7 +384,7 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 fontSize: 22.0,
                 fontWeight: FontWeight.w500,
-                color: shadow,
+                color: AppColor.shadow,
               ),
             ),
             TextField(
@@ -393,7 +401,7 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 fontSize: 22.0,
                 fontWeight: FontWeight.w500,
-                color: shadow,
+                color: AppColor.shadow,
               ),
             ),
             TextField(
@@ -417,7 +425,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 onPressed: submitPressed,
-                color: priceColor,
+                color: AppColor.priceColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -444,16 +452,19 @@ class _HomePageState extends State<HomePage> {
         'userPhotoUrl': userPhoto,
         'price': gamanPrice,
         'text': descriptionController.text,
-        'createdAt' : createdAt,
+        'createdAt': createdAt,
+        'goalId': goalId, 
       });
 
-    gamanSnapshot = await FirebaseFirestore.instance.collection('gamans').where('userName', isEqualTo: userName).get();
+    gamanSnapshot = await FirebaseFirestore.instance.collection('gamans').where('goalId', isEqualTo: goalId).get();
     documents = gamanSnapshot.docs;
 
     setState(() {
-      if ((saving + int.parse(gamanPrice)) <= int.parse(wantThingPrice)) {
-        saving += int.parse(gamanPrice);
+      saving = saving + int.parse(gamanPrice);
+      if (saving >= int.parse(wantThingPrice)) {
+        saving = int.parse(wantThingPrice);
       }
+      _currentValue = (saving / int.parse(wantThingPrice)) * 100;
     });
     
     priceController.clear();

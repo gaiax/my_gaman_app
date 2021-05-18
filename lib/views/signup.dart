@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'goalset.dart';
+import '../configs/colors.dart';
 
 class MyAuthPage extends StatefulWidget {
   @override
@@ -15,9 +16,6 @@ class _MyAuthPageState extends State<MyAuthPage> {
   var userName = "";
   var userPhotoUrl = "";
 
-  final Color white = Color(0xFFffffff);
-  final Color shadow = Color(0xFF505659);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,8 +25,8 @@ class _MyAuthPageState extends State<MyAuthPage> {
           'Gaman App',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: white,
-        shadowColor: shadow,
+        backgroundColor: AppColor.white,
+        shadowColor: AppColor.shadow,
       ),
       body: Center(
         child: Container(

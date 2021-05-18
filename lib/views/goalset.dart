@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'home.dart';
 import 'package:universal_html/controller.dart';
+import '../configs/colors.dart';
 
 class GoalSetPage extends StatefulWidget {
   @override
@@ -11,10 +12,6 @@ class GoalSetPage extends StatefulWidget {
 }
 
 class _GoalSetPageState extends State<GoalSetPage> {
-
-  final Color white = Color(0xFFffffff);
-  final Color shadow = Color(0xFF505659);
-  final Color wavecolor = Color(0xFF45B5AA);
 
   TextEditingController goalTextController = TextEditingController();
   TextEditingController wantThingController = TextEditingController();
@@ -48,15 +45,15 @@ class _GoalSetPageState extends State<GoalSetPage> {
     }
 
     return Scaffold(
-      backgroundColor: white,
+      backgroundColor: AppColor.white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
           'Gaman App',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: white,
-        shadowColor: shadow,
+        backgroundColor: AppColor.white,
+        shadowColor: AppColor.shadow,
       ),
 
       drawer:Drawer(
@@ -81,7 +78,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
 
       body: Center(
         child: Container(
-          color: white,
+          color: AppColor.white,
           padding: EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -93,7 +90,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.w500,
-                  color: shadow,
+                  color: AppColor.shadow,
                 ),
               ),
               TextField(
@@ -109,7 +106,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.w500,
-                  color: shadow,
+                  color: AppColor.shadow,
                 ),
               ),
               TextField(
@@ -133,7 +130,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                     ),
                   ),
                   onPressed: submitPressed,
-                  color: wavecolor,
+                  color: AppColor.wavecolor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

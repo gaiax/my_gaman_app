@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-import 'signup.dart';
-import 'login.dart';
+import 'views/signup.dart';
+import 'views/login.dart';
+import 'configs/colors.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +11,8 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
+  //final UserState userState = UserState();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -46,15 +48,6 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  final Color bgColor = Color(0xFFF2FBFE);
-  final Color white = Color(0xFFffffff);
-  final Color curtain = Color(0x80ffffff);
-  final Color shadow = Color(0xFF505659);
-  final Color wavecolor = Color(0xFF97DDFA);
-  final Color waveshadow = Color(0xFF83C1BB);
-  final Color goalTextColor = Color(0xFF2870A0);
-  final Color priceColor = Color(0xFF44AAD6);
-  final Color textColor = Color(0xFF332F2E);
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +58,8 @@ class _StartPageState extends State<StartPage> {
           'Gaman App',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: white,
-        shadowColor: shadow,
+        backgroundColor: AppColor.white,
+        shadowColor: AppColor.shadow,
       ),
       body: Center(
         child: Container(
@@ -84,8 +77,8 @@ class _StartPageState extends State<StartPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: wavecolor,
-                    onPrimary: textColor,
+                    primary: AppColor.wavecolor,
+                    onPrimary: AppColor.textColor,
                   ),
                   child: Text("SignUp"),
                 ),
@@ -100,8 +93,8 @@ class _StartPageState extends State<StartPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: wavecolor,
-                    onPrimary: textColor,
+                    primary: AppColor.wavecolor,
+                    onPrimary: AppColor.textColor,
                   ),
                   child: Text("Login"),
                 ),

@@ -146,9 +146,9 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void uploadImage() async {
-    var image = await getImage(true);
+    var image = await UploadImage.getImage(true);
     _loading = true;
-    await uploadFile(image, userEmail);
+    await UploadImage.uploadFile(image, userEmail);
     userPhoto = await storage.ref('userImages/'+userEmail+'.png').getDownloadURL();
     setState(() {
       _loading = false;

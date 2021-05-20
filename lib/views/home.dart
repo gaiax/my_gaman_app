@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   var user = FirebaseAuth.instance.currentUser;
   var cloud = FirebaseFirestore.instance;
   var userEmail;
+  var userId;
   var userName;
   var userPhoto;
   var wantThingPrice;
@@ -51,7 +52,8 @@ class _HomePageState extends State<HomePage> {
     userEmail = user.email;
     userName = user.displayName;
     userPhoto = user.photoURL;
-    QuerySnapshot goalSnapshot = await cloud.collection('goals').limit(1).where('userEmail', isEqualTo: userEmail).get();
+    userId = user.uid;
+    QuerySnapshot goalSnapshot = await cloud.collection('goals').orderBy('createdAt').limit(1).where('userId', isEqualTo: userId).get();
     wantThingPrice = goalSnapshot.docs[0].data()['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
     wantThingImg = goalSnapshot.docs[0].data()['wantThingImg'];
     goalId = goalSnapshot.docs[0].id;
@@ -448,7 +450,7 @@ class _HomePageState extends State<HomePage> {
       .collection('gamans')
       .doc()
       .set({
-        'userEmail': userEmail,
+        'userId': userId,
         'userName': userName,
         'userPhotoUrl': userPhoto,
         'price': gamanPrice,
@@ -457,7 +459,7 @@ class _HomePageState extends State<HomePage> {
         'date': date,
         'goalId': goalId, 
       });
-
+    print(userId);
     gamanSnapshot = await FirebaseFirestore.instance.collection('gamans').where('goalId', isEqualTo: goalId).get();
     documents = gamanSnapshot.docs;
 

@@ -17,6 +17,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
   TextEditingController wantThingController = TextEditingController();
 
   var user = FirebaseAuth.instance.currentUser;
+  var userId;
   var userEmail;
   var userName;
   var userPhoto;
@@ -27,6 +28,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
   void initState() {
     super.initState();
     if (user != null) {
+      userId = user.uid;
       userEmail = user.email;
       userName = user.displayName;
       userPhoto = user.photoURL;
@@ -144,7 +146,8 @@ class _GoalSetPageState extends State<GoalSetPage> {
   }
 
   void submitPressed() async {
-    final createdAt = DateFormat.yMMMMEEEEd().add_jms().format(DateTime.now());
+    final time = DateTime.now();
+    final createdAt = Timestamp.fromDate(time);
 
     final controller = WindowController();
     await controller.openHttp(
@@ -159,7 +162,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
       .collection('goals')
       .doc()
       .set({
-        'userEmail': userEmail,
+        'userId': userId,
         'userName': userName,
         'userPhotoUrl': userPhoto,
         'goalText': goalTextController.text,

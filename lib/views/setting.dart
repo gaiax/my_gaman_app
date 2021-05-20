@@ -15,7 +15,7 @@ class _SettingPageState extends State<SettingPage> {
   TextEditingController userNameController;
 
   var user = FirebaseAuth.instance.currentUser;
-  var userEmail;
+  var userId;
   var userName;
   var userPhoto;
 
@@ -31,7 +31,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void setData() async {
-    userEmail = user.email;
+    userId = user.uid;
     userName = user.displayName;
     userPhoto = user.photoURL;
 
@@ -146,8 +146,8 @@ class _SettingPageState extends State<SettingPage> {
   void uploadImage() async {
     var image = await UploadImage.getImage(true);
     _loading = true;
-    await UploadImage.uploadFile(image, userEmail);
-    userPhoto = await storage.ref('userImages/'+userEmail+'.png').getDownloadURL();
+    await UploadImage.uploadFile(image, userId);
+    userPhoto = await storage.ref('user/'+userId+'/'+userId).getDownloadURL();
     setState(() {
       _loading = false;
     });

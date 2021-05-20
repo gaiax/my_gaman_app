@@ -81,7 +81,6 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: AppColor.bgColor,
-
       drawer:Drawer(
         child: ListView(
           shrinkWrap: true,
@@ -308,7 +307,7 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  document['createdAt'],
+                                  document['date'],
                                   style: TextStyle(
                                     fontSize: 12.0,
                                     fontWeight: FontWeight.w300,
@@ -440,7 +439,9 @@ class _HomePageState extends State<HomePage> {
   void submitPressed() async {
     Navigator.pop(context);
 
-    final createdAt = DateFormat.yMMMMEEEEd().add_jms().format(DateTime.now());
+    final time = DateTime.now();
+    final createdAt = Timestamp.fromDate(time);
+    final date = DateTime(time.year, time.month, time.day, time.hour, time.minute);
     gamanPrice = priceController.text;
 
     await FirebaseFirestore.instance
@@ -453,6 +454,7 @@ class _HomePageState extends State<HomePage> {
         'price': gamanPrice,
         'text': descriptionController.text,
         'createdAt': createdAt,
+        'date': date,
         'goalId': goalId, 
       });
 

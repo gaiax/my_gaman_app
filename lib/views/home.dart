@@ -441,7 +441,7 @@ class _HomePageState extends State<HomePage> {
 
     final time = DateTime.now();
     final createdAt = Timestamp.fromDate(time);
-    final date = DateTime(time.year, time.month, time.day, time.hour, time.minute);
+    final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
     gamanPrice = priceController.text;
 
     await FirebaseFirestore.instance

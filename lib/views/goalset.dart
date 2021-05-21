@@ -166,6 +166,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
         'userName': userName,
         'userPhotoUrl': userPhoto,
         'goalText': goalTextController.text,
+        'wantThingUrl': wantThingController.text,
         'wantThingImg': wantThingImg,
         'wantThingPrice': wantThingPrice,
         'createdAt' : createdAt,

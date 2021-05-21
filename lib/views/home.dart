@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'postview.dart';
 import 'setting.dart';
@@ -34,6 +35,7 @@ class _HomePageState extends State<HomePage> {
   var wantThingPrice;
   var wantThingImg;
   var goalId;
+  var _url = 'https://www.amazon.co.jp/Dell-21-5%E3%82%A4%E3%83%B3%E3%83%81%E3%83%AF%E3%82%A4%E3%83%89-P2214H-LED%E6%B6%B2%E6%99%B6%E3%83%A2%E3%83%8B%E3%82%BF-1920x1080/dp/B0936FMZW3/ref=sr_1_1_sspa?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&dchild=1&keywords=%E3%83%87%E3%82%A3%E3%82%B9%E3%83%97%E3%83%AC%E3%82%A4&qid=1621546723&sr=8-1-spons&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUlY1Q1JJUFdaSklPJmVuY3J5cHRlZElkPUEwMzgyODA0M0pXSFNLWDk1RlFKTiZlbmNyeXB0ZWRBZElkPUEyVE9VQ1pKNVpYUklMJndpZGdldE5hbWU9c3BfYXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ&th=1';
 
   QuerySnapshot gamanSnapshot;
   List<DocumentSnapshot> documents = [];
@@ -350,6 +352,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           submitGaman();
@@ -365,6 +368,10 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: AppColor.priceColor,
       ),
     );
+  }
+
+  void _launchURL() async {
+    await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
   }
 
   void submitGaman() {
@@ -468,11 +475,44 @@ class _HomePageState extends State<HomePage> {
       saving = saving + int.parse(gamanPrice);
       if (saving >= int.parse(wantThingPrice)) {
         saving = int.parse(wantThingPrice);
-      }
+      } 
       _currentValue = (saving / int.parse(wantThingPrice)) * 100;
     });
     
     priceController.clear();
     descriptionController.clear();
+
+    if (saving >= int.parse(wantThingPrice)) {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('目標達成！'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Image.network(wantThingImg),
+                  Text('おめでとうございます！実質貯金が貯まりました。'),
+                  Text('商品ページへ遷移しますか？'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: _launchURL,
+              ),
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 }

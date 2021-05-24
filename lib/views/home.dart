@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   var wantThingPrice;
   var wantThingImg;
   var goalId;
-  var _url = 'https://www.amazon.co.jp/Dell-21-5%E3%82%A4%E3%83%B3%E3%83%81%E3%83%AF%E3%82%A4%E3%83%89-P2214H-LED%E6%B6%B2%E6%99%B6%E3%83%A2%E3%83%8B%E3%82%BF-1920x1080/dp/B0936FMZW3/ref=sr_1_1_sspa?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&dchild=1&keywords=%E3%83%87%E3%82%A3%E3%82%B9%E3%83%97%E3%83%AC%E3%82%A4&qid=1621546723&sr=8-1-spons&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUlY1Q1JJUFdaSklPJmVuY3J5cHRlZElkPUEwMzgyODA0M0pXSFNLWDk1RlFKTiZlbmNyeXB0ZWRBZElkPUEyVE9VQ1pKNVpYUklMJndpZGdldE5hbWU9c3BfYXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ&th=1';
+  var _url;
 
   QuerySnapshot gamanSnapshot;
   List<DocumentSnapshot> documents = [];
@@ -59,6 +59,7 @@ class _HomePageState extends State<HomePage> {
     QuerySnapshot goalSnapshot = await cloud.collection('goals').limit(1).where('userId', isEqualTo: userId).get();
     wantThingPrice = goalSnapshot.docs[0].data()['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
     wantThingImg = goalSnapshot.docs[0].data()['wantThingImg'];
+    _url = goalSnapshot.docs[0].data()['wantThingUrl'];
     goalId = goalSnapshot.docs[0].id;
 
     gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();

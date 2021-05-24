@@ -76,7 +76,7 @@ class _PostViewPageState extends State<PostViewPage> {
               child: FutureBuilder<QuerySnapshot>(
                 future: FirebaseFirestore.instance
                   .collection('gamans')
-                  .orderBy('createdAt')
+                  .orderBy('createdAt', descending: true)
                   .get(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
@@ -117,7 +117,7 @@ class _PostViewPageState extends State<PostViewPage> {
                                   ),
                                 ),
                                 Text(
-                                  document['createdAt'],
+                                  document['date'],
                                   style: TextStyle(
                                     fontSize: 9.0,
                                     fontWeight: FontWeight.w300,

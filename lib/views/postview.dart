@@ -11,15 +11,9 @@ class PostViewPage extends StatefulWidget {
 
 class _PostViewPageState extends State<PostViewPage> {
 
-  var saving = 0;
-  var gamanPrice;
-
-  TextEditingController priceController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
   firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance; 
 
   var user = FirebaseAuth.instance.currentUser;
-  var userEmail;
   var userName;
   var userPhoto;
 
@@ -34,7 +28,6 @@ class _PostViewPageState extends State<PostViewPage> {
   }
 
   void setData() async {
-    userEmail = user.email;
     userName = user.displayName;
     userPhoto = user.photoURL;
 

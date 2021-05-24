@@ -164,12 +164,12 @@ class _HomePageState extends State<HomePage> {
                     image: AssetImage('image/SliverAppBar2.png'),
                   ),
                 ),
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.all(8.0),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: <Widget>[
-                      Padding(padding: EdgeInsets.all(5.0)),
+                      Padding(padding: EdgeInsets.all(7.0)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,

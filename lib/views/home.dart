@@ -55,8 +55,7 @@ class _HomePageState extends State<HomePage> {
     userName = user.displayName;
     userPhoto = user.photoURL;
     userId = user.uid;
-    print(userId);
-    QuerySnapshot goalSnapshot = await cloud.collection('goals').limit(1).where('userId', isEqualTo: userId).get();
+    QuerySnapshot goalSnapshot = await cloud.collection('goals').where('userId', isEqualTo: userId).orderBy('createdAt', descending: true).limit(1).get();
     wantThingPrice = goalSnapshot.docs[0].data()['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
     wantThingImg = goalSnapshot.docs[0].data()['wantThingImg'];
     _url = goalSnapshot.docs[0].data()['wantThingUrl'];
@@ -129,6 +128,18 @@ class _HomePageState extends State<HomePage> {
                   user = FirebaseAuth.instance.currentUser;
                   userName = user.displayName;
                   userPhoto = user.photoURL;
+                });
+              },
+            ),
+            ListTile(
+              title: Text('　目的変更'),
+              onTap: () async {
+                Navigator.of(context).pop();
+                await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SettingPage()),
+                );
+                setState(() {
+                  setData();
                 });
               },
             ), 

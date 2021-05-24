@@ -146,6 +146,10 @@ class _GoalSetPageState extends State<GoalSetPage> {
   }
 
   void submitPressed() async {
+    await Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
+
     final time = DateTime.now();
     final createdAt = Timestamp.fromDate(time);
 
@@ -153,7 +157,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
     await controller.openHttp(
       uri: Uri.parse(wantThingController.text),
     );
-
     final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
     final wantThingImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
     final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
@@ -174,9 +177,5 @@ class _GoalSetPageState extends State<GoalSetPage> {
 
     goalTextController.clear();
     wantThingController.clear();
-
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => HomePage()),
-    );
   }
 }

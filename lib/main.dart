@@ -1,17 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'views/signup.dart';
 import 'views/login.dart';
+import 'views/goalselect.dart';
 import 'configs/colors.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
   //final UserState userState = UserState();
+  final user = FirebaseAuth.instance.currentUser;
 
   // This widget is the root of your application.
   @override
@@ -23,21 +26,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'Yu Gothic',
       ),
-      home: FutureBuilder(
-        future: _fbApp,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            print('You have an error! ${snapshot.error.toString()}');
-            return Text('Something went wrong!');
-          } else if (snapshot.hasData) {
-            return StartPage();
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      )
+      home: (user == null) ? StartPage() : GoalSelectPage(),
     );
   }
 }

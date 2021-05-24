@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:my_gaman_app/main.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -139,14 +140,27 @@ class _HomePageState extends State<HomePage> {
               title: Text('　目的一覧・変更'),
               onTap: () async {
                 Navigator.of(context).pop();
-                await Navigator.of(context).push(
+                Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => GoalSelectPage()),
                 );
                 setState(() {
                   setData();
                 });
               },
-            ), 
+            ),
+            ListTile(
+              title: Text(''),
+            ),
+            ListTile(
+              title: Text('　サインアウト'),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pop();
+                await Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => StartPage()),
+                );
+              },
+            ),
           ],
         ),
       ),

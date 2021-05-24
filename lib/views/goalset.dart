@@ -47,6 +47,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColor.white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
@@ -57,27 +58,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
         backgroundColor: AppColor.white,
         shadowColor: AppColor.shadow,
       ),
-
-      drawer:Drawer(
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            Card(
-              child: ListTile(
-                leading: FlutterLogo(size: 65.0),
-                title: Text(userName),
-                subtitle: Text(userEmail),
-              )
-            ),
-            Padding(padding: EdgeInsets.all(5.0)),
-            ListTile(
-              leading: const Icon(Icons.ac_unit_sharp),
-              title: Text('testtest'),
-            ),
-          ],
-        ),
-      ),
-
       body: Center(
         child: Container(
           color: AppColor.white,
@@ -90,7 +70,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
               Text(
                 '我慢目的',
                 style: TextStyle(
-                  fontSize: 22.0,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                   color: AppColor.shadow,
                 ),
@@ -98,15 +78,15 @@ class _GoalSetPageState extends State<GoalSetPage> {
               TextField(
                 controller: goalTextController,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              SizedBox(height: 40.0),
+              SizedBox(height: 20.0),
               Text(
                 '欲しいもの',
                 style: TextStyle(
-                  fontSize: 22.0,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                   color: AppColor.shadow,
                 ),
@@ -114,11 +94,11 @@ class _GoalSetPageState extends State<GoalSetPage> {
               TextField(
                 controller: wantThingController,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              Padding(padding: EdgeInsets.all(60.0),),
+              Padding(padding: EdgeInsets.all(30.0),),
               Container(
                 alignment: Alignment.bottomRight,
                 padding: EdgeInsets.all(10.0),
@@ -138,6 +118,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                   ),
                 ),
               ),
+              Padding(padding: EdgeInsets.all(30.0)),
             ],
           ),
         ),
@@ -146,10 +127,9 @@ class _GoalSetPageState extends State<GoalSetPage> {
   }
 
   void submitPressed() async {
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => HomePage()),
-    );
-
+    setState(() {
+      _loading = true;
+    });
     final time = DateTime.now();
     final createdAt = Timestamp.fromDate(time);
 
@@ -177,5 +157,13 @@ class _GoalSetPageState extends State<GoalSetPage> {
 
     goalTextController.clear();
     wantThingController.clear();
+
+    await Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
+
+    setState(() {
+      _loading = false;
+    });
   }
 }

@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'postview.dart';
 import 'setting.dart';
+import 'goalset.dart';
 import '../configs/colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -85,6 +86,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColor.bgColor,
       drawer:Drawer(
         child: ListView(
@@ -136,7 +138,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () async {
                 Navigator.of(context).pop();
                 await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SettingPage()),
+                  MaterialPageRoute(builder: (context) => GoalSetPage()),
                 );
                 setState(() {
                   setData();
@@ -162,65 +164,68 @@ class _HomePageState extends State<HomePage> {
                     image: AssetImage('image/SliverAppBar2.png'),
                   ),
                 ),
-                padding: EdgeInsets.only(top: 14.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.all(17.0)),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          '目標金額',
-                          style: TextStyle(
-                            color: AppColor.priceColor,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w400,
+                padding: EdgeInsets.all(10.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.all(5.0)),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            '目標金額',
+                            style: TextStyle(
+                              color: AppColor.priceColor,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              formatter.format(int.parse(wantThingPrice)),
-                              style: TextStyle(
-                                color: AppColor.priceColor,
-                                fontSize: 30.0,
-                                fontWeight: FontWeight.w600,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                formatter.format(int.parse(wantThingPrice)),
+                                style: TextStyle(
+                                  color: AppColor.priceColor,
+                                  fontSize: 28.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                '円',
+                                style: TextStyle(
+                                  color: AppColor.priceColor,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w300,
+                                )
+                              ), 
+                            ],
+                          ),
+                          Padding(padding: EdgeInsets.all(12.0)),
+                        ],
+                      ),
+                      Padding(padding: EdgeInsets.all(4.0)),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Container(
+                            width: 200.0,
+                            height: 200.0,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                fit: BoxFit.contain,
+                                image: NetworkImage(wantThingImg),
                               ),
                             ),
-                            Text(
-                              '円',
-                              style: TextStyle(
-                                color: AppColor.priceColor,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w300,
-                              )
-                            ), 
-                          ],
-                        ),
-                        Padding(padding: EdgeInsets.all(12.0)),
-                      ],
-                    ),
-                    Padding(padding: EdgeInsets.all(7.0)),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Container(
-                          width: 208.0,
-                          height: 200.0,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.contain,
-                              image: NetworkImage(wantThingImg),
-                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -238,15 +243,15 @@ class _HomePageState extends State<HomePage> {
                       alignment: Alignment.center,
                       children: <Widget>[
                         Container(
-                          width: 320,
-                          height: 320,
+                          width: 310,
+                          height: 310,
                           decoration: BoxDecoration(
                             color: AppColor.white,
                             shape: BoxShape.circle,
                           ),
                         ),
                         WaveProgress(
-                          310.0, AppColor.white, AppColor.wavecolor, _currentValue
+                          300.0, AppColor.white, AppColor.wavecolor, _currentValue
                         ),
                         Container(
                           width: 220,
@@ -265,7 +270,7 @@ class _HomePageState extends State<HomePage> {
                               '現在の貯金額',
                               style: TextStyle(
                                 color: AppColor.priceColor,
-                                fontSize: 18.0,
+                                fontSize: 16.0,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -278,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                                   formatter.format(saving),
                                   style: TextStyle(
                                     color: AppColor.priceColor,
-                                    fontSize: 45.0,
+                                    fontSize: 38.0,
                                     fontWeight: FontWeight.w800,
                                   ),
                                 ),
@@ -326,7 +331,7 @@ class _HomePageState extends State<HomePage> {
                                 Text(
                                   document['date'],
                                   style: TextStyle(
-                                    fontSize: 12.0,
+                                    fontSize: 11.0,
                                     fontWeight: FontWeight.w300,
                                   )
                                 ),
@@ -340,7 +345,7 @@ class _HomePageState extends State<HomePage> {
                                   document['text'],
                                   style: TextStyle(
                                     color: AppColor.textColor,
-                                    fontSize: 18.0,
+                                    fontSize: 16.0,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -350,7 +355,7 @@ class _HomePageState extends State<HomePage> {
                               document['price'],
                               style: TextStyle(
                                 color: AppColor.priceColor,
-                                fontSize: 20.0,
+                                fontSize: 19.0,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -369,12 +374,15 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           submitGaman();
         },
-        child: Text(
-          '+',
-          style: TextStyle(
-            color: AppColor.white,
-            fontSize: 45.0,
-            fontWeight: FontWeight.w500,
+        child: Container(
+          alignment: Alignment.center,
+          child: Text(
+            '＋',
+            style: TextStyle(
+              color: AppColor.white,
+              fontSize: 40.0,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         backgroundColor: AppColor.priceColor,

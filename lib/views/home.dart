@@ -7,12 +7,14 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'postview.dart';
 import 'setting.dart';
-import 'goalset.dart';
+import 'goalselect.dart';
 import '../configs/colors.dart';
 
 class HomePage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePage(this.goalId);
+  final String goalId;
+  _HomePageState createState() => _HomePageState(goalId);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -38,6 +40,7 @@ class _HomePageState extends State<HomePage> {
   var goalId;
   var _url;
 
+  _HomePageState(this.goalId);
   QuerySnapshot gamanSnapshot;
   List<DocumentSnapshot> documents = [];
 
@@ -56,11 +59,10 @@ class _HomePageState extends State<HomePage> {
     userName = user.displayName;
     userPhoto = user.photoURL;
     userId = user.uid;
-    QuerySnapshot goalSnapshot = await cloud.collection('goals').where('userId', isEqualTo: userId).orderBy('createdAt', descending: true).limit(1).get();
-    wantThingPrice = goalSnapshot.docs[0].data()['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
-    wantThingImg = goalSnapshot.docs[0].data()['wantThingImg'];
-    _url = goalSnapshot.docs[0].data()['wantThingUrl'];
-    goalId = goalSnapshot.docs[0].id;
+    DocumentSnapshot goalSnapshot = await cloud.collection('goals').doc(goalId).get();
+    wantThingPrice = goalSnapshot['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
+    wantThingImg = goalSnapshot['wantThingImg'];
+    _url = goalSnapshot['wantThingUrl'];
 
     gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
     documents = gamanSnapshot.docs;
@@ -134,11 +136,11 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              title: Text('　目的変更'),
+              title: Text('　目的一覧・変更'),
               onTap: () async {
                 Navigator.of(context).pop();
                 await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => GoalSetPage()),
+                  MaterialPageRoute(builder: (context) => GoalSelectPage()),
                 );
                 setState(() {
                   setData();
@@ -503,6 +505,7 @@ class _HomePageState extends State<HomePage> {
     descriptionController.clear();
 
     if (saving >= int.parse(wantThingPrice)) {
+      await FirebaseFirestore.instance.collection('goals').doc(goalId).update({'achieve': true});
       showDialog(
         context: context,
         barrierDismissible: true,

@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'home.dart';
+import 'package:my_gaman_app/views/goalselect.dart';
 import 'package:universal_html/controller.dart';
 import '../configs/colors.dart';
 
@@ -132,6 +132,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
     });
     final time = DateTime.now();
     final createdAt = Timestamp.fromDate(time);
+    final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
 
     final controller = WindowController();
     await controller.openHttp(
@@ -153,17 +154,17 @@ class _GoalSetPageState extends State<GoalSetPage> {
         'wantThingImg': wantThingImg,
         'wantThingPrice': wantThingPrice,
         'createdAt' : createdAt,
+        'date': date,
+        'achieve': false,
       });
 
     goalTextController.clear();
     wantThingController.clear();
 
     await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => GoalSelectPage()),
     );
 
-    setState(() {
-      _loading = false;
-    });
+    _loading = false;
   }
 }

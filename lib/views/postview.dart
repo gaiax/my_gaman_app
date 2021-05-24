@@ -140,8 +140,8 @@ class _PostViewPageState extends State<PostViewPage> {
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                          )
-                        )
+                          ),
+                        ),
                       );
                     }).toList(),
                   );

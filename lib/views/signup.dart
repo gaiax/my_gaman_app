@@ -73,7 +73,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                     final User user = authResult.user;
 
                     final FirebaseStorage storage = FirebaseStorage.instance;
-                    var photo = storage.ref().child('slime.png').fullPath;
+                    var photo = storage.ref().child('userPhoto.png').fullPath;
                     var photoRef = storage.ref(photo);
                     userPhotoUrl = await getDownloadUrl(photoRef);
                     

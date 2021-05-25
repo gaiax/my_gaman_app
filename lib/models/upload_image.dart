@@ -22,8 +22,8 @@ class UploadImage {
     return pickedFile.path;
   }
 
-  static Future<void> uploadFile(imagePath, userEmail) async {
+  static Future<void> uploadFile(imagePath, userId) async {
     File file = File(imagePath);
-    await storage.ref('userImages/'+userEmail+'.png').putFile(file);
+    await storage.ref('user/'+userId+'/'+userId).putFile(file);
   }
 }

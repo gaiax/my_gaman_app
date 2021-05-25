@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'package:my_gaman_app/views/goalselect.dart';
 import '../configs/colors.dart';
 
 class MyLoginPage extends StatefulWidget {
@@ -61,7 +61,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
                     // 登録後Home画面に遷移
                     await Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => HomePage()),
+                      MaterialPageRoute(builder: (context) => GoalSelectPage()),
                     );
                   } catch (e) {
                     // 登録に失敗した場合

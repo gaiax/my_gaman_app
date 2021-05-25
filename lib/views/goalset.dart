@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'home.dart';
+import 'package:my_gaman_app/views/goalselect.dart';
 import 'package:universal_html/controller.dart';
 import '../configs/colors.dart';
 
@@ -17,6 +17,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
   TextEditingController wantThingController = TextEditingController();
 
   var user = FirebaseAuth.instance.currentUser;
+  var userId;
   var userEmail;
   var userName;
   var userPhoto;
@@ -27,6 +28,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
   void initState() {
     super.initState();
     if (user != null) {
+      userId = user.uid;
       userEmail = user.email;
       userName = user.displayName;
       userPhoto = user.photoURL;
@@ -45,6 +47,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColor.white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
@@ -55,27 +58,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
         backgroundColor: AppColor.white,
         shadowColor: AppColor.shadow,
       ),
-
-      drawer:Drawer(
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            Card(
-              child: ListTile(
-                leading: FlutterLogo(size: 65.0),
-                title: Text(userName),
-                subtitle: Text(userEmail),
-              )
-            ),
-            Padding(padding: EdgeInsets.all(5.0)),
-            ListTile(
-              leading: const Icon(Icons.ac_unit_sharp),
-              title: Text('testtest'),
-            ),
-          ],
-        ),
-      ),
-
       body: Center(
         child: Container(
           color: AppColor.white,
@@ -88,7 +70,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
               Text(
                 '我慢目的',
                 style: TextStyle(
-                  fontSize: 22.0,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                   color: AppColor.shadow,
                 ),
@@ -96,15 +78,15 @@ class _GoalSetPageState extends State<GoalSetPage> {
               TextField(
                 controller: goalTextController,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              SizedBox(height: 40.0),
+              SizedBox(height: 20.0),
               Text(
                 '欲しいもの',
                 style: TextStyle(
-                  fontSize: 22.0,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                   color: AppColor.shadow,
                 ),
@@ -112,11 +94,11 @@ class _GoalSetPageState extends State<GoalSetPage> {
               TextField(
                 controller: wantThingController,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              Padding(padding: EdgeInsets.all(60.0),),
+              Padding(padding: EdgeInsets.all(30.0),),
               Container(
                 alignment: Alignment.bottomRight,
                 padding: EdgeInsets.all(10.0),
@@ -136,6 +118,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                   ),
                 ),
               ),
+              Padding(padding: EdgeInsets.all(30.0)),
             ],
           ),
         ),
@@ -144,13 +127,17 @@ class _GoalSetPageState extends State<GoalSetPage> {
   }
 
   void submitPressed() async {
-    final createdAt = DateFormat.yMMMMEEEEd().add_jms().format(DateTime.now());
+    setState(() {
+      _loading = true;
+    });
+    final time = DateTime.now();
+    final createdAt = Timestamp.fromDate(time);
+    final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
 
     final controller = WindowController();
     await controller.openHttp(
       uri: Uri.parse(wantThingController.text),
     );
-
     final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
     final wantThingImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
     final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
@@ -159,20 +146,25 @@ class _GoalSetPageState extends State<GoalSetPage> {
       .collection('goals')
       .doc()
       .set({
-        'userEmail': userEmail,
+        'userId': userId,
         'userName': userName,
         'userPhotoUrl': userPhoto,
         'goalText': goalTextController.text,
+        'wantThingUrl': wantThingController.text,
         'wantThingImg': wantThingImg,
         'wantThingPrice': wantThingPrice,
         'createdAt' : createdAt,
+        'date': date,
+        'achieve': false,
       });
 
     goalTextController.clear();
     wantThingController.clear();
 
     await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => GoalSelectPage()),
     );
+
+    _loading = false;
   }
 }

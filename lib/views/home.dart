@@ -1,16 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:my_gaman_app/main.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'postview.dart';
 import 'setting.dart';
+import 'goalselect.dart';
 import '../configs/colors.dart';
 
 class HomePage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePage(this.goalId);
+  final String goalId;
+  _HomePageState createState() => _HomePageState(goalId);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -28,12 +33,15 @@ class _HomePageState extends State<HomePage> {
   var user = FirebaseAuth.instance.currentUser;
   var cloud = FirebaseFirestore.instance;
   var userEmail;
+  var userId;
   var userName;
   var userPhoto;
   var wantThingPrice;
   var wantThingImg;
   var goalId;
+  var _url;
 
+  _HomePageState(this.goalId);
   QuerySnapshot gamanSnapshot;
   List<DocumentSnapshot> documents = [];
 
@@ -51,12 +59,13 @@ class _HomePageState extends State<HomePage> {
     userEmail = user.email;
     userName = user.displayName;
     userPhoto = user.photoURL;
-    QuerySnapshot goalSnapshot = await cloud.collection('goals').limit(1).where('userEmail', isEqualTo: userEmail).get();
-    wantThingPrice = goalSnapshot.docs[0].data()['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
-    wantThingImg = goalSnapshot.docs[0].data()['wantThingImg'];
-    goalId = goalSnapshot.docs[0].id;
+    userId = user.uid;
+    DocumentSnapshot goalSnapshot = await cloud.collection('goals').doc(goalId).get();
+    wantThingPrice = goalSnapshot['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
+    wantThingImg = goalSnapshot['wantThingImg'];
+    _url = goalSnapshot['wantThingUrl'];
 
-    gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).get();
+    gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
     documents = gamanSnapshot.docs;
     documents.forEach((document) {
       saving = saving + int.parse(document['price']);
@@ -80,8 +89,8 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColor.bgColor,
-
       drawer:Drawer(
         child: ListView(
           shrinkWrap: true,
@@ -126,7 +135,32 @@ class _HomePageState extends State<HomePage> {
                   userPhoto = user.photoURL;
                 });
               },
-            ), 
+            ),
+            ListTile(
+              title: Text('　目的一覧・変更'),
+              onTap: () async {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => GoalSelectPage()),
+                );
+                setState(() {
+                  setData();
+                });
+              },
+            ),
+            ListTile(
+              title: Text(''),
+            ),
+            ListTile(
+              title: Text('　サインアウト'),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pop();
+                await Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => StartPage()),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -146,65 +180,68 @@ class _HomePageState extends State<HomePage> {
                     image: AssetImage('image/SliverAppBar2.png'),
                   ),
                 ),
-                padding: EdgeInsets.only(top: 14.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.all(17.0)),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          '目標金額',
-                          style: TextStyle(
-                            color: AppColor.priceColor,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w400,
+                padding: EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.all(7.0)),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            '目標金額',
+                            style: TextStyle(
+                              color: AppColor.priceColor,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              formatter.format(int.parse(wantThingPrice)),
-                              style: TextStyle(
-                                color: AppColor.priceColor,
-                                fontSize: 30.0,
-                                fontWeight: FontWeight.w600,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                formatter.format(int.parse(wantThingPrice)),
+                                style: TextStyle(
+                                  color: AppColor.priceColor,
+                                  fontSize: 28.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                '円',
+                                style: TextStyle(
+                                  color: AppColor.priceColor,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w300,
+                                )
+                              ), 
+                            ],
+                          ),
+                          Padding(padding: EdgeInsets.all(12.0)),
+                        ],
+                      ),
+                      Padding(padding: EdgeInsets.all(4.0)),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Container(
+                            width: 200.0,
+                            height: 200.0,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                fit: BoxFit.contain,
+                                image: NetworkImage(wantThingImg),
                               ),
                             ),
-                            Text(
-                              '円',
-                              style: TextStyle(
-                                color: AppColor.priceColor,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w300,
-                              )
-                            ), 
-                          ],
-                        ),
-                        Padding(padding: EdgeInsets.all(12.0)),
-                      ],
-                    ),
-                    Padding(padding: EdgeInsets.all(7.0)),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Container(
-                          width: 208.0,
-                          height: 200.0,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.contain,
-                              image: NetworkImage(wantThingImg),
-                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -222,15 +259,15 @@ class _HomePageState extends State<HomePage> {
                       alignment: Alignment.center,
                       children: <Widget>[
                         Container(
-                          width: 320,
-                          height: 320,
+                          width: 310,
+                          height: 310,
                           decoration: BoxDecoration(
                             color: AppColor.white,
                             shape: BoxShape.circle,
                           ),
                         ),
                         WaveProgress(
-                          310.0, AppColor.white, AppColor.wavecolor, _currentValue
+                          300.0, AppColor.white, AppColor.wavecolor, _currentValue
                         ),
                         Container(
                           width: 220,
@@ -249,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                               '現在の貯金額',
                               style: TextStyle(
                                 color: AppColor.priceColor,
-                                fontSize: 18.0,
+                                fontSize: 16.0,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -262,7 +299,7 @@ class _HomePageState extends State<HomePage> {
                                   formatter.format(saving),
                                   style: TextStyle(
                                     color: AppColor.priceColor,
-                                    fontSize: 45.0,
+                                    fontSize: 38.0,
                                     fontWeight: FontWeight.w800,
                                   ),
                                 ),
@@ -308,9 +345,9 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  document['createdAt'],
+                                  document['date'],
                                   style: TextStyle(
-                                    fontSize: 12.0,
+                                    fontSize: 11.0,
                                     fontWeight: FontWeight.w300,
                                   )
                                 ),
@@ -324,7 +361,7 @@ class _HomePageState extends State<HomePage> {
                                   document['text'],
                                   style: TextStyle(
                                     color: AppColor.textColor,
-                                    fontSize: 18.0,
+                                    fontSize: 16.0,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -334,7 +371,7 @@ class _HomePageState extends State<HomePage> {
                               document['price'],
                               style: TextStyle(
                                 color: AppColor.priceColor,
-                                fontSize: 20.0,
+                                fontSize: 19.0,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -348,16 +385,20 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           submitGaman();
         },
-        child: Text(
-          '+',
-          style: TextStyle(
-            color: AppColor.white,
-            fontSize: 45.0,
-            fontWeight: FontWeight.w500,
+        child: Container(
+          alignment: Alignment.center,
+          child: Text(
+            '＋',
+            style: TextStyle(
+              color: AppColor.white,
+              fontSize: 40.0,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         backgroundColor: AppColor.priceColor,
@@ -440,34 +481,102 @@ class _HomePageState extends State<HomePage> {
   void submitPressed() async {
     Navigator.pop(context);
 
-    final createdAt = DateFormat.yMMMMEEEEd().add_jms().format(DateTime.now());
+    final time = DateTime.now();
+    final createdAt = Timestamp.fromDate(time);
+    final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
     gamanPrice = priceController.text;
 
     await FirebaseFirestore.instance
       .collection('gamans')
       .doc()
       .set({
-        'userEmail': userEmail,
+        'userId': userId,
         'userName': userName,
         'userPhotoUrl': userPhoto,
         'price': gamanPrice,
         'text': descriptionController.text,
         'createdAt': createdAt,
+        'date': date,
         'goalId': goalId, 
       });
-
-    gamanSnapshot = await FirebaseFirestore.instance.collection('gamans').where('goalId', isEqualTo: goalId).get();
+    print(userId);
+    gamanSnapshot = await FirebaseFirestore.instance.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
     documents = gamanSnapshot.docs;
 
     setState(() {
       saving = saving + int.parse(gamanPrice);
       if (saving >= int.parse(wantThingPrice)) {
         saving = int.parse(wantThingPrice);
-      }
+      } 
       _currentValue = (saving / int.parse(wantThingPrice)) * 100;
     });
     
     priceController.clear();
     descriptionController.clear();
+
+    if (saving >= int.parse(wantThingPrice)) {
+      await FirebaseFirestore.instance.collection('goals').doc(goalId).update({'achieve': true});
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('目標達成！'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Image.network(wantThingImg),
+                  Text('おめでとうございます！実質貯金が貯まりました。'),
+                  Text('商品ページへ遷移しますか？'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: _launchURL,
+              ),
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void _launchURL() async {
+    await canLaunch(_url) ? await launch(_url) : errorDialog();
+  }
+
+  void errorDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('エラーが起こりました。'),
+          content: Text('欲しいモノのURLが見つかりません。直接アクセスしてください。'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

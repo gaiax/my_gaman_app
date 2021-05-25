@@ -406,10 +406,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _launchURL() async {
-    await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
-  }
-
   void submitGaman() {
     showModalBottomSheet(
       context: context,
@@ -551,5 +547,36 @@ class _HomePageState extends State<HomePage> {
         },
       );
     }
+  }
+
+  void _launchURL() async {
+    await canLaunch(_url) ? await launch(_url) : errorDialog();
+  }
+
+  void errorDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('エラーが起こりました。'),
+          content: Text('欲しいモノのURLが見つかりません。直接アクセスしてください。'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

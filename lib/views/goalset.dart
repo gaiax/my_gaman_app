@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:my_gaman_app/views/goalselect.dart';
 import 'package:universal_html/controller.dart';
+import '../models/upload_image.dart';
 import '../configs/colors.dart';
 
 class GoalSetPage extends StatefulWidget {
@@ -139,8 +140,10 @@ class _GoalSetPageState extends State<GoalSetPage> {
       uri: Uri.parse(wantThingController.text),
     );
     final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
-    final wantThingImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
+    final wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
     final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
+    
+    final wantThingImg = UploadImage.uploadAmazonImg(wantThingAmazonImg, userId, date);
 
     await FirebaseFirestore.instance
       .collection('goals')

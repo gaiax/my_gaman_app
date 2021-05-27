@@ -22,8 +22,17 @@ class UploadImage {
     return pickedFile.path;
   }
 
-  static Future<void> uploadFile(imagePath, userId) async {
+  static Future<String> uploadFile(imagePath, userId) async {
     File file = File(imagePath);
     await storage.ref('user/'+userId+'/'+userId).putFile(file);
+
+    return await storage.ref('user/'+userId+'/'+userId).getDownloadURL();
+  }
+
+  static Future<String> uploadAmazonImg(imagePath, userId, date) async {
+    File file = File(imagePath);
+    await storage.ref('user/'+userId+'/'+date).putFile(file);
+
+    return await storage.ref('user/'+userId+'/'+date).getDownloadURL();
   }
 }

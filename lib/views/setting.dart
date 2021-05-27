@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../configs/colors.dart';
 import '../models/upload_image.dart';
 
@@ -11,7 +10,6 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
 
-  firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance; 
   TextEditingController userNameController;
 
   var user = FirebaseAuth.instance.currentUser;
@@ -146,8 +144,7 @@ class _SettingPageState extends State<SettingPage> {
   void uploadImage() async {
     var image = await UploadImage.getImage(true);
     _loading = true;
-    await UploadImage.uploadFile(image, userId);
-    userPhoto = await storage.ref('user/'+userId+'/'+userId).getDownloadURL();
+    userPhoto = await UploadImage.uploadFile(image, userId);
     setState(() {
       _loading = false;
     });

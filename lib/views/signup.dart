@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'goalset.dart';
 import '../configs/colors.dart';
@@ -72,6 +73,9 @@ class _MyAuthPageState extends State<MyAuthPage> {
 
                     final User user = authResult.user;
 
+                    final time = DateTime.now();
+                    final createdAt = Timestamp.fromDate(time);
+
                     final FirebaseStorage storage = FirebaseStorage.instance;
                     var photo = storage.ref().child('userPhoto.png').fullPath;
                     var photoRef = storage.ref(photo);
@@ -79,6 +83,16 @@ class _MyAuthPageState extends State<MyAuthPage> {
                     
                     await user.updateProfile(displayName: userName, photoURL: userPhotoUrl);
                     await user.reload();
+
+                    await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(user.uid)
+                      .set({
+                        'userId': user.uid,
+                        'userName': userName,
+                        'userPhotoUrl': userPhotoUrl,
+                        'createdAt' : createdAt,
+                      });
 
                     // 登録後Home画面に遷移
                     await Navigator.of(context).pushReplacement(

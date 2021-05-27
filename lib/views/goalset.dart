@@ -143,7 +143,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
     final wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
     final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
     
-    final wantThingImg = UploadImage.uploadAmazonImg(wantThingAmazonImg, userId, date);
+    final wantThingImg = await UploadImage.uploadAmazonImg(wantThingAmazonImg, userId, date);
 
     await FirebaseFirestore.instance
       .collection('goals')

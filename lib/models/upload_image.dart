@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:http/http.dart' as http;
 
 class UploadImage {
   static PickedFile pickedFile;
@@ -30,8 +31,9 @@ class UploadImage {
   }
 
   static Future<String> uploadAmazonImg(imagePath, userId, date) async {
-    File file = File(imagePath);
-    await storage.ref('user/'+userId+'/'+date).putFile(file);
+    final response = await http.get(Uri.parse(imagePath));
+    print(response);
+    await storage.ref('user/'+userId+'/'+date).putData(response.bodyBytes);
 
     return await storage.ref('user/'+userId+'/'+date).getDownloadURL();
   }

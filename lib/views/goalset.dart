@@ -19,9 +19,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
 
   var user = FirebaseAuth.instance.currentUser;
   var userId;
-  var userEmail;
-  var userName;
-  var userPhoto;
 
   bool _loading = true;
 
@@ -30,9 +27,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
     super.initState();
     if (user != null) {
       userId = user.uid;
-      userEmail = user.email;
-      userName = user.displayName;
-      userPhoto = user.photoURL;
     }
     setState(() {
       _loading = false;
@@ -88,6 +82,14 @@ class _GoalSetPageState extends State<GoalSetPage> {
                 '欲しいもの',
                 style: TextStyle(
                   fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.shadow,
+                ),
+              ),
+              Text(
+                '※ Amazon商品リンクを貼り付けてください.（セール商品は対象外です.）',
+                style: TextStyle(
+                  fontSize: 10.0,
                   fontWeight: FontWeight.w500,
                   color: AppColor.shadow,
                 ),
@@ -150,8 +152,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
       .doc()
       .set({
         'userId': userId,
-        'userName': userName,
-        'userPhotoUrl': userPhoto,
         'goalText': goalTextController.text,
         'wantThingUrl': wantThingController.text,
         'wantThingImg': wantThingImg,

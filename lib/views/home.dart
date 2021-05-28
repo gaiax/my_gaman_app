@@ -491,16 +491,13 @@ class _HomePageState extends State<HomePage> {
       .doc()
       .set({
         'userId': userId,
-        'userName': userName,
-        'userPhotoUrl': userPhoto,
         'price': gamanPrice,
         'text': descriptionController.text,
         'createdAt': createdAt,
         'date': date,
         'goalId': goalId, 
       });
-    print(userId);
-    gamanSnapshot = await FirebaseFirestore.instance.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
+    gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
     documents = gamanSnapshot.docs;
 
     setState(() {

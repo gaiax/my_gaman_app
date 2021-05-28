@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'goalset.dart';
+import 'mailcheck.dart';
 import '../configs/colors.dart';
 
 class MyAuthPage extends StatefulWidget {
@@ -71,6 +71,8 @@ class _MyAuthPageState extends State<MyAuthPage> {
                       email: newUserEmail, password: newUserPassword,
                     );
 
+                    await auth.currentUser.sendEmailVerification();
+
                     final User user = authResult.user;
 
                     final time = DateTime.now();
@@ -93,10 +95,11 @@ class _MyAuthPageState extends State<MyAuthPage> {
                         'userPhotoUrl': userPhotoUrl,
                         'createdAt' : createdAt,
                       });
+                    
 
                     // 登録後Home画面に遷移
                     await Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => GoalSetPage()),
+                      MaterialPageRoute(builder: (context) => Emailcheck(email: newUserEmail, pswd: newUserPassword,)),
                     );
                   } catch (e) {
                     // 登録に失敗した場合

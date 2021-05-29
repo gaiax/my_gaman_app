@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:my_gaman_app/views/goalselect.dart';
-import 'package:universal_html/controller.dart';
-import 'goalset_manual.dart';
 import '../models/upload_image.dart';
 import '../configs/colors.dart';
 
-class GoalSetPage extends StatefulWidget {
+class GoalSetManualPage extends StatefulWidget {
   @override
-  _GoalSetPageState createState() => _GoalSetPageState();
+  _GoalSetManualPageState createState() => _GoalSetManualPageState();
 }
 
-class _GoalSetPageState extends State<GoalSetPage> {
+class _GoalSetManualPageState extends State<GoalSetManualPage> {
 
   TextEditingController goalTextController = TextEditingController();
   TextEditingController wantThingController = TextEditingController();
 
   var user = FirebaseAuth.instance.currentUser;
   var userId;
+
+  var wantThingImg;
 
   bool _loading = true;
 
@@ -80,26 +80,63 @@ class _GoalSetPageState extends State<GoalSetPage> {
               ),
               SizedBox(height: 20.0),
               Text(
-                '欲しいもの',
+                '欲しいものの値段',
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                   color: AppColor.shadow,
                 ),
               ),
-              Text(
-                '※ Amazon商品リンクを貼り付けてください.（セール商品は対象外です.）',
-                style: TextStyle(
-                  fontSize: 10.0,
-                  fontWeight: FontWeight.w500,
-                  color: AppColor.shadow,
-                ),
-              ),
               TextField(
+                keyboardType: TextInputType.number,
                 controller: wantThingController,
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w400,
+                ),
+              ),
+              SizedBox(height: 20.0),
+              Text(
+                '欲しいものの画像',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.shadow,
+                ),
+              ),
+              GestureDetector(
+                onTap: uploadImage,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    (wantThingImg != null) ? Container(
+                      height: 200.0,
+                      width: 200.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        image: DecorationImage(
+                          image: NetworkImage(wantThingImg),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ) : null,
+                    Container(
+                      width: 200.0,
+                      height: 200.0,
+                      decoration: BoxDecoration(
+                        color: AppColor.curtain,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    Text(
+                      '+',
+                      style: TextStyle(
+                        color: AppColor.textColor,
+                        fontSize: 40.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Padding(padding: EdgeInsets.all(30.0),),
@@ -122,34 +159,23 @@ class _GoalSetPageState extends State<GoalSetPage> {
                   ),
                 ),
               ),
-              Padding(padding: EdgeInsets.all(20.0)),
-              ButtonTheme(
-                minWidth: 200.0,  
-                // height: 100.0,
-                child: RaisedButton(
-                  // ボタンの形状
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  onPressed: () async {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => GoalSetManualPage()),
-                    );
-                  },
-                  // ボタン内の文字や書式
-                  child: Text(
-                    '手動で登録する',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  textColor: AppColor.white,
-                  color: AppColor.shadow,
-                ),
-              ),
+              Padding(padding: EdgeInsets.all(30.0)),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void uploadImage() async {
+    setState(() {
+      _loading = true;
+    });
+    var image = await UploadImage.getImage(true);
+    wantThingImg = await UploadImage.uploadFile(image, userId);
+    setState(() {
+      _loading = false;
+    });
   }
 
   void submitPressed() async {
@@ -160,25 +186,15 @@ class _GoalSetPageState extends State<GoalSetPage> {
     final createdAt = Timestamp.fromDate(time);
     final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
 
-    final controller = WindowController();
-    await controller.openHttp(
-      uri: Uri.parse(wantThingController.text),
-    );
-    final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
-    final wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
-    final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
-    
-    final wantThingImg = await UploadImage.uploadAmazonImg(wantThingAmazonImg, userId, date);
-
     await FirebaseFirestore.instance
       .collection('goals')
       .doc()
       .set({
         'userId': userId,
         'goalText': goalTextController.text,
-        'wantThingUrl': wantThingController.text,
+        'wantThingUrl': null,
         'wantThingImg': wantThingImg,
-        'wantThingPrice': wantThingPrice,
+        'wantThingPrice': wantThingController.text,
         'createdAt' : createdAt,
         'date': date,
         'achieve': false,

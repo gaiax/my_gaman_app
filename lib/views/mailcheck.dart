@@ -53,16 +53,13 @@ class _Emailcheck extends State<Emailcheck> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-
                   onPressed: () async {
                     final UserCredential authResult = await auth.signInWithEmailAndPassword(
                       email: widget.email,
                       password: widget.pswd,
                     );
-
                     await authResult.user.sendEmailVerification();
                   },
-
                   // ボタン内の文字や書式
                   child: Text(
                     '確認メールを再送信',

@@ -66,7 +66,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   } catch (e) {
                     // 登録に失敗した場合
                     setState(() {
-                      infoText = "登録NG：{e.message}";
+                      infoText = "認証NG：{e.message}";
                     });
                   }
                 },

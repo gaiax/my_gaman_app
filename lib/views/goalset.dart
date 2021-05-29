@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:my_gaman_app/views/goalselect.dart';
 import 'package:universal_html/controller.dart';
+import '../models/upload_image.dart';
 import '../configs/colors.dart';
 
 class GoalSetPage extends StatefulWidget {
@@ -18,9 +19,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
 
   var user = FirebaseAuth.instance.currentUser;
   var userId;
-  var userEmail;
-  var userName;
-  var userPhoto;
 
   bool _loading = true;
 
@@ -29,9 +27,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
     super.initState();
     if (user != null) {
       userId = user.uid;
-      userEmail = user.email;
-      userName = user.displayName;
-      userPhoto = user.photoURL;
     }
     setState(() {
       _loading = false;
@@ -91,6 +86,14 @@ class _GoalSetPageState extends State<GoalSetPage> {
                   color: AppColor.shadow,
                 ),
               ),
+              Text(
+                '※ Amazon商品リンクを貼り付けてください.（セール商品は対象外です.）',
+                style: TextStyle(
+                  fontSize: 10.0,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.shadow,
+                ),
+              ),
               TextField(
                 controller: wantThingController,
                 style: TextStyle(
@@ -139,16 +142,16 @@ class _GoalSetPageState extends State<GoalSetPage> {
       uri: Uri.parse(wantThingController.text),
     );
     final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
-    final wantThingImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
+    final wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
     final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
+    
+    final wantThingImg = await UploadImage.uploadAmazonImg(wantThingAmazonImg, userId, date);
 
     await FirebaseFirestore.instance
       .collection('goals')
       .doc()
       .set({
         'userId': userId,
-        'userName': userName,
-        'userPhotoUrl': userPhoto,
         'goalText': goalTextController.text,
         'wantThingUrl': wantThingController.text,
         'wantThingImg': wantThingImg,

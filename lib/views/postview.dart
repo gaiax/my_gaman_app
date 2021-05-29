@@ -11,8 +11,9 @@ class PostViewPage extends StatefulWidget {
 
 class _PostViewPageState extends State<PostViewPage> {
 
-  firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance; 
+  firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
 
+  var cloud = FirebaseFirestore.instance;
   var user = FirebaseAuth.instance.currentUser;
   var userName;
   var userPhoto;
@@ -67,7 +68,7 @@ class _PostViewPageState extends State<PostViewPage> {
           children: <Widget>[
             Expanded(
               child: FutureBuilder<QuerySnapshot>(
-                future: FirebaseFirestore.instance
+                future: cloud
                   .collection('gamans')
                   .orderBy('createdAt', descending: true)
                   .get(),
@@ -87,59 +88,73 @@ class _PostViewPageState extends State<PostViewPage> {
                         elevation: 2.0,
                         child: Padding(
                           padding: EdgeInsets.all(7.0),
-                          child: ListTile(
-                            leading: Container(
-                              height: 55.0,
-                              width: 55.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                image: DecorationImage(
-                                  image: NetworkImage(document['userPhotoUrl']),
-                                  fit: BoxFit.cover,
+                          child: FutureBuilder<DocumentSnapshot>(
+                            future: cloud
+                              .collection('users')
+                              .doc(document['userId'])
+                              .get(),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: CircularProgressIndicator()
+                                );
+                              }
+                              final DocumentSnapshot userData = snapshot.data;
+                              return ListTile(
+                                leading: Container(
+                                  height: 55.0,
+                                  width: 55.0,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    image: DecorationImage(
+                                      image: NetworkImage(userData['userPhotoUrl']),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  document['userName'],
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      userData['userName'],
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    Text(
+                                      document['date'],
+                                      style: TextStyle(
+                                        fontSize: 9.0,
+                                        fontWeight: FontWeight.w300,
+                                      )
+                                    ),
+                                  ],
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(padding: EdgeInsets.all(3.0)),
+                                    Text(
+                                      document['text'],
+                                      style: TextStyle(
+                                        color: AppColor.textColor,
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                trailing: Text(
+                                  document['price'],
                                   style: TextStyle(
-                                    fontSize: 16.0,
+                                    color: AppColor.priceColor,
+                                    fontSize: 20.0,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                                Text(
-                                  document['date'],
-                                  style: TextStyle(
-                                    fontSize: 9.0,
-                                    fontWeight: FontWeight.w300,
-                                  )
-                                ),
-                              ],
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(padding: EdgeInsets.all(3.0)),
-                                Text(
-                                  document['text'],
-                                  style: TextStyle(
-                                    color: AppColor.textColor,
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            trailing: Text(
-                              document['price'],
-                              style: TextStyle(
-                                color: AppColor.priceColor,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
+                              );
+                            },
                           ),
                         ),
                       );

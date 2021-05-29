@@ -37,4 +37,11 @@ class UploadImage {
 
     return await storage.ref('user/'+userId+'/'+date).getDownloadURL();
   }
+
+  static Future<String> uploadWantImg(imagePath, userId, date) async {
+    File file = File(imagePath);
+    await storage.ref('user/'+userId+'/'+date).putFile(file);
+
+    return await storage.ref('user/'+userId+'/'+date).getDownloadURL();
+  }
 }

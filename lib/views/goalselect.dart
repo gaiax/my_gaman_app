@@ -100,7 +100,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
               },
             ),
             ListTile(
-              title: Text('　プロフィール設定'),
+              title: Text('　アカウント設定'),
               onTap: () async {
                 Navigator.of(context).pop();
                 await Navigator.of(context).push(

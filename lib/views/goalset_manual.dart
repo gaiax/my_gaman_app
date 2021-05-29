@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -106,32 +107,31 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
               ),
               GestureDetector(
                 onTap: uploadImage,
-                child: Stack(
+                child: (wantThingImg != null) ? Container(
+                  height: 200.0,
+                  width: 150.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    image: DecorationImage(
+                      image: FileImage(File(wantThingImg)),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ) : Stack(
                   alignment: Alignment.center,
                   children: <Widget>[
-                    (wantThingImg != null) ? Container(
-                      height: 200.0,
-                      width: 200.0,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        image: DecorationImage(
-                          image: NetworkImage(wantThingImg),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ) : null,
                     Container(
                       width: 200.0,
-                      height: 200.0,
+                      height: 150.0,
                       decoration: BoxDecoration(
-                        color: AppColor.curtain,
+                        color: AppColor.shadow,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                     Text(
                       '+',
                       style: TextStyle(
-                        color: AppColor.textColor,
+                        color: AppColor.white,
                         fontSize: 40.0,
                         fontWeight: FontWeight.w500,
                       ),
@@ -139,7 +139,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                   ],
                 ),
               ),
-              Padding(padding: EdgeInsets.all(30.0),),
+              Padding(padding: EdgeInsets.all(20.0),),
               Container(
                 alignment: Alignment.bottomRight,
                 padding: EdgeInsets.all(10.0),
@@ -171,8 +171,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
     setState(() {
       _loading = true;
     });
-    var image = await UploadImage.getImage(true);
-    wantThingImg = await UploadImage.uploadFile(image, userId);
+    wantThingImg = await UploadImage.getImage(true);
     setState(() {
       _loading = false;
     });
@@ -186,6 +185,8 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
     final createdAt = Timestamp.fromDate(time);
     final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
 
+    final wantThingImgUrl = await UploadImage.uploadWantImg(wantThingImg, userId, date);
+
     await FirebaseFirestore.instance
       .collection('goals')
       .doc()
@@ -193,7 +194,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
         'userId': userId,
         'goalText': goalTextController.text,
         'wantThingUrl': null,
-        'wantThingImg': wantThingImg,
+        'wantThingImg': wantThingImgUrl,
         'wantThingPrice': wantThingController.text,
         'createdAt' : createdAt,
         'date': date,

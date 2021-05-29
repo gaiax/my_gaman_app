@@ -122,24 +122,24 @@ class _GoalSetPageState extends State<GoalSetPage> {
                   ),
                 ),
               ),
-              Padding(padding: EdgeInsets.all(20.0)),
+              Padding(padding: EdgeInsets.all(30.0)),
               ButtonTheme(
                 minWidth: 200.0,  
                 // height: 100.0,
                 child: RaisedButton(
-                  // ボタンの形状
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   onPressed: () async {
-                    Navigator.of(context).pushReplacement(
+                    Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => GoalSetManualPage()),
                     );
                   },
-                  // ボタン内の文字や書式
                   child: Text(
                     '手動で登録する',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold
+                    ),
                   ),
                   textColor: AppColor.white,
                   color: AppColor.shadow,
@@ -160,29 +160,59 @@ class _GoalSetPageState extends State<GoalSetPage> {
     final createdAt = Timestamp.fromDate(time);
     final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
 
-    final controller = WindowController();
-    await controller.openHttp(
-      uri: Uri.parse(wantThingController.text),
-    );
-    final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
-    final wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
-    final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
-    
-    final wantThingImg = await UploadImage.uploadAmazonImg(wantThingAmazonImg, userId, date);
+    try {
+      final controller = WindowController();
+      await controller.openHttp(
+        uri: Uri.parse(wantThingController.text),
+      );
+      final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
+      final wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
+      final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
+      
+      final wantThingImg = await UploadImage.uploadAmazonImg(wantThingAmazonImg, userId, date);
 
-    await FirebaseFirestore.instance
-      .collection('goals')
-      .doc()
-      .set({
-        'userId': userId,
-        'goalText': goalTextController.text,
-        'wantThingUrl': wantThingController.text,
-        'wantThingImg': wantThingImg,
-        'wantThingPrice': wantThingPrice,
-        'createdAt' : createdAt,
-        'date': date,
-        'achieve': false,
-      });
+      await FirebaseFirestore.instance
+        .collection('goals')
+        .doc()
+        .set({
+          'userId': userId,
+          'goalText': goalTextController.text,
+          'wantThingUrl': wantThingController.text,
+          'wantThingImg': wantThingImg,
+          'wantThingPrice': wantThingPrice,
+          'createdAt' : createdAt,
+          'date': date,
+          'achieve': false,
+        });
+    } catch(e) {
+      return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('エラー'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('欲しいモノ情報が取得できませんでした。'),
+                  Text('手動で登録してください。'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => GoalSetManualPage()),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
     goalTextController.clear();
     wantThingController.clear();

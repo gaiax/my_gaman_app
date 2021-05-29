@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              title: Text('　プロフィール設定'),
+              title: Text('　アカウント設定'),
               onTap: () async {
                 Navigator.of(context).pop();
                 await Navigator.of(context).push(
@@ -224,7 +224,7 @@ class _HomePageState extends State<HomePage> {
                           Padding(padding: EdgeInsets.all(12.0)),
                         ],
                       ),
-                      Padding(padding: EdgeInsets.all(4.0)),
+                      Padding(padding: EdgeInsets.all(10.0)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[

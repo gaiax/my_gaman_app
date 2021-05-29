@@ -203,6 +203,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
               TextButton(
                 child: const Text('OK'),
                 onPressed: () {
+                  Navigator.of(context).pop();
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => GoalSetManualPage()),
                   );

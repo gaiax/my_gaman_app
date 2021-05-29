@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
               title: Text('　目的一覧・変更'),
               onTap: () async {
                 Navigator.of(context).pop();
-                Navigator.of(context).push(
+                Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => GoalSelectPage()),
                 );
                 setState(() {
@@ -180,12 +180,12 @@ class _HomePageState extends State<HomePage> {
                     image: AssetImage('image/SliverAppBar2.png'),
                   ),
                 ),
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(3.0),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: <Widget>[
-                      Padding(padding: EdgeInsets.all(7.0)),
+                      Padding(padding: EdgeInsets.all(14.0)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,7 +224,7 @@ class _HomePageState extends State<HomePage> {
                           Padding(padding: EdgeInsets.all(12.0)),
                         ],
                       ),
-                      Padding(padding: EdgeInsets.all(12.0)),
+                      Padding(padding: EdgeInsets.all(16.0)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[

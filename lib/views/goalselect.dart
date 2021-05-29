@@ -159,8 +159,9 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                         elevation: 2.0,
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).pushReplacement(
+                            Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (context) => HomePage(document.id)),
+                              (_) => false,
                             );
                           },
                           child: Padding(

@@ -24,7 +24,6 @@ class _Emailcheck extends State<Emailcheck> {
   Widget build(BuildContext context) {
 
     _sentEmailText = '${widget.email}\nに確認メールを送信しました。';
-    _nocheckText = '';
 
     return Scaffold(
       // メイン画面
@@ -34,7 +33,8 @@ class _Emailcheck extends State<Emailcheck> {
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 20.0),
-              child: Text(_nocheckText,
+              child: Text(
+                _nocheckText,
                 style: TextStyle(color: Colors.red),
               ),
             ),
@@ -64,8 +64,10 @@ class _Emailcheck extends State<Emailcheck> {
                   },
 
                   // ボタン内の文字や書式
-                  child: Text('確認メールを再送信',
-                    style: TextStyle(fontWeight: FontWeight.bold),),
+                  child: Text(
+                    '確認メールを再送信',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   textColor: AppColor.white,
                   color: AppColor.shadow,
                 ),
@@ -88,7 +90,7 @@ class _Emailcheck extends State<Emailcheck> {
                     email: widget.email,
                     password: widget.pswd,
                   );
-                  final _verify = await authResult.user.emailVerified; 
+                  final _verify = authResult.user.emailVerified; 
                   // Email確認が済んでいる場合は、Home画面へ遷移
                   if (_verify){
                     Navigator.push(
@@ -97,10 +99,10 @@ class _Emailcheck extends State<Emailcheck> {
                         builder: (context) => MyLoginPage(),
                       )
                     );
-                  }else{
+                  } else {
                     // print('NG');
                     setState(() {
-                      _nocheckText = "まだメール確認が完了していません。確認メール内のリンクをクリックしてください。";
+                      _nocheckText = "まだメール確認が完了していません。\n確認メール内のリンクをクリックしてください。";
                     });
                   }
                 },

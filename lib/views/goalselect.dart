@@ -5,6 +5,9 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:my_gaman_app/views/goalset.dart';
 import '../configs/colors.dart';
 import 'home.dart';
+import 'postview.dart';
+import 'setting.dart';
+import 'package:my_gaman_app/main.dart';
 
 class GoalSelectPage extends StatefulWidget {
   @override
@@ -17,6 +20,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
 
   var user = FirebaseAuth.instance.currentUser;
   var userId;
+  var userEmail;
   var userName;
   var userPhoto;
 
@@ -32,6 +36,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
 
   void setData() async {
     userId = user.uid;
+    userEmail = user.email;
     userName = user.displayName;
     userPhoto = user.photoURL;
 
@@ -61,6 +66,68 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
         ),
         backgroundColor: AppColor.white,
         shadowColor: AppColor.shadow,
+      ),
+
+      drawer:Drawer(
+        child: ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            Card(
+              child: ListTile(
+                leading: Container(
+                  height: 65.0,
+                  width: 65.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image:NetworkImage(userPhoto),
+                    ),
+                  ),
+                ),
+                title: Text(userName),
+                subtitle: Text(userEmail),
+              )
+            ),
+            Padding(padding: EdgeInsets.all(5.0)),
+            ListTile(
+              title: Text('　タイムライン'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => PostViewPage()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text('　プロフィール設定'),
+              onTap: () async {
+                Navigator.of(context).pop();
+                await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SettingPage()),
+                );
+                setState(() {
+                  user = FirebaseAuth.instance.currentUser;
+                  userName = user.displayName;
+                  userPhoto = user.photoURL;
+                });
+              },
+            ),
+            ListTile(
+              title: Text(''),
+            ),
+            ListTile(
+              title: Text('　サインアウト'),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pop();
+                await Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => StartPage()),
+                );
+              },
+            ),
+          ],
+        ),
       ),
 
       body: Container(

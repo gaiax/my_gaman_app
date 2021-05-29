@@ -160,8 +160,7 @@ class _SettingPageState extends State<SettingPage> {
                         actions: <Widget>[
                           TextButton(
                             child: const Text('OK'),
-                            onPressed: () {
-                            },
+                            onPressed: deleteUser,
                           ),
                         ],
                       );

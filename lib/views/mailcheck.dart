@@ -76,8 +76,6 @@ class _Emailcheck extends State<Emailcheck> {
               minWidth: 350.0,  
               // height: 100.0,
               child: RaisedButton(
-
-                // ボタンの形状
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -90,22 +88,22 @@ class _Emailcheck extends State<Emailcheck> {
                   final _verify = authResult.user.emailVerified; 
                   // Email確認が済んでいる場合は、Home画面へ遷移
                   if (_verify){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyLoginPage(),
-                      )
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => MyLoginPage()),
                     );
                   } else {
-                    // print('NG');
                     setState(() {
                       _nocheckText = "まだメール確認が完了していません。\n確認メール内のリンクをクリックしてください。";
                     });
                   }
                 },
                 // ボタン内の文字や書式
-                child: Text('メール確認完了',
-                  style: TextStyle(fontWeight: FontWeight.bold),),
+                child: Text(
+                  'メール確認完了',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
                 textColor: AppColor.white,
                 color: AppColor.wavecolor,
               ),

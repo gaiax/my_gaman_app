@@ -481,68 +481,70 @@ class _HomePageState extends State<HomePage> {
   void submitPressed() async {
     Navigator.pop(context);
 
-    final time = DateTime.now();
-    final createdAt = Timestamp.fromDate(time);
-    final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
-    gamanPrice = priceController.text;
+    if(priceController.text != null && descriptionController.text != null) {
+      final time = DateTime.now();
+      final createdAt = Timestamp.fromDate(time);
+      final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
+      gamanPrice = priceController.text;
 
-    await FirebaseFirestore.instance
-      .collection('gamans')
-      .doc()
-      .set({
-        'userId': userId,
-        'price': gamanPrice,
-        'text': descriptionController.text,
-        'createdAt': createdAt,
-        'date': date,
-        'goalId': goalId, 
+      await FirebaseFirestore.instance
+        .collection('gamans')
+        .doc()
+        .set({
+          'userId': userId,
+          'price': gamanPrice,
+          'text': descriptionController.text,
+          'createdAt': createdAt,
+          'date': date,
+          'goalId': goalId, 
+        });
+      gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
+      documents = gamanSnapshot.docs;
+
+      setState(() {
+        saving = saving + int.parse(gamanPrice);
+        if (saving >= int.parse(wantThingPrice)) {
+          saving = int.parse(wantThingPrice);
+        } 
+        _currentValue = (saving / int.parse(wantThingPrice)) * 100;
       });
-    gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
-    documents = gamanSnapshot.docs;
+      
+      priceController.clear();
+      descriptionController.clear();
 
-    setState(() {
-      saving = saving + int.parse(gamanPrice);
       if (saving >= int.parse(wantThingPrice)) {
-        saving = int.parse(wantThingPrice);
-      } 
-      _currentValue = (saving / int.parse(wantThingPrice)) * 100;
-    });
-    
-    priceController.clear();
-    descriptionController.clear();
-
-    if (saving >= int.parse(wantThingPrice)) {
-      await FirebaseFirestore.instance.collection('goals').doc(goalId).update({'achieve': true});
-      showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('目標達成！'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Image.network(wantThingImg),
-                  Text('おめでとうございます！実質貯金が貯まりました。'),
-                  Text('商品ページへ遷移しますか？'),
-                ],
+        await FirebaseFirestore.instance.collection('goals').doc(goalId).update({'achieve': true});
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('目標達成！'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Image.network(wantThingImg),
+                    Text('おめでとうございます！実質貯金が貯まりました。'),
+                    Text('商品ページへ遷移しますか？'),
+                  ],
+                ),
               ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: _launchURL,
-              ),
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: _launchURL,
+                ),
+                TextButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 

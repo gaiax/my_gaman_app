@@ -96,10 +96,10 @@ class _MyAuthPageState extends State<MyAuthPage> {
                         'createdAt' : createdAt,
                       });
                     
-
-                    // 登録後Home画面に遷移
-                    await Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => Emailcheck(email: newUserEmail, pswd: newUserPassword,)),
+                      // 登録後Home画面に遷移
+                      await Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => Emailcheck(email: newUserEmail, pswd: newUserPassword)
+                      ),
                     );
                   } catch (e) {
                     // 登録に失敗した場合

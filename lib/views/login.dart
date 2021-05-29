@@ -60,8 +60,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     );
 
                     // 登録後Home画面に遷移
-                    await Navigator.of(context).pushReplacement(
+                    await Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => GoalSelectPage()),
+                      (_) => false,
                     );
                   } catch (e) {
                     // 登録に失敗した場合

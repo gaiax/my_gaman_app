@@ -57,7 +57,7 @@ class _StartPageState extends State<StartPage> {
             children: <Widget>[
               Padding(padding: EdgeInsets.all(30.0)),
               SizedBox(
-                width: 100,
+                width: 250,
                 child: ElevatedButton(
                   onPressed: () {
                     // 登録後Home画面に遷移
@@ -73,7 +73,7 @@ class _StartPageState extends State<StartPage> {
                 ),
               ),
               SizedBox(
-                width: 100,
+                width: 250,
                 child: ElevatedButton(
                   onPressed: () {
                     // 登録後Home画面に遷移

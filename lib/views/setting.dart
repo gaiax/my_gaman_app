@@ -139,7 +139,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 30.0),
             SizedBox(
               width: 200,
               child: ElevatedButton(
@@ -149,7 +149,7 @@ class _SettingPageState extends State<SettingPage> {
                     barrierDismissible: true,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('エラー'),
+                        title: Text('確認'),
                         content: SingleChildScrollView(
                           child: ListBody(
                             children: <Widget>[

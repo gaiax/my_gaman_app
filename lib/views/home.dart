@@ -224,7 +224,7 @@ class _HomePageState extends State<HomePage> {
                           Padding(padding: EdgeInsets.all(12.0)),
                         ],
                       ),
-                      Padding(padding: EdgeInsets.all(10.0)),
+                      Padding(padding: EdgeInsets.all(12.0)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
@@ -481,7 +481,7 @@ class _HomePageState extends State<HomePage> {
   void submitPressed() async {
     Navigator.pop(context);
 
-    if(priceController.text != null && descriptionController.text != null) {
+    if(priceController.text != '' && descriptionController.text != '') {
       final time = DateTime.now();
       final createdAt = Timestamp.fromDate(time);
       final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();

@@ -183,8 +183,9 @@ class _SettingPageState extends State<SettingPage> {
   void deleteUser() async {
     try {
       await FirebaseAuth.instance.currentUser.delete();
-      await Navigator.of(context).pushReplacement(
+      await Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => StartPage()),
+        (_) => false
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'requires-recent-login') {

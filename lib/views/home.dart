@@ -549,7 +549,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _launchURL() async {
-    await canLaunch(_url) ? await launch(_url) : errorDialog();
+    if(_url == null) {
+      errorDialog();
+    } else {
+      await canLaunch(_url) ? await launch(_url) : errorDialog();
+    }
   }
 
   void errorDialog() {

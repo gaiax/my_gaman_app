@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_gaman_app/views/goalselect.dart';
 import '../configs/colors.dart';
+import 'mailcheck.dart';
 
 class MyLoginPage extends StatefulWidget {
   @override
@@ -55,15 +56,26 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   try {
                     // メールとパスワードでユーザー登録
                     final FirebaseAuth auth = FirebaseAuth.instance;
-                    await auth.signInWithEmailAndPassword(
+                    final UserCredential authResult = await auth.signInWithEmailAndPassword(
                       email: loginUserEmail, password: loginUserPassword,
                     );
 
-                    // 登録後Home画面に遷移
-                    await Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => GoalSelectPage()),
-                      (_) => false,
-                    );
+                    final user = authResult.user;
+                    await user.reload();
+                    final _verify = user.emailVerified; 
+                    // Email確認が済んでいる場合は、Home画面へ遷移
+                    if (_verify){
+                      // 登録後Home画面に遷移
+                      await Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => GoalSelectPage()),
+                        (_) => false,
+                      );
+                    } else {
+                      await user.sendEmailVerification();
+                      await Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => Emailcheck(email: user.email)),
+                      );
+                    }
                   } catch (e) {
                     // 登録に失敗した場合
                     setState(() {

@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'Yu Gothic',
       ),
-      home: (user == null) ? StartPage() : GoalSelectPage(),
+      home: (user != null && user.emailVerified) ? GoalSelectPage() : StartPage(),
     );
   }
 }

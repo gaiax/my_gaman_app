@@ -7,8 +7,7 @@ import 'login.dart';
 class Emailcheck extends StatefulWidget {
    // 呼び出し元Widgetから受け取った後、変更をしないためfinalを宣言。
   final String email;
-  final String pswd;
-  Emailcheck({Key key, this.email, this.pswd}) : super(key: key);
+  Emailcheck({Key key, this.email}) : super(key: key);
 
   @override
   _Emailcheck createState() => _Emailcheck();
@@ -16,9 +15,9 @@ class Emailcheck extends StatefulWidget {
 
 
 class _Emailcheck extends State<Emailcheck> {
-  final auth = FirebaseAuth.instance;
+  User user = FirebaseAuth.instance.currentUser;
   String _sentEmailText;
-  String _nocheckText;
+  String _nocheckText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +53,7 @@ class _Emailcheck extends State<Emailcheck> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   onPressed: () async {
-                    final UserCredential authResult = await auth.signInWithEmailAndPassword(
-                      email: widget.email,
-                      password: widget.pswd,
-                    );
-                    await authResult.user.sendEmailVerification();
+                    await user.sendEmailVerification();
                   },
                   // ボタン内の文字や書式
                   child: Text(
@@ -81,11 +76,8 @@ class _Emailcheck extends State<Emailcheck> {
                 ),
 
                 onPressed: () async {
-                  final UserCredential authResult = await auth.signInWithEmailAndPassword(
-                    email: widget.email,
-                    password: widget.pswd,
-                  );
-                  final _verify = authResult.user.emailVerified; 
+                  await user.reload();
+                  final _verify = user.emailVerified; 
                   // Email確認が済んでいる場合は、Home画面へ遷移
                   if (_verify){
                     Navigator.of(context).pushReplacement(

@@ -15,7 +15,7 @@ class Emailcheck extends StatefulWidget {
 
 
 class _Emailcheck extends State<Emailcheck> {
-  User user = FirebaseAuth.instance.currentUser;
+  final auth = FirebaseAuth.instance;
   String _sentEmailText;
   String _nocheckText = '';
 
@@ -53,7 +53,7 @@ class _Emailcheck extends State<Emailcheck> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   onPressed: () async {
-                    await user.sendEmailVerification();
+                    await auth.currentUser.sendEmailVerification();
                   },
                   // ボタン内の文字や書式
                   child: Text(
@@ -76,6 +76,7 @@ class _Emailcheck extends State<Emailcheck> {
                 ),
 
                 onPressed: () async {
+                  final user = auth.currentUser;
                   await user.reload();
                   final _verify = user.emailVerified; 
                   // Email確認が済んでいる場合は、Home画面へ遷移

@@ -54,7 +54,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
     }
 
     return Scaffold(
-      backgroundColor: AppColor.bgColor,
+      backgroundColor: AppColor.bgColor2,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
@@ -131,7 +131,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
       ),
 
       body: Container(
-        color: AppColor.bgColor,
+        color: AppColor.bgColor2,
         margin: EdgeInsets.only(top: 20),
         padding: EdgeInsets.only(left: 10, right: 10),
         child: Column(
@@ -242,7 +242,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
             ),
           ),
         ),
-        backgroundColor: AppColor.priceColor,
+        backgroundColor: AppColor.goalsetColor,
       ),
     );
   }

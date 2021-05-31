@@ -153,7 +153,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                     ),
                   ),
                   onPressed: submitPressed,
-                  color: AppColor.wavecolor,
+                  color: AppColor.goalsetColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

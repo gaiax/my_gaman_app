@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'views/signup.dart';
 import 'views/login.dart';
 import 'views/goalselect.dart';
+import 'views/mailcheck.dart';
 import 'configs/colors.dart';
 
 Future<void> main() async {
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'Yu Gothic',
       ),
-      home: (user != null && user.emailVerified) ? GoalSelectPage() : StartPage(),
+      home: (user != null && user.emailVerified) ? GoalSelectPage() : (user != null && !user.emailVerified) ? Emailcheck(email: user.email) : StartPage(),
     );
   }
 }

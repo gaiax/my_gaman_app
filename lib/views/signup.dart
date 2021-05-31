@@ -169,6 +169,10 @@ class _MyAuthPageState extends State<MyAuthPage> {
                   }
                 },
                 child: Text("SignUp"),
+                style: ElevatedButton.styleFrom(
+                  primary: AppColor.wavecolor,
+                  onPrimary: AppColor.textColor,
+                ),
               ),
               Text(infoText)
             ],

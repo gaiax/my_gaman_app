@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   var userPhoto;
   var wantThingPrice;
   var wantThingImg;
+  var wantThingText;
   var goalId;
   var _url;
 
@@ -63,6 +64,7 @@ class _HomePageState extends State<HomePage> {
     DocumentSnapshot goalSnapshot = await cloud.collection('goals').doc(goalId).get();
     wantThingPrice = goalSnapshot['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
     wantThingImg = goalSnapshot['wantThingImg'];
+    wantThingText = goalSnapshot['goalText'];
     _url = goalSnapshot['wantThingUrl'];
 
     gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();

@@ -69,7 +69,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                 style: TextStyle(color: Colors.red),
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: "パスワード（８文字以上）"),
+                decoration: InputDecoration(labelText: "パスワード（８文字以上推奨）"),
                 //　パスワードを見えないように
                 obscureText: true,
                 onChanged: (String value) {

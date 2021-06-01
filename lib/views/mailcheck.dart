@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../configs/colors.dart';
-import 'login.dart';
+import 'goalselect.dart';
 
 
 class Emailcheck extends StatefulWidget {
@@ -82,7 +82,7 @@ class _Emailcheck extends State<Emailcheck> {
                   // Email確認が済んでいる場合は、Home画面へ遷移
                   if (_verify){
                     Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => MyLoginPage()),
+                      MaterialPageRoute(builder: (context) => GoalSelectPage()),
                     );
                   } else {
                     setState(() {

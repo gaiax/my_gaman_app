@@ -22,6 +22,10 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
 
   var wantThingImg;
 
+  var infoText = "";
+  var infoText2 = "";
+  var infoText3 = "";
+
   bool _loading = true;
 
   @override
@@ -159,6 +163,18 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                   ),
                 ),
               ),
+              Text(
+                infoText,
+                style: TextStyle(color: Colors.red),
+              ),
+              Text(
+                infoText2,
+                style: TextStyle(color: Colors.red),
+              ),
+              Text(
+                infoText3,
+                style: TextStyle(color: Colors.red),
+              ),
               Padding(padding: EdgeInsets.all(30.0)),
             ],
           ),
@@ -178,36 +194,50 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
   }
 
   void submitPressed() async {
-    setState(() {
-      _loading = true;
-    });
-    final time = DateTime.now();
-    final createdAt = Timestamp.fromDate(time);
-    final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
-
-    final wantThingImgUrl = await UploadImage.uploadWantImg(wantThingImg, userId, date);
-
-    await FirebaseFirestore.instance
-      .collection('goals')
-      .doc()
-      .set({
-        'userId': userId,
-        'goalText': goalTextController.text,
-        'wantThingUrl': null,
-        'wantThingImg': wantThingImgUrl,
-        'wantThingPrice': wantThingController.text,
-        'createdAt' : createdAt,
-        'date': date,
-        'achieve': false,
+    if (goalTextController.text != "" && wantThingController.text != "" && wantThingImg != null) {
+      setState(() {
+        _loading = true;
       });
+      final time = DateTime.now();
+      final createdAt = Timestamp.fromDate(time);
+      final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
 
-    goalTextController.clear();
-    wantThingController.clear();
+      final wantThingImgUrl = await UploadImage.uploadWantImg(wantThingImg, userId, date);
 
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => GoalSelectPage()),
-    );
+      await FirebaseFirestore.instance
+        .collection('goals')
+        .doc()
+        .set({
+          'userId': userId,
+          'goalText': goalTextController.text,
+          'wantThingUrl': null,
+          'wantThingImg': wantThingImgUrl,
+          'wantThingPrice': wantThingController.text,
+          'createdAt' : createdAt,
+          'date': date,
+          'achieve': false,
+        });
 
-    _loading = false;
+      goalTextController.clear();
+      wantThingController.clear();
+
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => GoalSelectPage()),
+      );
+
+      _loading = false;
+    } else {
+      setState(() {
+        if (goalTextController.text == "") {
+        infoText = "我慢目的を入力してください。";
+        }
+        if (wantThingController.text == "") {
+          infoText2 = "欲しいものの値段を入力してください。";
+        }
+        if (wantThingImg == null) {
+          infoText3 = "欲しいものの画像を選択してください。";
+        }
+      });
+    }
   }
 }

@@ -388,7 +388,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: (saving < int.parse(wantThingPrice)) ? FloatingActionButton(
         onPressed: () {
           submitGaman();
         },
@@ -404,7 +404,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         backgroundColor: AppColor.priceColor,
-      ),
+      ) : null,
     );
   }
 

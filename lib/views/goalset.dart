@@ -22,6 +22,8 @@ class _GoalSetPageState extends State<GoalSetPage> {
   var userId;
 
   bool _loading = true;
+  bool isGoalEmpty = false;
+  bool isWantThingEmpty = false;
 
   @override
   void initState() {
@@ -78,6 +80,13 @@ class _GoalSetPageState extends State<GoalSetPage> {
                   fontWeight: FontWeight.w400,
                 ),
               ),
+              Visibility(
+                visible: isGoalEmpty,
+                child: Text(
+                  "我慢目的を入力してください。(例: ディスプレイが欲しい！）",
+                  style: TextStyle(color: Colors.red, fontSize: 12.0),
+                ),
+              ),
               SizedBox(height: 20.0),
               Text(
                 '欲しいもの',
@@ -100,6 +109,13 @@ class _GoalSetPageState extends State<GoalSetPage> {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w400,
+                ),
+              ),
+              Visibility(
+                visible: isWantThingEmpty,
+                child: Text(
+                  "欲しいモノのAmazon商品リンクを入力してください。",
+                  style: TextStyle(color: Colors.red),
                 ),
               ),
               Padding(padding: EdgeInsets.all(30.0),),
@@ -153,75 +169,82 @@ class _GoalSetPageState extends State<GoalSetPage> {
   }
 
   void submitPressed() async {
-    setState(() {
-      _loading = true;
-    });
-    final time = DateTime.now();
-    final createdAt = Timestamp.fromDate(time);
-    final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
+    if (goalTextController.text.isNotEmpty && wantThingController.text.isNotEmpty) {
+      setState(() {
+        _loading = true;
+      });
+      final time = DateTime.now();
+      final createdAt = Timestamp.fromDate(time);
+      final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
 
-    try {
-      final controller = WindowController();
-      await controller.openHttp(
-        uri: Uri.parse(wantThingController.text),
-      );
-      final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
-      final wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
-      final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
-      
-      final wantThingImg = await UploadImage.uploadAmazonImg(wantThingAmazonImg, userId, date);
+      try {
+        final controller = WindowController();
+        await controller.openHttp(
+          uri: Uri.parse(wantThingController.text),
+        );
+        final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
+        final wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
+        final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
+        
+        final wantThingImg = await UploadImage.uploadAmazonImg(wantThingAmazonImg, userId, date);
 
-      await FirebaseFirestore.instance
-        .collection('goals')
-        .doc()
-        .set({
-          'userId': userId,
-          'goalText': goalTextController.text,
-          'wantThingUrl': wantThingController.text,
-          'wantThingImg': wantThingImg,
-          'wantThingPrice': wantThingPrice,
-          'createdAt' : createdAt,
-          'date': date,
-          'achieve': false,
-        });
-    } catch(e) {
-      return showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('エラー'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text('欲しいモノ情報が取得できませんでした。'),
-                  Text('手動で登録してください。'),
-                ],
+        await FirebaseFirestore.instance
+          .collection('goals')
+          .doc()
+          .set({
+            'userId': userId,
+            'goalText': goalTextController.text,
+            'wantThingUrl': wantThingController.text,
+            'wantThingImg': wantThingImg,
+            'wantThingPrice': wantThingPrice,
+            'createdAt' : createdAt,
+            'date': date,
+            'achieve': false,
+          });
+      } catch(e) {
+        return showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('エラー'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text('欲しいモノ情報が取得できませんでした。'),
+                    Text('手動で登録してください。'),
+                  ],
+                ),
               ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => GoalSetManualPage()),
-                  );
-                },
-              ),
-            ],
-          );
-        },
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => GoalSetManualPage()),
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+
+      goalTextController.clear();
+      wantThingController.clear();
+
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => GoalSelectPage()),
       );
+
+      _loading = false;
+    } else {
+      setState(() {
+        isGoalEmpty = goalTextController.text.isEmpty;
+        isWantThingEmpty = wantThingController.text.isEmpty;
+      });
     }
-
-    goalTextController.clear();
-    wantThingController.clear();
-
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => GoalSelectPage()),
-    );
-
-    _loading = false;
   }
 }

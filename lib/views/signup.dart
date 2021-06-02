@@ -19,6 +19,10 @@ class _MyAuthPageState extends State<MyAuthPage> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController checkPassController = TextEditingController();
+  var isEmailEmpty = false;
+  var isUserNameEmpty = false;
+  var isPassEmpty = false;
+  var unmatchPass = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +47,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                 controller: emailController,
               ),
               Visibility(
-                visible: emailController.text.isEmpty,
+                visible: isEmailEmpty,
                 child: Text(
                   "登録するメールアドレスを入力してください。",
                   style: TextStyle(color: Colors.red),
@@ -54,7 +58,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                 controller: userNameController,
               ),
               Visibility(
-                visible: userNameController.text.isEmpty,
+                visible: isUserNameEmpty,
                 child: Text(
                   "登録するユーザーネームを入力してください。",
                   style: TextStyle(color: Colors.red),
@@ -67,7 +71,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                 controller: passController,
               ),
               Visibility(
-                visible: passController.text.isEmpty,
+                visible: isPassEmpty,
                 child: Text(
                   "パスワードを設定してください。",
                   style: TextStyle(color: Colors.red),
@@ -80,9 +84,9 @@ class _MyAuthPageState extends State<MyAuthPage> {
                 controller: checkPassController,
               ),
               Visibility(
-                visible: (passController.text == checkPassController.text) ? false : true,
+                visible: unmatchPass,
                 child: Text(
-                 "パスワードを確認してください。",
+                 "パスワードが違います。",
                   style: TextStyle(color: Colors.red),
                 ),
               ),
@@ -136,6 +140,14 @@ class _MyAuthPageState extends State<MyAuthPage> {
                         infoText = "登録NG: $e";
                       });
                     }
+                  } else {
+                    isEmailEmpty = emailController.text.isEmpty;
+                    isUserNameEmpty = userNameController.text.isEmpty;
+                    isPassEmpty = passController.text.isEmpty;
+                    if (passController.text != checkPassController.text) {
+                      unmatchPass = true;
+                    }
+                    setState(() {});
                   }
                 },
                 child: Text("SignUp"),

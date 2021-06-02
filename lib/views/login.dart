@@ -11,11 +11,11 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
-  String loginUserEmail = "";
-  String loginUserPassword = "";
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passController = TextEditingController();
   String infoText = "";
-  String infoText1 = "";
-  String infoText2 = "";
+  var isEmailEmpty = false;
+  var isPassEmpty = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,39 +37,37 @@ class _MyLoginPageState extends State<MyLoginPage> {
               Padding(padding: EdgeInsets.all(30.0)),
               TextFormField(
                 decoration: InputDecoration(labelText: "メールアドレス"),
-                onChanged: (String value) {
-                  setState(() {
-                    loginUserEmail = value;
-                  });
-                },
+                controller: emailController,
               ),
-              Text(
-                infoText1,
-                style: TextStyle(color: Colors.red),
+              Visibility(
+                visible: isEmailEmpty,
+                child: Text(
+                  "ログインメールアドレスを入力してください。",
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: "パスワード（８文字以上）"),
+                decoration: InputDecoration(labelText: "パスワード"),
                 //　パスワードを見えないように
                 obscureText: true,
-                onChanged: (String value) {
-                  setState(() {
-                    loginUserPassword = value;
-                  });
-                },
+                controller: passController,
               ),
-              Text(
-                infoText2,
-                style: TextStyle(color: Colors.red),
+              Visibility(
+                visible: isPassEmpty,
+                child: Text(
+                  "パスワードを入力してください。",
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
               Padding(padding: EdgeInsets.all(30.0)),
               ElevatedButton(
                 onPressed: () async {
-                  if (loginUserEmail != "" && loginUserPassword != "") {
+                  if (emailController.text.isNotEmpty && passController.text.isNotEmpty) {
                     try {
                       // メールとパスワードでユーザー登録
                       final FirebaseAuth auth = FirebaseAuth.instance;
                       final UserCredential authResult = await auth.signInWithEmailAndPassword(
-                        email: loginUserEmail, password: loginUserPassword,
+                        email: emailController.text, password: passController.text,
                       );
 
                       final user = authResult.user;
@@ -101,13 +99,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     }
                   } else {
                     setState(() {
-                      if (loginUserEmail == "") {
-                        infoText1 = "ログインメールアドレスを入力してください。";
-                      } 
-
-                      if (loginUserPassword == "") {
-                        infoText2 = "パスワードを入力してください。";
-                      } 
+                      isEmailEmpty = emailController.text.isEmpty;
+                      isPassEmpty = passController.text.isEmpty;
                     });
                   }
                 },

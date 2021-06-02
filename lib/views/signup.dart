@@ -141,13 +141,14 @@ class _MyAuthPageState extends State<MyAuthPage> {
                       });
                     }
                   } else {
-                    isEmailEmpty = emailController.text.isEmpty;
-                    isUserNameEmpty = userNameController.text.isEmpty;
-                    isPassEmpty = passController.text.isEmpty;
-                    if (passController.text != checkPassController.text) {
-                      unmatchPass = true;
-                    }
-                    setState(() {});
+                    setState(() {
+                      isEmailEmpty = emailController.text.isEmpty;
+                      isUserNameEmpty = userNameController.text.isEmpty;
+                      isPassEmpty = passController.text.isEmpty;
+                      if (passController.text != checkPassController.text) {
+                        unmatchPass = true;
+                      }
+                    });
                   }
                 },
                 child: Text("SignUp"),

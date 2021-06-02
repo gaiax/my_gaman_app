@@ -13,16 +13,12 @@ class MyAuthPage extends StatefulWidget {
 }
 
 class _MyAuthPageState extends State<MyAuthPage> {
-  var newUserEmail = "";
-  var newUserPassword = "";
-  var checkPassword = "";
   var infoText = "";
-  var infoText1 = "";
-  var infoText2 = "";
-  var infoText3 = "";
-  var infoText4 = "";
-  var userName = "";
   var userPhotoUrl = "";
+  TextEditingController emailController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+  TextEditingController checkPassController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -44,73 +40,61 @@ class _MyAuthPageState extends State<MyAuthPage> {
               Padding(padding: EdgeInsets.all(30.0)),
               TextFormField(
                 decoration: InputDecoration(labelText: "メールアドレス"),
-                onChanged: (String value) {
-                  setState(() {
-                    newUserEmail = value;
-                    infoText1 = "";
-                  });
-                },
+                controller: emailController,
               ),
-              Text(
-                infoText1,
-                style: TextStyle(color: Colors.red),
+              Visibility(
+                visible: emailController.text.isEmpty,
+                child: Text(
+                  "登録するメールアドレスを入力してください。",
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: "ユーザーネーム"),
-                onChanged: (String value) {
-                  setState(() {
-                    userName = value;
-                    infoText2 = "";
-                  });
-                },
+                controller: userNameController,
               ),
-              Text(
-                infoText2,
-                style: TextStyle(color: Colors.red),
+              Visibility(
+                visible: userNameController.text.isEmpty,
+                child: Text(
+                  "登録するユーザーネームを入力してください。",
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: "パスワード（８文字以上推奨）"),
                 //　パスワードを見えないように
                 obscureText: true,
-                onChanged: (String value) {
-                  setState(() {
-                    newUserPassword = value;
-                    infoText3 = "";
-                  });
-                },
+                controller: passController,
               ),
-              Text(
-                infoText3,
-                style: TextStyle(color: Colors.red),
+              Visibility(
+                visible: passController.text.isEmpty,
+                child: Text(
+                  "パスワードを設定してください。",
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: "パスワード（確認）"),
                 //　パスワードを見えないように
                 obscureText: true,
-                onChanged: (String value) {
-                  setState(() {
-                    checkPassword = value;
-                    if (newUserPassword == checkPassword) {
-                      infoText4 = "";
-                    } else {
-                      infoText4 = "パスワードが違います。";
-                    }
-                  });
-                },
+                controller: checkPassController,
               ),
-              Text(
-                infoText4,
-                style: TextStyle(color: Colors.red),
+              Visibility(
+                visible: (passController.text == checkPassController.text) ? false : true,
+                child: Text(
+                 "パスワードを確認してください。",
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
               Padding(padding: EdgeInsets.all(30.0)),
               ElevatedButton(
                 onPressed: () async {
-                  if (newUserEmail != "" && newUserPassword != "" && userName != "" && newUserPassword == checkPassword) {
+                  if (emailController.text.isNotEmpty && passController.text.isNotEmpty && userNameController.text.isNotEmpty && passController.text == checkPassController.text) {
                     try {
                       // メールとパスワードでユーザー登録
                       final FirebaseAuth auth = FirebaseAuth.instance;
                       final UserCredential authResult = await auth.createUserWithEmailAndPassword(
-                        email: newUserEmail, password: newUserPassword,
+                        email: emailController.text, password: passController.text,
                       );
 
                       await auth.currentUser.sendEmailVerification();
@@ -125,7 +109,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                       var photoRef = storage.ref(photo);
                       userPhotoUrl = await getDownloadUrl(photoRef);
                       
-                      await user.updateProfile(displayName: userName, photoURL: userPhotoUrl);
+                      await user.updateProfile(displayName: userNameController.text, photoURL: userPhotoUrl);
                       await user.reload();
 
                       await FirebaseFirestore.instance
@@ -133,13 +117,13 @@ class _MyAuthPageState extends State<MyAuthPage> {
                         .doc(user.uid)
                         .set({
                           'userId': user.uid,
-                          'userName': userName,
+                          'userName': userNameController.text,
                           'userPhotoUrl': userPhotoUrl,
                           'createdAt' : createdAt,
                         });
                       
                       await Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => Emailcheck(email: newUserEmail)),
+                        MaterialPageRoute(builder: (context) => Emailcheck(email: userNameController.text)),
                       );
                     } on PlatformException catch (error) {
                       // 登録に失敗した場合
@@ -152,20 +136,6 @@ class _MyAuthPageState extends State<MyAuthPage> {
                         infoText = "登録NG: $e";
                       });
                     }
-                  } else {
-                    setState(() {
-                      if (newUserEmail == "") {
-                        infoText1 = "登録するメールアドレスを入力してください。";
-                      } 
-
-                      if (userName == "") {
-                        infoText2 = "登録するユーザーネームを入力してください。";
-                      } 
-
-                      if (newUserPassword == "") {
-                        infoText3 = "パスワードを設定してください";
-                      } 
-                    });
                   }
                 },
                 child: Text("SignUp"),

@@ -22,11 +22,10 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
 
   var wantThingImg;
 
-  var infoText = "";
-  var infoText2 = "";
-  var infoText3 = "";
-
   bool _loading = true;
+  bool isGoalEmpty = false;
+  bool isPriceEmpty = false;
+  bool isWantThingImgEmpty = false;
 
   @override
   void initState() {
@@ -83,6 +82,13 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                   fontWeight: FontWeight.w400,
                 ),
               ),
+              Visibility(
+                visible: isGoalEmpty,
+                child: Text(
+                  "我慢目的を入力してください。",
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
               SizedBox(height: 20.0),
               Text(
                 '欲しいものの値段',
@@ -98,6 +104,13 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w400,
+                ),
+              ),
+              Visibility(
+                visible: isPriceEmpty,
+                child: Text(
+                  "欲しいものの値段を入力してください。",
+                  style: TextStyle(color: Colors.red),
                 ),
               ),
               SizedBox(height: 20.0),
@@ -143,6 +156,13 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                   ],
                 ),
               ),
+              Visibility(
+                visible: isWantThingImgEmpty,
+                child: Text(
+                  "欲しいものの画像を選択してください。",
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
               Padding(padding: EdgeInsets.all(20.0),),
               Container(
                 alignment: Alignment.bottomRight,
@@ -163,18 +183,6 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                   ),
                 ),
               ),
-              Text(
-                infoText,
-                style: TextStyle(color: Colors.red),
-              ),
-              Text(
-                infoText2,
-                style: TextStyle(color: Colors.red),
-              ),
-              Text(
-                infoText3,
-                style: TextStyle(color: Colors.red),
-              ),
               Padding(padding: EdgeInsets.all(30.0)),
             ],
           ),
@@ -194,7 +202,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
   }
 
   void submitPressed() async {
-    if (goalTextController.text != "" && wantThingController.text != "" && wantThingImg != null) {
+    if (goalTextController.text.isNotEmpty && wantThingController.text.isNotEmpty && wantThingImg != null) {
       setState(() {
         _loading = true;
       });
@@ -228,14 +236,12 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
       _loading = false;
     } else {
       setState(() {
-        if (goalTextController.text == "") {
-        infoText = "我慢目的を入力してください。";
-        }
-        if (wantThingController.text == "") {
-          infoText2 = "欲しいものの値段を入力してください。";
-        }
+        isGoalEmpty = goalTextController.text.isEmpty;
+        isPriceEmpty = wantThingController.text.isEmpty;
         if (wantThingImg == null) {
-          infoText3 = "欲しいものの画像を選択してください。";
+          isWantThingImgEmpty = true; 
+        } else {
+          isWantThingImgEmpty = false;
         }
       });
     }

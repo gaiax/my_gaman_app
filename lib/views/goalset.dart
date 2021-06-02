@@ -45,7 +45,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: AppColor.white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
@@ -56,112 +55,120 @@ class _GoalSetPageState extends State<GoalSetPage> {
         backgroundColor: AppColor.white,
         shadowColor: AppColor.shadow,
       ),
-      body: Center(
-        child: Container(
-          color: AppColor.white,
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                '我慢目的',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
-                  color: AppColor.shadow,
-                ),
-              ),
-              TextField(
-                controller: goalTextController,
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              Visibility(
-                visible: isGoalEmpty,
-                child: Text(
-                  "我慢目的を入力してください。(例: ディスプレイが欲しい！）",
-                  style: TextStyle(color: Colors.red, fontSize: 12.0),
-                ),
-              ),
-              SizedBox(height: 20.0),
-              Text(
-                '欲しいもの',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
-                  color: AppColor.shadow,
-                ),
-              ),
-              Text(
-                '※ Amazon商品リンクを貼り付けてください.（セール商品は対象外です.）',
-                style: TextStyle(
-                  fontSize: 10.0,
-                  fontWeight: FontWeight.w500,
-                  color: AppColor.shadow,
-                ),
-              ),
-              TextField(
-                controller: wantThingController,
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              Visibility(
-                visible: isWantThingEmpty,
-                child: Text(
-                  "欲しいモノのAmazon商品リンクを入力してください。",
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-              Padding(padding: EdgeInsets.all(30.0),),
-              Container(
-                alignment: Alignment.bottomRight,
-                padding: EdgeInsets.all(10.0),
-                child: RaisedButton(
-                  child: Text(
-                    '登録',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.w800,
+      body: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Center(
+              child: Container(
+                color: AppColor.white,
+                padding: EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      '我慢目的',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.shadow,
+                      ),
                     ),
-                  ),
-                  onPressed: submitPressed,
-                  color: AppColor.goalsetColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              Padding(padding: EdgeInsets.all(30.0)),
-              ButtonTheme(
-                minWidth: 200.0,  
-                // height: 100.0,
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  onPressed: () async {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => GoalSetManualPage()),
-                    );
-                  },
-                  child: Text(
-                    '手動で登録する',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold
+                    TextField(
+                      controller: goalTextController,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
-                  textColor: AppColor.white,
-                  color: AppColor.shadow,
+                    Visibility(
+                      visible: isGoalEmpty,
+                      child: Text(
+                        "我慢目的を入力してください。(例: ディスプレイが欲しい！）",
+                        style: TextStyle(color: Colors.red, fontSize: 12.0),
+                      ),
+                    ),
+                    SizedBox(height: 20.0),
+                    Text(
+                      '欲しいもの',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.shadow,
+                      ),
+                    ),
+                    Text(
+                      '※ Amazon商品リンクを貼り付けてください.（セール商品は対象外です.）',
+                      style: TextStyle(
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.shadow,
+                      ),
+                    ),
+                    TextField(
+                      controller: wantThingController,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Visibility(
+                      visible: isWantThingEmpty,
+                      child: Text(
+                        "欲しいモノのAmazon商品リンクを入力してください。",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.all(30.0),),
+                    Container(
+                      alignment: Alignment.bottomRight,
+                      padding: EdgeInsets.all(10.0),
+                      child: RaisedButton(
+                        child: Text(
+                          '登録',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        onPressed: submitPressed,
+                        color: AppColor.goalsetColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.all(30.0)),
+                    ButtonTheme(
+                      minWidth: 200.0,  
+                      // height: 100.0,
+                      child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        onPressed: () async {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => GoalSetManualPage()),
+                          );
+                        },
+                        child: Text(
+                          '手動で登録する',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        textColor: AppColor.white,
+                        color: AppColor.shadow,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

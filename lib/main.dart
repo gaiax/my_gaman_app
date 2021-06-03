@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'views/signup.dart';
 import 'views/login.dart';
 import 'views/goalselect.dart';
+import 'views/mailcheck.dart';
 import 'configs/colors.dart';
 
 Future<void> main() async {
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'Yu Gothic',
       ),
-      home: (user == null) ? StartPage() : StartPage(),
+      home: (user != null && user.emailVerified) ? GoalSelectPage() : (user != null && !user.emailVerified) ? Emailcheck(email: user.email) : StartPage(),
     );
   }
 }
@@ -57,7 +58,7 @@ class _StartPageState extends State<StartPage> {
             children: <Widget>[
               Padding(padding: EdgeInsets.all(30.0)),
               SizedBox(
-                width: 100,
+                width: 250,
                 child: ElevatedButton(
                   onPressed: () {
                     // 登録後Home画面に遷移
@@ -73,7 +74,7 @@ class _StartPageState extends State<StartPage> {
                 ),
               ),
               SizedBox(
-                width: 100,
+                width: 250,
                 child: ElevatedButton(
                   onPressed: () {
                     // 登録後Home画面に遷移

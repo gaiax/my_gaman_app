@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   var userPhoto;
   var wantThingPrice;
   var wantThingImg;
+  var wantThingText;
   var goalId;
   var _url;
 
@@ -63,6 +64,7 @@ class _HomePageState extends State<HomePage> {
     DocumentSnapshot goalSnapshot = await cloud.collection('goals').doc(goalId).get();
     wantThingPrice = goalSnapshot['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
     wantThingImg = goalSnapshot['wantThingImg'];
+    wantThingText = goalSnapshot['goalText'];
     _url = goalSnapshot['wantThingUrl'];
 
     gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
@@ -123,7 +125,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              title: Text('　プロフィール設定'),
+              title: Text('　アカウント設定'),
               onTap: () async {
                 Navigator.of(context).pop();
                 await Navigator.of(context).push(
@@ -140,7 +142,7 @@ class _HomePageState extends State<HomePage> {
               title: Text('　目的一覧・変更'),
               onTap: () async {
                 Navigator.of(context).pop();
-                Navigator.of(context).push(
+                Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => GoalSelectPage()),
                 );
                 setState(() {
@@ -180,12 +182,12 @@ class _HomePageState extends State<HomePage> {
                     image: AssetImage('image/SliverAppBar2.png'),
                   ),
                 ),
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(3.0),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: <Widget>[
-                      Padding(padding: EdgeInsets.all(7.0)),
+                      Padding(padding: EdgeInsets.all(14.0)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                           Padding(padding: EdgeInsets.all(12.0)),
                         ],
                       ),
-                      Padding(padding: EdgeInsets.all(4.0)),
+                      Padding(padding: EdgeInsets.all(16.0)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
@@ -386,7 +388,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: (saving < int.parse(wantThingPrice)) ? FloatingActionButton(
         onPressed: () {
           submitGaman();
         },
@@ -402,7 +404,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         backgroundColor: AppColor.priceColor,
-      ),
+      ) : null,
     );
   }
 
@@ -481,73 +483,79 @@ class _HomePageState extends State<HomePage> {
   void submitPressed() async {
     Navigator.pop(context);
 
-    final time = DateTime.now();
-    final createdAt = Timestamp.fromDate(time);
-    final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
-    gamanPrice = priceController.text;
+    if(priceController.text != '' && descriptionController.text != '') {
+      final time = DateTime.now();
+      final createdAt = Timestamp.fromDate(time);
+      final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
+      gamanPrice = priceController.text;
 
-    await FirebaseFirestore.instance
-      .collection('gamans')
-      .doc()
-      .set({
-        'userId': userId,
-        'price': gamanPrice,
-        'text': descriptionController.text,
-        'createdAt': createdAt,
-        'date': date,
-        'goalId': goalId, 
+      await FirebaseFirestore.instance
+        .collection('gamans')
+        .doc()
+        .set({
+          'userId': userId,
+          'price': gamanPrice,
+          'text': descriptionController.text,
+          'createdAt': createdAt,
+          'date': date,
+          'goalId': goalId, 
+        });
+      gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
+      documents = gamanSnapshot.docs;
+
+      setState(() {
+        saving = saving + int.parse(gamanPrice);
+        if (saving >= int.parse(wantThingPrice)) {
+          saving = int.parse(wantThingPrice);
+        } 
+        _currentValue = (saving / int.parse(wantThingPrice)) * 100;
       });
-    gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
-    documents = gamanSnapshot.docs;
+      
+      priceController.clear();
+      descriptionController.clear();
 
-    setState(() {
-      saving = saving + int.parse(gamanPrice);
       if (saving >= int.parse(wantThingPrice)) {
-        saving = int.parse(wantThingPrice);
-      } 
-      _currentValue = (saving / int.parse(wantThingPrice)) * 100;
-    });
-    
-    priceController.clear();
-    descriptionController.clear();
-
-    if (saving >= int.parse(wantThingPrice)) {
-      await FirebaseFirestore.instance.collection('goals').doc(goalId).update({'achieve': true});
-      showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('目標達成！'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Image.network(wantThingImg),
-                  Text('おめでとうございます！実質貯金が貯まりました。'),
-                  Text('商品ページへ遷移しますか？'),
-                ],
+        await FirebaseFirestore.instance.collection('goals').doc(goalId).update({'achieve': true});
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('目標達成！'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Image.network(wantThingImg),
+                    Text('おめでとうございます！実質貯金が貯まりました。'),
+                    Text('商品ページへ遷移しますか？'),
+                  ],
+                ),
               ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: _launchURL,
-              ),
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: _launchURL,
+                ),
+                TextButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 
   void _launchURL() async {
-    await canLaunch(_url) ? await launch(_url) : errorDialog();
+    if(_url == null) {
+      errorDialog();
+    } else {
+      await canLaunch(_url) ? await launch(_url) : errorDialog();
+    }
   }
 
   void errorDialog() {

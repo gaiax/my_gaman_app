@@ -54,7 +54,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
     }
 
     return Scaffold(
-      backgroundColor: AppColor.bgColor,
+      backgroundColor: AppColor.bgColor2,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
@@ -100,7 +100,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
               },
             ),
             ListTile(
-              title: Text('　プロフィール設定'),
+              title: Text('　アカウント設定'),
               onTap: () async {
                 Navigator.of(context).pop();
                 await Navigator.of(context).push(
@@ -131,7 +131,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
       ),
 
       body: Container(
-        color: AppColor.bgColor,
+        color: AppColor.bgColor2,
         margin: EdgeInsets.only(top: 20),
         padding: EdgeInsets.only(left: 10, right: 10),
         child: Column(
@@ -159,8 +159,9 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                         elevation: 2.0,
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).pushReplacement(
+                            Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (context) => HomePage(document.id)),
+                              (_) => false,
                             );
                           },
                           child: Padding(
@@ -241,7 +242,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
             ),
           ),
         ),
-        backgroundColor: AppColor.priceColor,
+        backgroundColor: AppColor.goalsetColor,
       ),
     );
   }

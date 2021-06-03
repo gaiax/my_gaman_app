@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../configs/colors.dart';
-import 'login.dart';
+import 'goalselect.dart';
 
 
 class Emailcheck extends StatefulWidget {
    // 呼び出し元Widgetから受け取った後、変更をしないためfinalを宣言。
   final String email;
-  final String pswd;
-  Emailcheck({Key key, this.email, this.pswd}) : super(key: key);
+  Emailcheck({Key key, this.email}) : super(key: key);
 
   @override
   _Emailcheck createState() => _Emailcheck();
@@ -18,7 +17,7 @@ class Emailcheck extends StatefulWidget {
 class _Emailcheck extends State<Emailcheck> {
   final auth = FirebaseAuth.instance;
   String _sentEmailText;
-  String _nocheckText;
+  String _nocheckText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -53,16 +52,9 @@ class _Emailcheck extends State<Emailcheck> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-
                   onPressed: () async {
-                    final UserCredential authResult = await auth.signInWithEmailAndPassword(
-                      email: widget.email,
-                      password: widget.pswd,
-                    );
-
-                    await authResult.user.sendEmailVerification();
+                    await auth.currentUser.sendEmailVerification();
                   },
-
                   // ボタン内の文字や書式
                   child: Text(
                     '確認メールを再送信',
@@ -79,36 +71,32 @@ class _Emailcheck extends State<Emailcheck> {
               minWidth: 350.0,  
               // height: 100.0,
               child: RaisedButton(
-
-                // ボタンの形状
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
 
                 onPressed: () async {
-                  final UserCredential authResult = await auth.signInWithEmailAndPassword(
-                    email: widget.email,
-                    password: widget.pswd,
-                  );
-                  final _verify = authResult.user.emailVerified; 
+                  final user = auth.currentUser;
+                  await user.reload();
+                  final _verify = user.emailVerified; 
                   // Email確認が済んでいる場合は、Home画面へ遷移
                   if (_verify){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyLoginPage(),
-                      )
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => GoalSelectPage()),
                     );
                   } else {
-                    // print('NG');
                     setState(() {
                       _nocheckText = "まだメール確認が完了していません。\n確認メール内のリンクをクリックしてください。";
                     });
                   }
                 },
                 // ボタン内の文字や書式
-                child: Text('メール確認完了',
-                  style: TextStyle(fontWeight: FontWeight.bold),),
+                child: Text(
+                  'メール確認完了',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
                 textColor: AppColor.white,
                 color: AppColor.wavecolor,
               ),

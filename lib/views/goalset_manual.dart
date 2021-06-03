@@ -1,19 +1,18 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:my_gaman_app/views/goalselect.dart';
-import 'package:universal_html/controller.dart';
-import 'goalset_manual.dart';
 import '../models/upload_image.dart';
 import '../configs/colors.dart';
 
-class GoalSetPage extends StatefulWidget {
+class GoalSetManualPage extends StatefulWidget {
   @override
-  _GoalSetPageState createState() => _GoalSetPageState();
+  _GoalSetManualPageState createState() => _GoalSetManualPageState();
 }
 
-class _GoalSetPageState extends State<GoalSetPage> {
+class _GoalSetManualPageState extends State<GoalSetManualPage> {
 
   TextEditingController goalTextController = TextEditingController();
   TextEditingController wantThingController = TextEditingController();
@@ -21,9 +20,12 @@ class _GoalSetPageState extends State<GoalSetPage> {
   var user = FirebaseAuth.instance.currentUser;
   var userId;
 
+  var wantThingImg;
+
   bool _loading = true;
   bool isGoalEmpty = false;
-  bool isWantThingEmpty = false;
+  bool isPriceEmpty = false;
+  bool isWantThingImgEmpty = false;
 
   @override
   void initState() {
@@ -87,28 +89,21 @@ class _GoalSetPageState extends State<GoalSetPage> {
                     Visibility(
                       visible: isGoalEmpty,
                       child: Text(
-                        "我慢目的を入力してください。(例: ディスプレイが欲しい！）",
-                        style: TextStyle(color: Colors.red, fontSize: 12.0),
+                        "我慢目的を入力してください。",
+                        style: TextStyle(color: Colors.red),
                       ),
                     ),
                     SizedBox(height: 20.0),
                     Text(
-                      '欲しいもの',
+                      '欲しいものの値段',
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w500,
                         color: AppColor.shadow,
                       ),
                     ),
-                    Text(
-                      '※ Amazon商品リンクを貼り付けてください.（セール商品は対象外です.）',
-                      style: TextStyle(
-                        fontSize: 10.0,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.shadow,
-                      ),
-                    ),
                     TextField(
+                      keyboardType: TextInputType.number,
                       controller: wantThingController,
                       style: TextStyle(
                         fontSize: 18.0,
@@ -116,13 +111,63 @@ class _GoalSetPageState extends State<GoalSetPage> {
                       ),
                     ),
                     Visibility(
-                      visible: isWantThingEmpty,
+                      visible: isPriceEmpty,
                       child: Text(
-                        "欲しいモノのAmazon商品リンクを入力してください。",
+                        "欲しいものの値段を入力してください。",
                         style: TextStyle(color: Colors.red),
                       ),
                     ),
-                    Padding(padding: EdgeInsets.all(30.0),),
+                    SizedBox(height: 20.0),
+                    Text(
+                      '欲しいものの画像',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.shadow,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: uploadImage,
+                      child: (wantThingImg != null) ? Container(
+                        height: 200.0,
+                        width: 150.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          image: DecorationImage(
+                            image: FileImage(File(wantThingImg)),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ) : Stack(
+                        alignment: Alignment.center,
+                        children: <Widget>[
+                          Container(
+                            width: 200.0,
+                            height: 150.0,
+                            decoration: BoxDecoration(
+                              color: AppColor.shadow,
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          Text(
+                            '+',
+                            style: TextStyle(
+                              color: AppColor.white,
+                              fontSize: 40.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: isWantThingImgEmpty,
+                      child: Text(
+                        "欲しいものの画像を選択してください。",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.all(20.0),),
                     Container(
                       alignment: Alignment.bottomRight,
                       padding: EdgeInsets.all(10.0),
@@ -143,28 +188,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
                       ),
                     ),
                     Padding(padding: EdgeInsets.all(30.0)),
-                    ButtonTheme(
-                      minWidth: 200.0,  
-                      // height: 100.0,
-                      child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        onPressed: () async {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => GoalSetManualPage()),
-                          );
-                        },
-                        child: Text(
-                          '手動で登録する',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        textColor: AppColor.white,
-                        color: AppColor.shadow,
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -175,8 +198,18 @@ class _GoalSetPageState extends State<GoalSetPage> {
     );
   }
 
+  void uploadImage() async {
+    setState(() {
+      _loading = true;
+    });
+    wantThingImg = await UploadImage.getImage(true);
+    setState(() {
+      _loading = false;
+    });
+  }
+
   void submitPressed() async {
-    if (goalTextController.text.isNotEmpty && wantThingController.text.isNotEmpty) {
+    if (goalTextController.text.isNotEmpty && wantThingController.text.isNotEmpty && wantThingImg != null) {
       setState(() {
         _loading = true;
       });
@@ -184,60 +217,21 @@ class _GoalSetPageState extends State<GoalSetPage> {
       final createdAt = Timestamp.fromDate(time);
       final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
 
-      try {
-        final controller = WindowController();
-        await controller.openHttp(
-          uri: Uri.parse(wantThingController.text),
-        );
-        final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
-        final wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
-        final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
-        
-        final wantThingImg = await UploadImage.uploadAmazonImg(wantThingAmazonImg, userId, date);
+      final wantThingImgUrl = await UploadImage.uploadWantImg(wantThingImg, userId, date);
 
-        await FirebaseFirestore.instance
-          .collection('goals')
-          .doc()
-          .set({
-            'userId': userId,
-            'goalText': goalTextController.text,
-            'wantThingUrl': wantThingController.text,
-            'wantThingImg': wantThingImg,
-            'wantThingPrice': wantThingPrice,
-            'createdAt' : createdAt,
-            'date': date,
-            'achieve': false,
-          });
-      } catch(e) {
-        return showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('エラー'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    Text('欲しいモノ情報が取得できませんでした。'),
-                    Text('手動で登録してください。'),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => GoalSetManualPage()),
-                    );
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
+      await FirebaseFirestore.instance
+        .collection('goals')
+        .doc()
+        .set({
+          'userId': userId,
+          'goalText': goalTextController.text,
+          'wantThingUrl': null,
+          'wantThingImg': wantThingImgUrl,
+          'wantThingPrice': wantThingController.text,
+          'createdAt' : createdAt,
+          'date': date,
+          'achieve': false,
+        });
 
       goalTextController.clear();
       wantThingController.clear();
@@ -250,7 +244,12 @@ class _GoalSetPageState extends State<GoalSetPage> {
     } else {
       setState(() {
         isGoalEmpty = goalTextController.text.isEmpty;
-        isWantThingEmpty = wantThingController.text.isEmpty;
+        isPriceEmpty = wantThingController.text.isEmpty;
+        if (wantThingImg == null) {
+          isWantThingImgEmpty = true; 
+        } else {
+          isWantThingImgEmpty = false;
+        }
       });
     }
   }

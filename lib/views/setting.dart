@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:my_gaman_app/main.dart';
+import 'login.dart';
 import '../configs/colors.dart';
 import '../models/upload_image.dart';
 
@@ -54,7 +56,7 @@ class _SettingPageState extends State<SettingPage> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
-          'プロフィール設定',
+          'アカウント設定',
           style: TextStyle(
             color:AppColor.textColor,
             fontWeight: FontWeight.w400,
@@ -136,11 +138,85 @@ class _SettingPageState extends State<SettingPage> {
                   onPrimary: AppColor.textColor,
                 ),
               ),
-            )
+            ),
+            SizedBox(height: 30.0),
+            SizedBox(
+              width: 200,
+              child: ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('確認'),
+                        content: SingleChildScrollView(
+                          child: ListBody(
+                            children: <Widget>[
+                              Text('本当に削除しますか？'),
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('OK'),
+                            onPressed: deleteUser,
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: AppColor.wavecolor,
+                  onPrimary: AppColor.textColor,
+                ),
+                child: Text("アカウント削除"),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void deleteUser() async {
+    try {
+      await FirebaseAuth.instance.currentUser.delete();
+      await Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => StartPage()),
+        (_) => false
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('注意'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text('再度ログインする必要があります。'),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => MyLoginPage()),
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
   }
 
   void uploadImage() async {

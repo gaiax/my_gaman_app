@@ -537,14 +537,14 @@ class _HomePageState extends State<HomePage> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: const Text('OK'),
-                  onPressed: _launchURL,
-                ),
-                TextButton(
                   child: const Text('Cancel'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
+                ),
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: _launchURL,
                 ),
               ],
             );
@@ -572,13 +572,13 @@ class _HomePageState extends State<HomePage> {
           content: Text('欲しいモノのURLが見つかりません。直接アクセスしてください。'),
           actions: <Widget>[
             TextButton(
-              child: const Text('OK'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

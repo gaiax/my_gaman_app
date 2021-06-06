@@ -16,7 +16,7 @@ class GoalSelectPage extends StatefulWidget {
 
 class _GoalSelectPageState extends State<GoalSelectPage> {
 
-  firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance; 
+  firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
 
   var user = FirebaseAuth.instance.currentUser;
   var userId;
@@ -41,6 +41,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
     userPhoto = user.photoURL;
 
     setState(() {
+      print(userId);
       _loading = false;
     });
   }
@@ -164,6 +165,33 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                               (_) => false,
                             );
                           },
+                          onLongPress: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('目的削除'),
+                                  content: Text('この目的を削除しますか？'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('OK'),
+                                      onPressed: () {
+                                        print('OK押された'+document.id);
+                                        deleteGoal(document.id);
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: const Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
                           child: Padding(
                             padding: EdgeInsets.all(5.0),
                             child: ListTile(
@@ -245,5 +273,12 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
         backgroundColor: AppColor.goalsetColor,
       ),
     );
+  }
+
+  void deleteGoal(String id) async {
+    print(id);
+    await FirebaseFirestore.instance.collection('goals').doc(id).delete();
+    print('Do it');
+    setState(() {});
   }
 }

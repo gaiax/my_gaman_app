@@ -589,6 +589,9 @@ class _HomePageState extends State<HomePage> {
     gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
     setState(() {
       documents = gamanSnapshot.docs;
+      documents.forEach((document) {
+        saving = saving + int.parse(document['price']);
+      });
     });
   }
 

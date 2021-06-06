@@ -338,45 +338,73 @@ class _HomePageState extends State<HomePage> {
                       (document) => Card(
                         margin: EdgeInsets.all(0.5),
                         elevation: 2.0,
-                        child: Padding(
-                          padding: EdgeInsets.all(7.0),
-                          child: ListTile(
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  document['date'],
-                                  style: TextStyle(
-                                    fontSize: 11.0,
-                                    fontWeight: FontWeight.w300,
-                                  )
-                                ),
-                              ],
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(padding: EdgeInsets.all(3.0)),
-                                Text(
-                                  document['text'],
-                                  style: TextStyle(
-                                    color: AppColor.textColor,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w400,
+                        child: InkWell(
+                          onLongPress: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('目的削除'),
+                                  content: Text('この目的を削除しますか？'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('OK'),
+                                      onPressed: () {
+                                        deleteGoal(document.id);
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: const Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(7.0),
+                            child: ListTile(
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    document['date'],
+                                    style: TextStyle(
+                                      fontSize: 11.0,
+                                      fontWeight: FontWeight.w300,
+                                    )
                                   ),
+                                ],
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(padding: EdgeInsets.all(3.0)),
+                                  Text(
+                                    document['text'],
+                                    style: TextStyle(
+                                      color: AppColor.textColor,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              trailing: Text(
+                                document['price'],
+                                style: TextStyle(
+                                  color: AppColor.priceColor,
+                                  fontSize: 19.0,
+                                  fontWeight: FontWeight.w700,
                                 ),
-                              ],
-                            ),
-                            trailing: Text(
-                              document['price'],
-                              style: TextStyle(
-                                color: AppColor.priceColor,
-                                fontSize: 19.0,
-                                fontWeight: FontWeight.w700,
                               ),
                             ),
-                          )
-                        )
+                          ),
+                        ),
                       )).toList(),
                   ),
                 ),
@@ -487,7 +515,7 @@ class _HomePageState extends State<HomePage> {
       final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
       gamanPrice = priceController.text;
 
-      await FirebaseFirestore.instance
+      await cloud
         .collection('gamans')
         .doc()
         .set({
@@ -513,7 +541,7 @@ class _HomePageState extends State<HomePage> {
       descriptionController.clear();
 
       if (saving >= int.parse(wantThingPrice)) {
-        await FirebaseFirestore.instance.collection('goals').doc(goalId).update({'achieve': true});
+        await cloud.collection('goals').doc(goalId).update({'achieve': true});
         showDialog(
           context: context,
           barrierDismissible: true,
@@ -554,6 +582,14 @@ class _HomePageState extends State<HomePage> {
     } else {
       await canLaunch(_url) ? await launch(_url) : errorDialog();
     }
+  }
+
+  void deleteGoal(String id) async {
+    await cloud.collection('gamans').doc(id).delete();
+    gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
+    setState(() {
+      documents = gamanSnapshot.docs;
+    });
   }
 
   void errorDialog() {

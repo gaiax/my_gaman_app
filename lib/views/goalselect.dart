@@ -18,6 +18,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
 
   firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
 
+  var cloud = FirebaseFirestore.instance;
   var user = FirebaseAuth.instance.currentUser;
   var userId;
   var userEmail;
@@ -41,7 +42,6 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
     userPhoto = user.photoURL;
 
     setState(() {
-      print(userId);
       _loading = false;
     });
   }
@@ -139,7 +139,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
           children: <Widget>[
             Expanded(
               child: FutureBuilder<QuerySnapshot>(
-                future: FirebaseFirestore.instance
+                future: cloud
                   .collection('goals')
                   .where('userId', isEqualTo: userId)
                   .orderBy('createdAt', descending: true)
@@ -176,7 +176,6 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                                     TextButton(
                                       child: const Text('OK'),
                                       onPressed: () {
-                                        print('OK押された'+document.id);
                                         deleteGoal(document.id);
                                         Navigator.of(context).pop();
                                       },
@@ -276,9 +275,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
   }
 
   void deleteGoal(String id) async {
-    print(id);
-    await FirebaseFirestore.instance.collection('goals').doc(id).delete();
-    print('Do it');
+    await cloud.collection('goals').doc(id).delete();
     setState(() {});
   }
 }

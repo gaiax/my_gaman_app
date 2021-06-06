@@ -2,13 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_gaman_app/main.dart';
-import 'package:wave_progress_widget/wave_progress.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'postview.dart';
 import 'setting.dart';
 import 'goalselect.dart';
+import 'waveprogress.dart';
 import '../configs/colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -142,12 +142,10 @@ class _HomePageState extends State<HomePage> {
               title: Text('　目的一覧・変更'),
               onTap: () async {
                 Navigator.of(context).pop();
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => GoalSelectPage()),
+                  (_) => false
                 );
-                setState(() {
-                  setData();
-                });
               },
             ),
             ListTile(

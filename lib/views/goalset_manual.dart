@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:my_gaman_app/views/goalselect.dart';
 import '../models/upload_image.dart';
@@ -85,6 +86,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                         fontSize: 18.0,
                         fontWeight: FontWeight.w400,
                       ),
+                      maxLength: 15,
                     ),
                     Visibility(
                       visible: isGoalEmpty,
@@ -109,6 +111,8 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                         fontSize: 18.0,
                         fontWeight: FontWeight.w400,
                       ),
+                      maxLength: 7,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     ),
                     Visibility(
                       visible: isPriceEmpty,

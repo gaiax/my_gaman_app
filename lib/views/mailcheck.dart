@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:my_gaman_app/views/show_progress.dart';
 import '../configs/colors.dart';
 import 'goalselect.dart';
 
@@ -53,7 +54,9 @@ class _Emailcheck extends State<Emailcheck> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   onPressed: () async {
+                    ShowProgress.showProgressDialog(context);
                     await auth.currentUser.sendEmailVerification();
+                    Navigator.of(context).pop();
                   },
                   // ボタン内の文字や書式
                   child: Text(
@@ -76,6 +79,7 @@ class _Emailcheck extends State<Emailcheck> {
                 ),
 
                 onPressed: () async {
+                  ShowProgress.showProgressDialog(context);
                   final user = auth.currentUser;
                   await user.reload();
                   final _verify = user.emailVerified; 
@@ -89,6 +93,7 @@ class _Emailcheck extends State<Emailcheck> {
                       _nocheckText = "まだメール確認が完了していません。\n確認メール内のリンクをクリックしてください。";
                     });
                   }
+                  Navigator.of(context).pop();
                 },
                 // ボタン内の文字や書式
                 child: Text(

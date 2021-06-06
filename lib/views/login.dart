@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_gaman_app/views/goalselect.dart';
+import 'package:my_gaman_app/views/reset_password.dart';
+import 'package:my_gaman_app/views/show_progress.dart';
 import '../configs/colors.dart';
 import 'mailcheck.dart';
 
@@ -39,7 +41,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 padding: EdgeInsets.all(32.0),
                 child: Column(
                   children: <Widget>[
-                    Padding(padding: EdgeInsets.all(30.0)),
                     TextFormField(
                       decoration: InputDecoration(labelText: "メールアドレス"),
                       controller: emailController,
@@ -64,11 +65,27 @@ class _MyLoginPageState extends State<MyLoginPage> {
                         style: TextStyle(color: Colors.red),
                       ),
                     ),
+                    SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: InkWell (
+                        child: Text(
+                          'パスワードを忘れましたか？',
+                          style: TextStyle(color: AppColor.priceColor),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => ResetPassPage()),
+                          );
+                        },
+                      ),
+                    ),
                     Padding(padding: EdgeInsets.all(30.0)),
                     ElevatedButton(
                       onPressed: () async {
                         if (emailController.text.isNotEmpty && passController.text.isNotEmpty) {
                           try {
+                            ShowProgress.showProgressDialog(context);
                             // メールとパスワードでユーザー登録
                             final FirebaseAuth auth = FirebaseAuth.instance;
                             final UserCredential authResult = await auth.signInWithEmailAndPassword(
@@ -77,7 +94,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
                             final user = authResult.user;
                             await user.reload();
-                            final _verify = user.emailVerified; 
+                            final _verify = user.emailVerified;
                             // Email確認が済んでいる場合は、Home画面へ遷移
                             if (_verify){
                               // 登録後Home画面に遷移
@@ -108,6 +125,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                             isPassEmpty = passController.text.isEmpty;
                           });
                         }
+                        Navigator.of(context).pop();
                       },
                       child: Text("Login"),
                       style: ElevatedButton.styleFrom(

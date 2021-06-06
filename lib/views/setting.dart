@@ -168,8 +168,8 @@ class _SettingPageState extends State<SettingPage> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: AppColor.wavecolor,
-                  onPrimary: AppColor.textColor,
+                  primary: AppColor.shadow,
+                  onPrimary: AppColor.white,
                 ),
                 child: Text("アカウント削除"),
               ),

@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:my_gaman_app/views/show_progress.dart';
 import 'dart:core';
 import 'mailcheck.dart';
 import '../configs/colors.dart';
@@ -114,6 +115,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                           isUserNameEmpty = false;
                           unmatchPass = false;
                           try {
+                            ShowProgress.showProgressDialog(context);
                             // メールとパスワードでユーザー登録
                             final FirebaseAuth auth = FirebaseAuth.instance;
                             final UserCredential authResult = await auth.createUserWithEmailAndPassword(
@@ -169,6 +171,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                             }
                           });
                         }
+                        Navigator.of(context).pop();
                       },
                       child: Text("SignUp"),
                       style: ElevatedButton.styleFrom(
@@ -189,6 +192,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
       ),
     );
   }
+
   Future<String> getDownloadUrl(userPhotoRef) async {
     return await userPhotoRef.getDownloadURL();
   }

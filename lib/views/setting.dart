@@ -5,6 +5,7 @@ import 'package:my_gaman_app/main.dart';
 import 'login.dart';
 import '../configs/colors.dart';
 import '../models/upload_image.dart';
+import '../views/show_progress.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -174,8 +175,8 @@ class _SettingPageState extends State<SettingPage> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: AppColor.wavecolor,
-                  onPrimary: AppColor.textColor,
+                  primary: AppColor.shadow,
+                  onPrimary: AppColor.white,
                 ),
                 child: Text("アカウント削除"),
               ),
@@ -226,15 +227,16 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void uploadImage() async {
+    ShowProgress.showProgressDialog(context);
     var image = await UploadImage.getImage(true);
-    _loading = true;
     userPhoto = await UploadImage.uploadFile(image, userId);
-    setState(() {
-      _loading = false;
-    });
+    Navigator.of(context).pop();
   }
 
   void saveUsers() async {
+    setState(() {
+      _loading = true;
+    });
     await user.updateProfile(displayName: userNameController.text, photoURL: userPhoto);
     await user.reload();
 

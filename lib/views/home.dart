@@ -345,8 +345,8 @@ class _HomePageState extends State<HomePage> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: const Text('目的削除'),
-                                  content: Text('この目的を削除しますか？'),
+                                  title: const Text('我慢削除'),
+                                  content: Text('この我慢を削除しますか？'),
                                   actions: <Widget>[
                                     TextButton(
                                       child: const Text('OK'),
@@ -570,7 +570,10 @@ class _HomePageState extends State<HomePage> {
                 ),
                 TextButton(
                   child: const Text('OK'),
-                  onPressed: _launchURL,
+                  onPressed: () {
+                    _launchURL();
+                    Navigator.of(context).pop();
+                  },
                 ),
               ],
             );

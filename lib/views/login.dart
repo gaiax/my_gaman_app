@@ -119,13 +119,13 @@ class _MyLoginPageState extends State<MyLoginPage> {
                               infoText = "認証NG: $e";
                             });
                           }
+                          Navigator.of(context).pop();
                         } else {
                           setState(() {
                             isEmailEmpty = emailController.text.isEmpty;
                             isPassEmpty = passController.text.isEmpty;
                           });
                         }
-                        Navigator.of(context).pop();
                       },
                       child: Text("Login"),
                       style: ElevatedButton.styleFrom(

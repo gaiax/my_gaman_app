@@ -161,6 +161,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                               infoText = "登録NG: $e";
                             });
                           }
+                          Navigator.of(context).pop();
                         } else {
                           setState(() {
                             isEmailEmpty = emailController.text.isEmpty;
@@ -171,7 +172,6 @@ class _MyAuthPageState extends State<MyAuthPage> {
                             }
                           });
                         }
-                        Navigator.of(context).pop();
                       },
                       child: Text("SignUp"),
                       style: ElevatedButton.styleFrom(

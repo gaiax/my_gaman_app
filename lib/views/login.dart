@@ -25,7 +25,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
-          'Gaman App',
+          'ログイン',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: AppColor.white,

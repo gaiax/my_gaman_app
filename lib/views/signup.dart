@@ -32,7 +32,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
-          'Gaman App',
+          'サインアップ',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: AppColor.white,

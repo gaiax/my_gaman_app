@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo2',
+      title: 'ちりつも',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -45,7 +45,7 @@ class _StartPageState extends State<StartPage> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
-          'Gaman App',
+          'ちりつも',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: AppColor.white,

@@ -49,7 +49,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
-          'Gaman App',
+          '目的設定',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: AppColor.white,

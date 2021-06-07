@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:my_gaman_app/views/goalselect.dart';
 import '../configs/colors.dart';
+import '../models/firebase_error.dart';
 import 'mailcheck.dart';
 
 class MyLoginPage extends StatefulWidget {
@@ -91,15 +91,15 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                 MaterialPageRoute(builder: (context) => Emailcheck(email: user.email)),
                               );
                             }
-                          } on PlatformException catch (error) {
+                          } on FirebaseAuthException catch (error) {
                             // 登録に失敗した場合
                             setState(() {
-                              infoText = "登録NG：${error.message}";
+                              infoText = FirebaseAuthExceptionHandler.exceptionMessage(FirebaseAuthExceptionHandler.handleException(error));
                             });
                           } on Exception catch (e) {
                             // 登録に失敗した場合
                             setState(() {
-                              infoText = "登録NG: $e";
+                              infoText = "認証NG: $e";
                             });
                           }
                         } else {
@@ -115,7 +115,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
                         onPrimary: AppColor.textColor,
                       ),
                     ),
-                    Text(infoText)
+                    Text(
+                      infoText,
+                      style: TextStyle(color: Colors.red),
+                    ),
                   ],
                 ),
               ),

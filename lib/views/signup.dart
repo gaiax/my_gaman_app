@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'dart:core';
 import 'mailcheck.dart';
 import '../configs/colors.dart';
+import '../models/firebase_error.dart';
 
 class MyAuthPage extends StatefulWidget {
   @override
@@ -46,10 +47,13 @@ class _MyAuthPageState extends State<MyAuthPage> {
                 padding: EdgeInsets.all(32.0),
                 child: Column(
                   children: <Widget>[
-                    Padding(padding: EdgeInsets.all(30.0)),
                     TextFormField(
                       decoration: InputDecoration(labelText: "メールアドレス"),
                       controller: emailController,
+                      validator: (String value) {
+                        return (value != null && !value.contains('@')) ? '正しいメールアドレスを入力してください。' : null;
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     Visibility(
                       visible: isEmailEmpty,
@@ -61,6 +65,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                     TextFormField(
                       decoration: InputDecoration(labelText: "ユーザーネーム"),
                       controller: userNameController,
+                      maxLength: 15,
                     ),
                     Visibility(
                       visible: isUserNameEmpty,
@@ -70,10 +75,15 @@ class _MyAuthPageState extends State<MyAuthPage> {
                       ),
                     ),
                     TextFormField(
-                      decoration: InputDecoration(labelText: "パスワード（８文字以上推奨）"),
+                      decoration: InputDecoration(labelText: "パスワード（８文字以上）"),
                       //　パスワードを見えないように
                       obscureText: true,
                       controller: passController,
+                      maxLength: 30,
+                      validator: (String value) {
+                        return (value.length < 8) ? '８文字以上にしてください' : null;
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     Visibility(
                       visible: isPassEmpty,
@@ -99,6 +109,10 @@ class _MyAuthPageState extends State<MyAuthPage> {
                     ElevatedButton(
                       onPressed: () async {
                         if (emailController.text.isNotEmpty && passController.text.isNotEmpty && userNameController.text.isNotEmpty && passController.text == checkPassController.text) {
+                          isEmailEmpty = false;
+                          isPassEmpty = false;
+                          isUserNameEmpty = false;
+                          unmatchPass = false;
                           try {
                             // メールとパスワードでユーザー登録
                             final FirebaseAuth auth = FirebaseAuth.instance;
@@ -134,10 +148,10 @@ class _MyAuthPageState extends State<MyAuthPage> {
                             await Navigator.of(context).pushReplacement(
                               MaterialPageRoute(builder: (context) => Emailcheck(email: userNameController.text)),
                             );
-                          } on PlatformException catch (error) {
+                          } on FirebaseAuthException catch (error) {
                             // 登録に失敗した場合
                             setState(() {
-                              infoText = "登録NG：${error.message}";
+                              infoText = FirebaseAuthExceptionHandler.exceptionMessage(FirebaseAuthExceptionHandler.handleException(error));
                             });
                           } on Exception catch (e) {
                             // 登録に失敗した場合
@@ -162,7 +176,10 @@ class _MyAuthPageState extends State<MyAuthPage> {
                         onPrimary: AppColor.textColor,
                       ),
                     ),
-                    Text(infoText)
+                    Text(
+                      infoText,
+                      style: TextStyle(color: Colors.red),
+                    ),
                   ],
                 ),
               ),

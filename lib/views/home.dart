@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:my_gaman_app/main.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -456,13 +457,15 @@ class _HomePageState extends State<HomePage> {
                 color: AppColor.shadow,
               ),
             ),
-            TextField(
+            TextFormField(
               controller: priceController,
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w400,
               ),
               keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              maxLength: 6,
             ),
             SizedBox(height: 40.0),
             Text(
@@ -479,6 +482,7 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 20.0,
                 fontWeight: FontWeight.w400,
               ),
+              maxLength: 15,
             ),
             Padding(padding: EdgeInsets.all(60.0),),
             Container(
@@ -559,14 +563,14 @@ class _HomePageState extends State<HomePage> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: const Text('OK'),
-                  onPressed: _launchURL,
-                ),
-                TextButton(
                   child: const Text('Cancel'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
+                ),
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: _launchURL,
                 ),
               ],
             );
@@ -607,13 +611,13 @@ class _HomePageState extends State<HomePage> {
           content: Text('欲しいモノのURLが見つかりません。直接アクセスしてください。'),
           actions: <Widget>[
             TextButton(
-              child: const Text('OK'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

@@ -83,6 +83,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                         fontSize: 18.0,
                         fontWeight: FontWeight.w400,
                       ),
+                      maxLength: 15,
                     ),
                     Visibility(
                       visible: isGoalEmpty,

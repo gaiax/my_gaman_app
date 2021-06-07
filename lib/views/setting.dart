@@ -159,6 +159,12 @@ class _SettingPageState extends State<SettingPage> {
                         ),
                         actions: <Widget>[
                           TextButton(
+                            child: const Text('Cancel'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
                             child: const Text('OK'),
                             onPressed: deleteUser,
                           ),

@@ -16,8 +16,9 @@ class GoalSelectPage extends StatefulWidget {
 
 class _GoalSelectPageState extends State<GoalSelectPage> {
 
-  firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance; 
+  firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
 
+  var cloud = FirebaseFirestore.instance;
   var user = FirebaseAuth.instance.currentUser;
   var userId;
   var userEmail;
@@ -138,7 +139,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
           children: <Widget>[
             Expanded(
               child: FutureBuilder<QuerySnapshot>(
-                future: FirebaseFirestore.instance
+                future: cloud
                   .collection('goals')
                   .where('userId', isEqualTo: userId)
                   .orderBy('createdAt', descending: true)
@@ -162,6 +163,32 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (context) => HomePage(document.id)),
                               (_) => false,
+                            );
+                          },
+                          onLongPress: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('目的削除'),
+                                  content: Text('この目的を削除しますか？'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('OK'),
+                                      onPressed: () {
+                                        deleteGoal(document.id);
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: const Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           },
                           child: Padding(
@@ -245,5 +272,10 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
         backgroundColor: AppColor.goalsetColor,
       ),
     );
+  }
+
+  void deleteGoal(String id) async {
+    await cloud.collection('goals').doc(id).delete();
+    setState(() {});
   }
 }

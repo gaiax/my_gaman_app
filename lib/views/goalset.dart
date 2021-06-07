@@ -186,9 +186,10 @@ class _GoalSetPageState extends State<GoalSetPage> {
       final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
 
       try {
+        final amazonUrl = getAmazonlink(wantThingController.text);
         final controller = WindowController();
         await controller.openHttp(
-          uri: Uri.parse(wantThingController.text),
+          uri: Uri.parse(amazonUrl),
         );
         final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
         final wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
@@ -202,7 +203,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
           .set({
             'userId': userId,
             'goalText': goalTextController.text,
-            'wantThingUrl': wantThingController.text,
+            'wantThingUrl': amazonUrl,
             'wantThingImg': wantThingImg,
             'wantThingPrice': wantThingPrice,
             'createdAt' : createdAt,
@@ -254,5 +255,20 @@ class _GoalSetPageState extends State<GoalSetPage> {
         isWantThingEmpty = wantThingController.text.isEmpty;
       });
     }
+  }
+
+  String getAmazonlink (String input){
+    final List<String> amazonUrl = <String>[];
+    // RegExpを定義
+    final RegExp urlRegExp = RegExp(
+      r'((https?:www\.)|(https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?'
+    );
+          
+    // ここで、Iterable型でURLの配列を取得
+    final Iterable<RegExpMatch> urlMatches = urlRegExp.allMatches(input);
+    for (RegExpMatch urlMatch in urlMatches) {
+      return input.substring(urlMatch.start, urlMatch.end);
+    }
+    return null;
   }
 }

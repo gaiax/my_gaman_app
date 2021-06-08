@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:my_gaman_app/main.dart';
 import 'login.dart';
@@ -202,6 +203,11 @@ class _SettingPageState extends State<SettingPage> {
       });
 
       await cloud.collection('users').doc(userId).delete();
+
+      firebase_storage.ListResult result = await firebase_storage.FirebaseStorage.instance.ref('user/'+userId).listAll();
+      result.items.forEach((firebase_storage.Reference ref) {
+        ref.delete();
+      });
 
       await FirebaseAuth.instance.currentUser.delete();
 

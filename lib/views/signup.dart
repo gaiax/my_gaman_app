@@ -109,7 +109,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                     Padding(padding: EdgeInsets.all(30.0)),
                     ElevatedButton(
                       onPressed: () async {
-                        if (emailController.text.isNotEmpty && passController.text.isNotEmpty && userNameController.text.isNotEmpty && passController.text == checkPassController.text) {
+                        if (emailController.text.isNotEmpty && passController.text.isNotEmpty && userNameController.text.isNotEmpty && passController.text == checkPassController.text && passController.text.length > 7) {
                           isEmailEmpty = false;
                           isPassEmpty = false;
                           isUserNameEmpty = false;
@@ -148,7 +148,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                               });
                             
                             await Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (context) => Emailcheck(email: userNameController.text)),
+                              MaterialPageRoute(builder: (context) => Emailcheck(email: authResult.user.email, pswd: passController.text)),
                             );
                           } on FirebaseAuthException catch (error) {
                             // 登録に失敗した場合

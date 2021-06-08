@@ -190,24 +190,29 @@ class _SettingPageState extends State<SettingPage> {
 
   void deleteUser() async {
     try {
-      final gamans = await cloud.collection('gamans').where('userId' == userId).get();
+      final gamans = await cloud.collection('gamans').where('userId', isEqualTo: userId).get();
       final gamandocs = gamans.docs;
       gamandocs.forEach((gamandoc) async {
         await cloud.collection('gamans').doc(gamandoc.id).delete();
       });
 
-      final goals = await cloud.collection('goals').where('userId' == userId).get();
+      final goals = await cloud.collection('goals').where('userId', isEqualTo: userId).get();
       final goaldocs = goals.docs;
       goaldocs.forEach((goaldoc) async {
         await cloud.collection('goals').doc(goaldoc.id).delete();
       });
 
-      await cloud.collection('users').doc(userId).delete();
-
       firebase_storage.ListResult result = await firebase_storage.FirebaseStorage.instance.ref('user/'+userId).listAll();
-      result.items.forEach((firebase_storage.Reference ref) {
-        ref.delete();
+      result.items.forEach((firebase_storage.Reference ref) async {
+        await ref.delete();
       });
+      result.prefixes.forEach((firebase_storage.Reference ref) async {
+        if (ref.name == userId) {
+          await ref.delete();
+        }
+      });
+
+      await cloud.collection('users').doc(userId).delete();
 
       await FirebaseAuth.instance.currentUser.delete();
 

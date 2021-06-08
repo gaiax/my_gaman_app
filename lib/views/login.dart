@@ -105,7 +105,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                             } else {
                               await user.sendEmailVerification();
                               await Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(builder: (context) => Emailcheck(email: user.email)),
+                                MaterialPageRoute(builder: (context) => Emailcheck(email: user.email, pswd: passController.text)),
                               );
                             }
                           } on FirebaseAuthException catch (error) {

@@ -8,7 +8,8 @@ import 'goalselect.dart';
 class Emailcheck extends StatefulWidget {
    // 呼び出し元Widgetから受け取った後、変更をしないためfinalを宣言。
   final String email;
-  Emailcheck({Key key, this.email}) : super(key: key);
+  final String pswd;
+  Emailcheck({Key key, this.email, this.pswd}) : super(key: key);
 
   @override
   _Emailcheck createState() => _Emailcheck();
@@ -80,13 +81,17 @@ class _Emailcheck extends State<Emailcheck> {
 
                 onPressed: () async {
                   ShowProgress.showProgressDialog(context);
-                  final user = auth.currentUser;
+                  final UserCredential authResult = await auth.signInWithEmailAndPassword(
+                    email: widget.email, password: widget.pswd,
+                  );
+                  final user = authResult.user;
                   await user.reload();
                   final _verify = user.emailVerified; 
                   // Email確認が済んでいる場合は、Home画面へ遷移
                   if (_verify){
-                    Navigator.of(context).pushReplacement(
+                    await Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => GoalSelectPage()),
+                      (_) => false,
                     );
                   } else {
                     setState(() {

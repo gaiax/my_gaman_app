@@ -71,6 +71,7 @@ class _PostViewPageState extends State<PostViewPage> {
                 future: cloud
                   .collection('gamans')
                   .orderBy('createdAt', descending: true)
+                  .limit(50)
                   .get(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {

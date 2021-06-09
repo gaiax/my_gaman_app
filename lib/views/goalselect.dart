@@ -60,7 +60,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
-          '目的一覧',
+          'ホーム',
           style: TextStyle(
             color:AppColor.textColor,
             fontWeight: FontWeight.w500,
@@ -83,15 +83,16 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
         ],
         onTap: (int index) {
           if (index == 0) {
-            Navigator.of(context).push(
+            Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => GoalSelectPage()),
             );
           } else if (index == 1) {
-            Navigator.of(context).push(
+            Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => PostViewPage()),
             );
           }
         },
+        fixedColor: AppColor.priceColor,
       ),
 
       drawer:Drawer(
@@ -115,9 +116,10 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                 subtitle: Text(userEmail),
               )
             ),
-            Padding(padding: EdgeInsets.all(5.0)),
+            Padding(padding: EdgeInsets.all(10.0)),
             ListTile(
-              title: Text('　アカウント設定'),
+              leading: Icon(Icons.settings_outlined),
+              title: Text('アカウント設定'),
               onTap: () async {
                 Navigator.of(context).pop();
                 await Navigator.of(context).push(
@@ -131,10 +133,8 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
               },
             ),
             ListTile(
-              title: Text(''),
-            ),
-            ListTile(
-              title: Text('　サインアウト'),
+              leading: Icon(Icons.logout_outlined),
+              title: Text('サインアウト'),
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pop();
@@ -177,7 +177,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                         elevation: 2.0,
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).pushReplacement(
+                            Navigator.of(context).push(
                               MaterialPageRoute(builder: (context) => HomePage(document.id)),
                             );
                           },

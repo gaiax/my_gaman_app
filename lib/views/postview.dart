@@ -86,9 +86,10 @@ class _PostViewPageState extends State<PostViewPage> {
                 subtitle: Text(userEmail),
               )
             ),
-            Padding(padding: EdgeInsets.all(5.0)),
+            Padding(padding: EdgeInsets.all(10.0)),
             ListTile(
-              title: Text('　アカウント設定'),
+              leading: Icon(Icons.settings_outlined),
+              title: Text('アカウント設定'),
               onTap: () async {
                 Navigator.of(context).pop();
                 await Navigator.of(context).push(
@@ -102,10 +103,8 @@ class _PostViewPageState extends State<PostViewPage> {
               },
             ),
             ListTile(
-              title: Text(''),
-            ),
-            ListTile(
-              title: Text('　サインアウト'),
+              leading: Icon(Icons.logout_outlined),
+              title: Text('サインアウト'),
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pop();
@@ -132,15 +131,16 @@ class _PostViewPageState extends State<PostViewPage> {
         ],
         onTap: (int index) {
           if (index == 0) {
-            Navigator.of(context).push(
+            Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => GoalSelectPage()),
             );
           } else if (index == 1) {
-            Navigator.of(context).push(
+            Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => PostViewPage()),
             );
           }
         },
+        fixedColor: AppColor.priceColor,
         currentIndex: 1,
       ),
 

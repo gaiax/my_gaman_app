@@ -544,7 +544,7 @@ class _HomePageState extends State<HomePage> {
       priceController.clear();
       descriptionController.clear();
 
-      if (saving >= int.parse(wantThingPrice) && _url != null) {
+      if (saving >= int.parse(wantThingPrice)) {
         await cloud.collection('goals').doc(goalId).update({'achieve': true});
         showDialog(
           context: context,
@@ -557,7 +557,7 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Image.network(wantThingImg),
                     Text('おめでとうございます！実質貯金が貯まりました。'),
-                    Text('商品ページへ遷移しますか？'),
+                    (_url != null) ? Text('商品ページへ遷移しますか？') : null,
                   ],
                 ),
               ),
@@ -571,7 +571,7 @@ class _HomePageState extends State<HomePage> {
                 TextButton(
                   child: const Text('OK'),
                   onPressed: () {
-                    _launchURL();
+                    (_url != null) ? _launchURL() : Container();
                     Navigator.of(context).pop();
                   },
                 ),
@@ -579,33 +579,6 @@ class _HomePageState extends State<HomePage> {
             );
           },
         );
-      } else if (saving >= int.parse(wantThingPrice) && _url == null) {
-        await cloud.collection('goals').doc(goalId).update({'achieve': true});
-        showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('目標達成！'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    Image.network(wantThingImg),
-                    Text('おめでとうございます！実質貯金が貯まりました。'),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        ); 
       }
     }
   }

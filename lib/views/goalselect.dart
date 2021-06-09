@@ -174,15 +174,15 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                                   content: Text('この目的を削除しますか？'),
                                   actions: <Widget>[
                                     TextButton(
-                                      child: const Text('OK'),
+                                      child: const Text('Cancel'),
                                       onPressed: () {
-                                        deleteGoal(document.id);
                                         Navigator.of(context).pop();
                                       },
                                     ),
                                     TextButton(
-                                      child: const Text('Cancel'),
+                                      child: const Text('OK'),
                                       onPressed: () {
+                                        deleteGoal(document.id);
                                         Navigator.of(context).pop();
                                       },
                                     ),
@@ -275,6 +275,10 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
   }
 
   void deleteGoal(String id) async {
+    QuerySnapshot gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: id).orderBy('createdAt', descending: true).get();
+    gamanSnapshot.docs.forEach((DocumentSnapshot gaman) async { 
+      await cloud.collection('gamans').doc(gaman.id).delete();
+    });
     await cloud.collection('goals').doc(id).delete();
     setState(() {});
   }

@@ -349,15 +349,15 @@ class _HomePageState extends State<HomePage> {
                                   content: Text('この我慢を削除しますか？'),
                                   actions: <Widget>[
                                     TextButton(
-                                      child: const Text('OK'),
+                                      child: const Text('Cancel'),
                                       onPressed: () {
-                                        deleteGoal(document.id);
                                         Navigator.of(context).pop();
                                       },
                                     ),
                                     TextButton(
-                                      child: const Text('Cancel'),
+                                      child: const Text('OK'),
                                       onPressed: () {
+                                        deleteGaman(document.id);
                                         Navigator.of(context).pop();
                                       },
                                     ),
@@ -557,7 +557,7 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Image.network(wantThingImg),
                     Text('おめでとうございます！実質貯金が貯まりました。'),
-                    (_url != null) ? Text('商品ページへ遷移しますか？') : null,
+                    (_url != null) ? Text('商品ページへ遷移しますか？') : Container(),
                   ],
                 ),
               ),
@@ -591,7 +591,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void deleteGoal(String id) async {
+  void deleteGaman(String id) async {
     await cloud.collection('gamans').doc(id).delete();
     gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
     setState(() {

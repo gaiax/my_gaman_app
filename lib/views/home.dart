@@ -93,6 +93,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: AppColor.bgColor,
+      resizeToAvoidBottomInset: true,
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -376,89 +377,92 @@ class _HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.circular(10),
       ),
       builder: (BuildContext context) => Container(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(
-              '価格',
-              style: TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.w500,
-                color: AppColor.shadow,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text(
-                      '￥ ',
-                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500, color: AppColor.textColor),
-                    ),
-                    SizedBox(height: 24.0),
-                  ],
+        padding: MediaQuery.of(context).viewInsets,
+        child: Container(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                '価格',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.shadow,
                 ),
-                Flexible(
-                  child: TextFormField(
-                    controller: priceController,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        '￥ ',
+                        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500, color: AppColor.textColor),
+                      ),
+                      SizedBox(height: 24.0),
+                    ],
+                  ),
+                  Flexible(
+                    child: TextFormField(
+                      controller: priceController,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      maxLength: 6,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 18.0),
+              Text(
+                '内容',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.shadow,
+                ),
+              ),
+              TextField(
+                controller: descriptionController,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w400,
+                ),
+                decoration: InputDecoration(
+                  hintText: '(例)買い食いを我慢した！',
+                  hintStyle: TextStyle(fontSize: 16.0,),
+                ),
+                maxLength: 20,
+              ),
+              Padding(padding: EdgeInsets.all(40.0),),
+              Container(
+                alignment: Alignment.bottomRight,
+                padding: EdgeInsets.all(10.0),
+                child: RaisedButton(
+                  child: Text(
+                    '登録',
                     style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w600,
                     ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    maxLength: 6,
+                  ),
+                  onPressed: submitPressed,
+                  color: AppColor.priceColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-              ],
-            ),
-            SizedBox(height: 40.0),
-            Text(
-              '内容',
-              style: TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.w500,
-                color: AppColor.shadow,
               ),
-            ),
-            TextField(
-              controller: descriptionController,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w400,
-              ),
-              decoration: InputDecoration(
-                hintText: '(例)買い食いを我慢した！',
-                hintStyle: TextStyle(fontSize: 18.0,),
-              ),
-              maxLength: 15,
-            ),
-            Padding(padding: EdgeInsets.all(60.0),),
-            Container(
-              alignment: Alignment.bottomRight,
-              padding: EdgeInsets.all(10.0),
-              child: RaisedButton(
-                child: Text(
-                  '登録',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                onPressed: submitPressed,
-                color: AppColor.priceColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -87,6 +87,9 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                         fontWeight: FontWeight.w400,
                       ),
                       maxLength: 15,
+                      decoration: InputDecoration(
+                        hintText: '(例)旅行に行きたい！',
+                      ),
                     ),
                     Visibility(
                       visible: isGoalEmpty,
@@ -104,15 +107,32 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                         color: AppColor.shadow,
                       ),
                     ),
-                    TextField(
-                      keyboardType: TextInputType.number,
-                      controller: wantThingController,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      maxLength: 7,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Text(
+                              '￥ ',
+                              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: AppColor.textColor),
+                            ),
+                            SizedBox(height: 24.0),
+                          ],
+                        ),
+                        Flexible(
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            controller: wantThingController,
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            maxLength: 7,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          ),
+                        ),
+                      ],
                     ),
                     Visibility(
                       visible: isPriceEmpty,

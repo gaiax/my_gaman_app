@@ -84,6 +84,9 @@ class _GoalSetPageState extends State<GoalSetPage> {
                         fontWeight: FontWeight.w400,
                       ),
                       maxLength: 15,
+                      decoration: InputDecoration(
+                        hintText: '(例)ディスプレイが欲しい！',
+                      ),
                     ),
                     Visibility(
                       visible: isGoalEmpty,

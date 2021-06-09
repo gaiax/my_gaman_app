@@ -30,6 +30,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
   @override
   void initState() {
     super.initState();
+    user.reload();
     if (user != null) {
       setData();
     }
@@ -69,6 +70,30 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
         shadowColor: AppColor.shadow,
       ),
 
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_filled),
+            label: 'ホーム',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.whatshot_outlined),
+            label: 'みんなの我慢',
+          ),
+        ],
+        onTap: (int index) {
+          if (index == 0) {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => GoalSelectPage()),
+            );
+          } else if (index == 1) {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => PostViewPage()),
+            );
+          }
+        },
+      ),
+
       drawer:Drawer(
         child: ListView(
           shrinkWrap: true,
@@ -92,15 +117,6 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
             ),
             Padding(padding: EdgeInsets.all(5.0)),
             ListTile(
-              title: Text('　タイムライン'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => PostViewPage()),
-                );
-              },
-            ),
-            ListTile(
               title: Text('　アカウント設定'),
               onTap: () async {
                 Navigator.of(context).pop();
@@ -122,8 +138,9 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pop();
-                await Navigator.of(context).pushReplacement(
+                await Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => StartPage()),
+                  (_) => false,
                 );
               },
             ),
@@ -160,9 +177,8 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                         elevation: 2.0,
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).pushAndRemoveUntil(
+                            Navigator.of(context).pushReplacement(
                               MaterialPageRoute(builder: (context) => HomePage(document.id)),
-                              (_) => false,
                             );
                           },
                           onLongPress: () {

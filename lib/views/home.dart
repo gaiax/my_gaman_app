@@ -92,80 +92,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: AppColor.bgColor,
-      drawer:Drawer(
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            Card(
-              child: ListTile(
-                leading: Container(
-                  height: 65.0,
-                  width: 65.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image:NetworkImage(userPhoto),
-                    ),
-                  ),
-                ),
-                title: Text(userName),
-                subtitle: Text(userEmail),
-              )
-            ),
-            Padding(padding: EdgeInsets.all(5.0)),
-            ListTile(
-              title: Text('　タイムライン'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => PostViewPage()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('　アカウント設定'),
-              onTap: () async {
-                Navigator.of(context).pop();
-                await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SettingPage()),
-                );
-                setState(() {
-                  user = FirebaseAuth.instance.currentUser;
-                  userName = user.displayName;
-                  userPhoto = user.photoURL;
-                });
-              },
-            ),
-            ListTile(
-              title: Text('　目的一覧・変更'),
-              onTap: () async {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => GoalSelectPage()),
-                  (_) => false
-                );
-              },
-            ),
-            ListTile(
-              title: Text(''),
-            ),
-            ListTile(
-              title: Text('　サインアウト'),
-              onTap: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.of(context).pop();
-                await Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => StartPage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
@@ -457,15 +384,32 @@ class _HomePageState extends State<HomePage> {
                 color: AppColor.shadow,
               ),
             ),
-            TextFormField(
-              controller: priceController,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w400,
-              ),
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              maxLength: 6,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text(
+                      '￥ ',
+                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500, color: AppColor.textColor),
+                    ),
+                    SizedBox(height: 24.0),
+                  ],
+                ),
+                Flexible(
+                  child: TextFormField(
+                    controller: priceController,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    maxLength: 6,
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 40.0),
             Text(
@@ -481,6 +425,10 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w400,
+              ),
+              decoration: InputDecoration(
+                hintText: '(例)買い食いを我慢した！',
+                hintStyle: TextStyle(fontSize: 18.0,),
               ),
               maxLength: 15,
             ),

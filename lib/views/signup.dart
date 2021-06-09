@@ -49,7 +49,10 @@ class _MyAuthPageState extends State<MyAuthPage> {
                 child: Column(
                   children: <Widget>[
                     TextFormField(
-                      decoration: InputDecoration(labelText: "メールアドレス"),
+                      decoration: InputDecoration(
+                        labelText: "メールアドレス",
+                        hintText: 'chiritsumo@gmail.com'
+                      ),
                       controller: emailController,
                       validator: (String value) {
                         return (value != null && !value.contains('@')) ? '正しいメールアドレスを入力してください。' : null;

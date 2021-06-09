@@ -261,7 +261,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
   }
 
   String getAmazonlink (String input){
-    final List<String> amazonUrl = <String>[];
     // RegExpを定義
     final RegExp urlRegExp = RegExp(
       r'((https?:www\.)|(https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?'

@@ -5,7 +5,6 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:my_gaman_app/views/setting.dart';
 import '../configs/colors.dart';
 import '../main.dart';
-import 'goalselect.dart';
 
 class PostViewPage extends StatefulWidget {
   @override

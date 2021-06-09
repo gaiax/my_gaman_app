@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'views/signup.dart';
 import 'views/login.dart';
 import 'views/goalselect.dart';
-import 'views/mailcheck.dart';
 import 'configs/colors.dart';
 
 Future<void> main() async {

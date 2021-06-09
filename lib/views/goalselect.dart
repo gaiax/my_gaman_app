@@ -31,6 +31,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
   void initState() {
     super.initState();
     user.reload();
+    user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       setData();
     }
@@ -82,12 +83,8 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
           ),
         ],
         onTap: (int index) {
-          if (index == 0) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => GoalSelectPage()),
-            );
-          } else if (index == 1) {
-            Navigator.of(context).pushReplacement(
+          if (index == 1) {
+            Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => PostViewPage()),
             );
           }

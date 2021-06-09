@@ -131,13 +131,9 @@ class _PostViewPageState extends State<PostViewPage> {
         ],
         onTap: (int index) {
           if (index == 0) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => GoalSelectPage()),
-            );
+            Navigator.of(context).pop();
           } else if (index == 1) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => PostViewPage()),
-            );
+            setState(() {});
           }
         },
         fixedColor: AppColor.priceColor,

@@ -321,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               trailing: Text(
-                                document['price'],
+                                document['price'].toString(),
                                 style: TextStyle(
                                   color: AppColor.priceColor,
                                   fontSize: 19.0,

@@ -226,7 +226,7 @@ class _PostViewPageState extends State<PostViewPage> {
                                   ],
                                 ),
                                 trailing: Text(
-                                  document['price'],
+                                  document['price'].toString(),
                                   style: TextStyle(
                                     color: AppColor.priceColor,
                                     fontSize: 20.0,

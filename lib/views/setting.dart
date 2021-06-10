@@ -121,13 +121,17 @@ class _SettingPageState extends State<SettingPage> {
                 fontWeight: FontWeight.w200,
               ),
             ),
-            TextField(
+            TextFormField(
               controller: userNameController,
               style: TextStyle(
                 color: AppColor.textColor,
                 fontSize: 18.0,
                 fontWeight: FontWeight.w400,
               ),
+              validator: (String value) {
+                return (value == '') ? 'ユーザー名を入力してください。' : null;
+              },
+              autovalidateMode: AutovalidateMode.onUserInteraction,
             ),
             Padding(padding: EdgeInsets.all(15.0)),
             Container(
@@ -262,19 +266,21 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void saveUsers() async {
-    setState(() {
-      _loading = true;
-    });
-    await user.updateProfile(displayName: userNameController.text, photoURL: userPhoto);
-    await user.reload();
-
-    await cloud
-      .collection('users')
-      .doc(userId)
-      .update({
-        'userName': userNameController.text,
-        'userPhotoUrl': userPhoto,
+    if (userNameController.text != '') {
+      setState(() {
+        _loading = true;
       });
-    Navigator.of(context).pop();
+      await user.updateProfile(displayName: userNameController.text, photoURL: userPhoto);
+      await user.reload();
+
+      await cloud
+        .collection('users')
+        .doc(userId)
+        .update({
+          'userName': userNameController.text,
+          'userPhotoUrl': userPhoto,
+        });
+      Navigator.of(context).pop();
+    }
   }
 }

@@ -105,7 +105,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                       ),
                     ),
                     Text(
-                      '※ Amazon商品リンクを貼り付けてください.（セール商品は対象外です.）',
+                      '※ Amazon商品リンクを貼り付けてください.',
                       style: TextStyle(
                         fontSize: 10.0,
                         fontWeight: FontWeight.w500,

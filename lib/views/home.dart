@@ -473,7 +473,7 @@ class _HomePageState extends State<HomePage> {
       final time = DateTime.now();
       final createdAt = Timestamp.fromDate(time);
       final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
-      gamanPrice = priceController.text;
+      gamanPrice = int.parse(priceController.text);
 
       await cloud
         .collection('gamans')
@@ -490,7 +490,7 @@ class _HomePageState extends State<HomePage> {
       documents = gamanSnapshot.docs;
 
       setState(() {
-        saving = saving + int.parse(gamanPrice);
+        saving = saving + gamanPrice;
         if (saving >= int.parse(wantThingPrice)) {
           saving = int.parse(wantThingPrice);
         } 

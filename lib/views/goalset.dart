@@ -194,10 +194,17 @@ class _GoalSetPageState extends State<GoalSetPage> {
         await controller.openHttp(
           uri: Uri.parse(amazonUrl),
         );
-        final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
-        final wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
-        final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
-        
+
+        var wantThingAmazonImg;
+        try {
+          final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
+          wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
+        } catch(e) {
+          wantThingAmazonImg = controller.window.document.querySelectorAll("#ebooksImgBlkFront").first.getAttribute("src");
+        }
+
+        final wantThingPrice = controller.window.document.querySelectorAll("span.a-color-price").first.text.replaceAll('\n', '');
+
         final wantThingImg = await UploadImage.uploadAmazonImg(wantThingAmazonImg, userId, date);
 
         await FirebaseFirestore.instance

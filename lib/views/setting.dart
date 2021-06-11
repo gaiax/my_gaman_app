@@ -65,7 +65,6 @@ class _SettingPageState extends State<SettingPage> {
           ),
         ),
         backgroundColor: AppColor.white,
-        shadowColor: AppColor.shadow,
       ),
 
       body: Container(

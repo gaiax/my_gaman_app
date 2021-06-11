@@ -260,9 +260,8 @@ class _SettingPageState extends State<SettingPage> {
     ShowProgress.showProgressDialog(context);
     var image = await UploadImage.getImage(true);
     userPhoto = await UploadImage.uploadFile(image, userId);
-    setState(() {
-      Navigator.of(context).pop();
-    });
+    Navigator.of(context).pop();
+    setState(() {});
   }
 
   void saveUsers() async {

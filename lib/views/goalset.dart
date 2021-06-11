@@ -140,7 +140,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                           ),
                         ),
                         onPressed: submitPressed,
-                        color: AppColor.goalsetColor,
+                        color: AppColor.priceColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

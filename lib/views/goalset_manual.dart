@@ -205,7 +205,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                           ),
                         ),
                         onPressed: submitPressed,
-                        color: AppColor.goalsetColor,
+                        color: AppColor.priceColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

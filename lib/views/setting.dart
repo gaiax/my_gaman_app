@@ -140,7 +140,7 @@ class _SettingPageState extends State<SettingPage> {
                 onPressed: saveUsers,
                 child: Text("保存"),
                 style: ElevatedButton.styleFrom(
-                  primary: AppColor.wavecolor,
+                  primary: AppColor.priceColor,
                   onPrimary: AppColor.textColor,
                 ),
               ),

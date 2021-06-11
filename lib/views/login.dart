@@ -133,8 +133,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
                         },
                         child: Text("Login"),
                         style: ElevatedButton.styleFrom(
-                          primary: AppColor.wavecolor,
-                          onPrimary: AppColor.textColor,
+                          primary: AppColor.priceColor,
+                          onPrimary: AppColor.white,
                         ),
                       ),
                       Text(

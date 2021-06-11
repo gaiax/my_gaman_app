@@ -271,18 +271,15 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
             MaterialPageRoute(builder: (context) => GoalSetPage()),
           );
         },
-        child: Container(
-          alignment: Alignment.center,
-          child: Text(
-            '＋',
-            style: TextStyle(
-              color: AppColor.white,
-              fontSize: 40.0,
-              fontWeight: FontWeight.w500,
-            ),
+        child: Text(
+          '＋',
+          style: TextStyle(
+            color: AppColor.white,
+            fontSize: 35.0,
+            fontWeight: FontWeight.w700,
           ),
         ),
-        backgroundColor: AppColor.goalsetColor,
+        backgroundColor: AppColor.priceColor,
       ),
     );
   }

@@ -66,8 +66,8 @@ class _StartPageState extends State<StartPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: AppColor.wavecolor,
-                    onPrimary: AppColor.textColor,
+                    primary: AppColor.priceColor,
+                    onPrimary: AppColor.white,
                   ),
                   child: Text("SignUp"),
                 ),
@@ -82,8 +82,8 @@ class _StartPageState extends State<StartPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: AppColor.wavecolor,
-                    onPrimary: AppColor.textColor,
+                    primary: AppColor.priceColor,
+                    onPrimary: AppColor.white,
                   ),
                   child: Text("Login"),
                 ),

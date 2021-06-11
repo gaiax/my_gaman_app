@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: <Widget>[
-                      Padding(padding: EdgeInsets.all(14.0)),
+                      Padding(padding: EdgeInsets.all(13.0)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                           Padding(padding: EdgeInsets.all(12.0)),
                         ],
                       ),
-                      Padding(padding: EdgeInsets.all(16.0)),
+                      (wantThingPrice.toString().length > 4) ? Padding(padding: EdgeInsets.all(12.0)) : Padding(padding: EdgeInsets.all(21.0)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
@@ -347,11 +347,11 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           alignment: Alignment.center,
           child: Text(
-            '＋',
+            '￥',
             style: TextStyle(
               color: AppColor.white,
-              fontSize: 40.0,
-              fontWeight: FontWeight.w500,
+              fontSize: 35.0,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),

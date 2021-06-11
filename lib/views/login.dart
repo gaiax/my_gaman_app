@@ -29,7 +29,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: AppColor.white,
-        shadowColor: AppColor.shadow,
       ),
       body: GestureDetector(
         onTap: () {

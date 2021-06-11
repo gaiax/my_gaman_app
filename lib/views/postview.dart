@@ -57,11 +57,10 @@ class _PostViewPageState extends State<PostViewPage> {
           'みんなの我慢履歴',
           style: TextStyle(
             color:AppColor.textColor,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
           ),
         ),
         backgroundColor: AppColor.white,
-        shadowColor: AppColor.shadow,
       ),
 
       drawer:Drawer(

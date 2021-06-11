@@ -68,7 +68,6 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
           ),
         ),
         backgroundColor: AppColor.white,
-        shadowColor: AppColor.shadow,
       ),
 
       bottomNavigationBar: BottomNavigationBar(

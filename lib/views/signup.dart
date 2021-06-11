@@ -35,7 +35,6 @@ class _MyAuthPageState extends State<MyAuthPage> {
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: AppColor.white,
-        shadowColor: AppColor.shadow,
       ),
       body: GestureDetector(
         onTap: () {

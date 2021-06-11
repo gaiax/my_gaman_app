@@ -56,7 +56,6 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: AppColor.white,
-        shadowColor: AppColor.shadow,
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => SingleChildScrollView(

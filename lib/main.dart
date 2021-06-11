@@ -48,7 +48,6 @@ class _StartPageState extends State<StartPage> {
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: AppColor.white,
-        shadowColor: AppColor.shadow,
       ),
       body: Center(
         child: Container(

@@ -341,6 +341,7 @@ class _HomePageState extends State<HomePage> {
       ),
       
       floatingActionButton: (saving < int.parse(wantThingPrice)) ? FloatingActionButton(
+        elevation: 1.5,
         onPressed: () {
           submitGaman();
         },
@@ -456,7 +457,7 @@ class _HomePageState extends State<HomePage> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 24.0,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),

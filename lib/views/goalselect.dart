@@ -265,6 +265,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        elevation: 1.5,
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => GoalSetPage()),

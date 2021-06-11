@@ -144,7 +144,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24.0,
-                              fontWeight: FontWeight.w800,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),

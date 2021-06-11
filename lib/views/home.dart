@@ -441,19 +441,24 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     alignment: Alignment.bottomRight,
                     padding: EdgeInsets.all(10.0),
-                    child: RaisedButton(
-                      child: Text(
-                        '登録',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.w600,
+                    child: SizedBox(
+                      child: ElevatedButton(
+                        onPressed: submitPressed,
+                        style: ElevatedButton.styleFrom(
+                          primary: AppColor.priceColor,
+                          onPrimary: AppColor.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                      ),
-                      onPressed: submitPressed,
-                      color: AppColor.priceColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        child: Text(
+                          '登録',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ),
                     ),
                   ),

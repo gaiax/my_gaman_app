@@ -269,7 +269,8 @@ class _SettingPageState extends State<SettingPage> {
       setState(() {
         _loading = true;
       });
-      await user.updateProfile(displayName: userNameController.text, photoURL: userPhoto);
+      await user.updateDisplayName(userNameController.text);
+      await user.updatePhotoURL(userPhoto);
       await user.reload();
 
       await cloud

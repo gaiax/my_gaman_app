@@ -140,7 +140,8 @@ class _MyAuthPageState extends State<MyAuthPage> {
                               var photoRef = storage.ref(photo);
                               userPhotoUrl = await getDownloadUrl(photoRef);
                               
-                              await user.updateProfile(displayName: userNameController.text, photoURL: userPhotoUrl);
+                              await user.updateDisplayName(userNameController.text);
+                              await user.updatePhotoURL(userPhotoUrl);
                               await user.reload();
 
                               await FirebaseFirestore.instance

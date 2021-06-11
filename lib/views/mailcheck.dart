@@ -8,7 +8,8 @@ import 'goalselect.dart';
 class Emailcheck extends StatefulWidget {
    // 呼び出し元Widgetから受け取った後、変更をしないためfinalを宣言。
   final String email;
-  Emailcheck({Key key, this.email}) : super(key: key);
+  final String pswd;
+  Emailcheck({Key key, this.email, this.pswd}) : super(key: key);
 
   @override
   _Emailcheck createState() => _Emailcheck();
@@ -45,48 +46,46 @@ class _Emailcheck extends State<Emailcheck> {
             // 確認メールの再送信ボタン
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 30.0),
-              child:ButtonTheme(
-                minWidth: 200.0,  
-                // height: 100.0,
-                child: RaisedButton(
-                  // ボタンの形状
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+              child: SizedBox(
+                width: 200.0,
+                child: ElevatedButton(
                   onPressed: () async {
                     ShowProgress.showProgressDialog(context);
                     await auth.currentUser.sendEmailVerification();
                     Navigator.of(context).pop();
                   },
-                  // ボタン内の文字や書式
+                  style: ElevatedButton.styleFrom(
+                    primary: AppColor.shadow,
+                    onPrimary: AppColor.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                   child: Text(
                     '確認メールを再送信',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  textColor: AppColor.white,
-                  color: AppColor.shadow,
                 ),
               ),
             ),
 
             // メール確認完了のボタン配置（Home画面に遷移）
-            ButtonTheme(
-              minWidth: 350.0,  
-              // height: 100.0,
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-
+            SizedBox(
+              width: 350.0,
+              child: ElevatedButton(
                 onPressed: () async {
                   ShowProgress.showProgressDialog(context);
-                  final user = auth.currentUser;
+                  final UserCredential authResult = await auth.signInWithEmailAndPassword(
+                    email: widget.email, password: widget.pswd,
+                  );
+                  final user = authResult.user;
                   await user.reload();
                   final _verify = user.emailVerified; 
                   // Email確認が済んでいる場合は、Home画面へ遷移
                   if (_verify){
-                    Navigator.of(context).pushReplacement(
+                    await Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => GoalSelectPage()),
+                      (_) => false,
                     );
                   } else {
                     setState(() {
@@ -95,15 +94,19 @@ class _Emailcheck extends State<Emailcheck> {
                   }
                   Navigator.of(context).pop();
                 },
-                // ボタン内の文字や書式
+                style: ElevatedButton.styleFrom(
+                  primary: AppColor.wavecolor,
+                  onPrimary: AppColor.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 child: Text(
                   'メール確認完了',
                   style: TextStyle(
                     fontWeight: FontWeight.bold
                   ),
                 ),
-                textColor: AppColor.white,
-                color: AppColor.wavecolor,
               ),
             ),
           ],

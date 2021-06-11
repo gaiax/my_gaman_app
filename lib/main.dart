@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'views/signup.dart';
 import 'views/login.dart';
 import 'views/goalselect.dart';
-import 'views/mailcheck.dart';
 import 'configs/colors.dart';
 
 Future<void> main() async {
@@ -27,7 +26,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'Yu Gothic',
       ),
-      home: (user != null && user.emailVerified) ? GoalSelectPage() : (user != null && !user.emailVerified) ? Emailcheck(email: user.email) : StartPage(),
+      home: (user != null && user.emailVerified) ? GoalSelectPage() : StartPage(),
     );
   }
 }
@@ -67,8 +66,8 @@ class _StartPageState extends State<StartPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: AppColor.wavecolor,
-                    onPrimary: AppColor.textColor,
+                    primary: AppColor.priceColor,
+                    onPrimary: AppColor.white,
                   ),
                   child: Text("SignUp"),
                 ),
@@ -83,8 +82,8 @@ class _StartPageState extends State<StartPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: AppColor.wavecolor,
-                    onPrimary: AppColor.textColor,
+                    primary: AppColor.priceColor,
+                    onPrimary: AppColor.white,
                   ),
                   child: Text("Login"),
                 ),

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:my_gaman_app/main.dart';
 import 'login.dart';
@@ -120,13 +121,17 @@ class _SettingPageState extends State<SettingPage> {
                 fontWeight: FontWeight.w200,
               ),
             ),
-            TextField(
+            TextFormField(
               controller: userNameController,
               style: TextStyle(
                 color: AppColor.textColor,
                 fontSize: 18.0,
                 fontWeight: FontWeight.w400,
               ),
+              validator: (String value) {
+                return (value == '') ? 'ユーザー名を入力してください。' : null;
+              },
+              autovalidateMode: AutovalidateMode.onUserInteraction,
             ),
             Padding(padding: EdgeInsets.all(15.0)),
             Container(
@@ -135,7 +140,7 @@ class _SettingPageState extends State<SettingPage> {
                 onPressed: saveUsers,
                 child: Text("保存"),
                 style: ElevatedButton.styleFrom(
-                  primary: AppColor.wavecolor,
+                  primary: AppColor.priceColor,
                   onPrimary: AppColor.textColor,
                 ),
               ),
@@ -189,7 +194,32 @@ class _SettingPageState extends State<SettingPage> {
 
   void deleteUser() async {
     try {
+      final gamans = await cloud.collection('gamans').where('userId', isEqualTo: userId).get();
+      final gamandocs = gamans.docs;
+      gamandocs.forEach((gamandoc) async {
+        await cloud.collection('gamans').doc(gamandoc.id).delete();
+      });
+
+      final goals = await cloud.collection('goals').where('userId', isEqualTo: userId).get();
+      final goaldocs = goals.docs;
+      goaldocs.forEach((goaldoc) async {
+        await cloud.collection('goals').doc(goaldoc.id).delete();
+      });
+
+      firebase_storage.ListResult result = await firebase_storage.FirebaseStorage.instance.ref('user/'+userId).listAll();
+      result.items.forEach((firebase_storage.Reference ref) async {
+        await ref.delete();
+      });
+      result.prefixes.forEach((firebase_storage.Reference ref) async {
+        if (ref.name == userId) {
+          await ref.delete();
+        }
+      });
+
+      await cloud.collection('users').doc(userId).delete();
+
       await FirebaseAuth.instance.currentUser.delete();
+
       await Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => StartPage()),
         (_) => false
@@ -231,22 +261,26 @@ class _SettingPageState extends State<SettingPage> {
     var image = await UploadImage.getImage(true);
     userPhoto = await UploadImage.uploadFile(image, userId);
     Navigator.of(context).pop();
+    setState(() {});
   }
 
   void saveUsers() async {
-    setState(() {
-      _loading = true;
-    });
-    await user.updateProfile(displayName: userNameController.text, photoURL: userPhoto);
-    await user.reload();
-
-    await cloud
-      .collection('users')
-      .doc(userId)
-      .update({
-        'userName': userNameController.text,
-        'userPhotoUrl': userPhoto,
+    if (userNameController.text != '') {
+      setState(() {
+        _loading = true;
       });
-    Navigator.of(context).pop();
+      await user.updateDisplayName(userNameController.text);
+      await user.updatePhotoURL(userPhoto);
+      await user.reload();
+
+      await cloud
+        .collection('users')
+        .doc(userId)
+        .update({
+          'userName': userNameController.text,
+          'userPhotoUrl': userPhoto,
+        });
+      Navigator.of(context).pop();
+    }
   }
 }

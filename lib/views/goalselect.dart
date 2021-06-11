@@ -30,6 +30,8 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
   @override
   void initState() {
     super.initState();
+    user.reload();
+    user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       setData();
     }
@@ -59,7 +61,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
-          '目的一覧',
+          'ホーム',
           style: TextStyle(
             color:AppColor.textColor,
             fontWeight: FontWeight.w500,
@@ -67,6 +69,27 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
         ),
         backgroundColor: AppColor.white,
         shadowColor: AppColor.shadow,
+      ),
+
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_filled),
+            label: 'ホーム',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.whatshot_outlined),
+            label: 'みんなの我慢',
+          ),
+        ],
+        onTap: (int index) {
+          if (index == 1) {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => PostViewPage()),
+            );
+          }
+        },
+        fixedColor: AppColor.priceColor,
       ),
 
       drawer:Drawer(
@@ -90,18 +113,10 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                 subtitle: Text(userEmail),
               )
             ),
-            Padding(padding: EdgeInsets.all(5.0)),
+            Padding(padding: EdgeInsets.all(10.0)),
             ListTile(
-              title: Text('　タイムライン'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => PostViewPage()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('　アカウント設定'),
+              leading: Icon(Icons.settings_outlined),
+              title: Text('アカウント設定'),
               onTap: () async {
                 Navigator.of(context).pop();
                 await Navigator.of(context).push(
@@ -115,15 +130,14 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
               },
             ),
             ListTile(
-              title: Text(''),
-            ),
-            ListTile(
-              title: Text('　サインアウト'),
+              leading: Icon(Icons.logout_outlined),
+              title: Text('サインアウト'),
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pop();
-                await Navigator.of(context).pushReplacement(
+                await Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => StartPage()),
+                  (_) => false,
                 );
               },
             ),
@@ -160,9 +174,8 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                         elevation: 2.0,
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).pushAndRemoveUntil(
+                            Navigator.of(context).push(
                               MaterialPageRoute(builder: (context) => HomePage(document.id)),
-                              (_) => false,
                             );
                           },
                           onLongPress: () {
@@ -174,15 +187,15 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                                   content: Text('この目的を削除しますか？'),
                                   actions: <Widget>[
                                     TextButton(
-                                      child: const Text('OK'),
+                                      child: const Text('Cancel'),
                                       onPressed: () {
-                                        deleteGoal(document.id);
                                         Navigator.of(context).pop();
                                       },
                                     ),
                                     TextButton(
-                                      child: const Text('Cancel'),
+                                      child: const Text('OK'),
                                       onPressed: () {
+                                        deleteGoal(document.id);
                                         Navigator.of(context).pop();
                                       },
                                     ),
@@ -258,23 +271,24 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
             MaterialPageRoute(builder: (context) => GoalSetPage()),
           );
         },
-        child: Container(
-          alignment: Alignment.center,
-          child: Text(
-            '＋',
-            style: TextStyle(
-              color: AppColor.white,
-              fontSize: 40.0,
-              fontWeight: FontWeight.w500,
-            ),
+        child: Text(
+          '＋',
+          style: TextStyle(
+            color: AppColor.white,
+            fontSize: 35.0,
+            fontWeight: FontWeight.w700,
           ),
         ),
-        backgroundColor: AppColor.goalsetColor,
+        backgroundColor: AppColor.priceColor,
       ),
     );
   }
 
   void deleteGoal(String id) async {
+    QuerySnapshot gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: id).orderBy('createdAt', descending: true).get();
+    gamanSnapshot.docs.forEach((DocumentSnapshot gaman) async { 
+      await cloud.collection('gamans').doc(gaman.id).delete();
+    });
     await cloud.collection('goals').doc(id).delete();
     setState(() {});
   }

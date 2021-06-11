@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:my_gaman_app/views/setting.dart';
 import '../configs/colors.dart';
+import '../main.dart';
 
 class PostViewPage extends StatefulWidget {
   @override
@@ -17,6 +19,7 @@ class _PostViewPageState extends State<PostViewPage> {
   var user = FirebaseAuth.instance.currentUser;
   var userName;
   var userPhoto;
+  var userEmail;
 
   bool _loading = true;
 
@@ -31,6 +34,7 @@ class _PostViewPageState extends State<PostViewPage> {
   void setData() async {
     userName = user.displayName;
     userPhoto = user.photoURL;
+    userEmail = user.email;
 
     setState(() {
       _loading = false;
@@ -46,11 +50,11 @@ class _PostViewPageState extends State<PostViewPage> {
     }
 
     return Scaffold(
-      backgroundColor: AppColor.bgColor,
+      backgroundColor: AppColor.bgColor2,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         title: Text(
-          'タイムライン',
+          'みんなの我慢履歴',
           style: TextStyle(
             color:AppColor.textColor,
             fontWeight: FontWeight.w600,
@@ -60,8 +64,83 @@ class _PostViewPageState extends State<PostViewPage> {
         shadowColor: AppColor.shadow,
       ),
 
+      drawer:Drawer(
+        child: ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            Card(
+              child: ListTile(
+                leading: Container(
+                  height: 65.0,
+                  width: 65.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image:NetworkImage(userPhoto),
+                    ),
+                  ),
+                ),
+                title: Text(userName),
+                subtitle: Text(userEmail),
+              )
+            ),
+            Padding(padding: EdgeInsets.all(10.0)),
+            ListTile(
+              leading: Icon(Icons.settings_outlined),
+              title: Text('アカウント設定'),
+              onTap: () async {
+                Navigator.of(context).pop();
+                await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SettingPage()),
+                );
+                setState(() {
+                  user = FirebaseAuth.instance.currentUser;
+                  userName = user.displayName;
+                  userPhoto = user.photoURL;
+                });
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout_outlined),
+              title: Text('サインアウト'),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pop();
+                await Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => StartPage()),
+                  (_) => false,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_filled),
+            label: 'ホーム',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.whatshot_outlined),
+            label: 'みんなの我慢',
+          ),
+        ],
+        onTap: (int index) {
+          if (index == 0) {
+            Navigator.of(context).pop();
+          } else if (index == 1) {
+            setState(() {});
+          }
+        },
+        fixedColor: AppColor.priceColor,
+        currentIndex: 1,
+      ),
+
       body: Container(
-        color: AppColor.bgColor,
+        color: AppColor.bgColor2,
         margin: EdgeInsets.only(top: 20),
         padding: EdgeInsets.only(left: 10, right: 10),
         child: Column(
@@ -71,6 +150,7 @@ class _PostViewPageState extends State<PostViewPage> {
                 future: cloud
                   .collection('gamans')
                   .orderBy('createdAt', descending: true)
+                  .limit(50)
                   .get(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
@@ -146,7 +226,7 @@ class _PostViewPageState extends State<PostViewPage> {
                                   ],
                                 ),
                                 trailing: Text(
-                                  document['price'],
+                                  document['price'].toString(),
                                   style: TextStyle(
                                     color: AppColor.priceColor,
                                     fontSize: 20.0,

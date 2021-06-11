@@ -87,6 +87,9 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                         fontWeight: FontWeight.w400,
                       ),
                       maxLength: 15,
+                      decoration: InputDecoration(
+                        hintText: '(例)旅行に行きたい！',
+                      ),
                     ),
                     Visibility(
                       visible: isGoalEmpty,
@@ -104,15 +107,32 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                         color: AppColor.shadow,
                       ),
                     ),
-                    TextField(
-                      keyboardType: TextInputType.number,
-                      controller: wantThingController,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      maxLength: 7,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Text(
+                              '￥ ',
+                              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: AppColor.textColor),
+                            ),
+                            SizedBox(height: 24.0),
+                          ],
+                        ),
+                        Flexible(
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            controller: wantThingController,
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            maxLength: 7,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          ),
+                        ),
+                      ],
                     ),
                     Visibility(
                       visible: isPriceEmpty,
@@ -175,19 +195,24 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                     Container(
                       alignment: Alignment.bottomRight,
                       padding: EdgeInsets.all(10.0),
-                      child: RaisedButton(
-                        child: Text(
-                          '登録',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.w800,
+                      child: SizedBox(
+                        child: ElevatedButton(
+                          onPressed: submitPressed,
+                          style: ElevatedButton.styleFrom(
+                            primary: AppColor.priceColor,
+                            onPrimary: AppColor.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
-                        ),
-                        onPressed: submitPressed,
-                        color: AppColor.goalsetColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          child: Text(
+                            '登録',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
                         ),
                       ),
                     ),

@@ -84,6 +84,9 @@ class _GoalSetPageState extends State<GoalSetPage> {
                         fontWeight: FontWeight.w400,
                       ),
                       maxLength: 15,
+                      decoration: InputDecoration(
+                        hintText: '(例)ディスプレイが欲しい！',
+                      ),
                     ),
                     Visibility(
                       visible: isGoalEmpty,
@@ -102,7 +105,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
                       ),
                     ),
                     Text(
-                      '※ Amazon商品リンクを貼り付けてください.（セール商品は対象外です.）',
+                      '※ Amazon商品リンクを貼り付けてください.',
                       style: TextStyle(
                         fontSize: 10.0,
                         fontWeight: FontWeight.w500,
@@ -127,43 +130,49 @@ class _GoalSetPageState extends State<GoalSetPage> {
                     Container(
                       alignment: Alignment.bottomRight,
                       padding: EdgeInsets.all(10.0),
-                      child: RaisedButton(
-                        child: Text(
-                          '登録',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.w800,
+                      child: SizedBox(
+                        child: ElevatedButton(
+                          onPressed: submitPressed,
+                          style: ElevatedButton.styleFrom(
+                            primary: AppColor.priceColor,
+                            onPrimary: AppColor.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
-                        ),
-                        onPressed: submitPressed,
-                        color: AppColor.goalsetColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          child: Text(
+                            '登録',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                     Padding(padding: EdgeInsets.all(30.0)),
-                    ButtonTheme(
-                      minWidth: 200.0,  
-                      // height: 100.0,
-                      child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        onPressed: () async {
+                    SizedBox(
+                      width: 200.0,
+                      child: ElevatedButton(
+                        onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (context) => GoalSetManualPage()),
                           );
                         },
+                        style: ElevatedButton.styleFrom(
+                          primary: AppColor.shadow,
+                          onPrimary: AppColor.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
                         child: Text(
                           '手動で登録する',
                           style: TextStyle(
                             fontWeight: FontWeight.bold
                           ),
                         ),
-                        textColor: AppColor.white,
-                        color: AppColor.shadow,
                       ),
                     ),
                   ],
@@ -191,10 +200,17 @@ class _GoalSetPageState extends State<GoalSetPage> {
         await controller.openHttp(
           uri: Uri.parse(amazonUrl),
         );
-        final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
-        final wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
-        final wantThingPrice = controller.window.document.querySelectorAll("span.priceBlockBuyingPriceString").first.text;
-        
+
+        var wantThingAmazonImg;
+        try {
+          final imgContainer = controller.window.document.querySelector("#imgTagWrapperId");
+          wantThingAmazonImg = imgContainer.querySelectorAll("img").first.getAttribute("src");
+        } catch(e) {
+          wantThingAmazonImg = controller.window.document.querySelectorAll("#ebooksImgBlkFront").first.getAttribute("src");
+        }
+
+        final wantThingPrice = controller.window.document.querySelectorAll("span.a-color-price").first.text.replaceAll('\n', '');
+
         final wantThingImg = await UploadImage.uploadAmazonImg(wantThingAmazonImg, userId, date);
 
         await FirebaseFirestore.instance
@@ -258,7 +274,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
   }
 
   String getAmazonlink (String input){
-    final List<String> amazonUrl = <String>[];
     // RegExpを定義
     final RegExp urlRegExp = RegExp(
       r'((https?:www\.)|(https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?'

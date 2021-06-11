@@ -2,13 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:my_gaman_app/main.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'postview.dart';
-import 'setting.dart';
-import 'goalselect.dart';
 import 'waveprogress.dart';
 import '../configs/colors.dart';
 
@@ -71,7 +67,7 @@ class _HomePageState extends State<HomePage> {
     gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
     documents = gamanSnapshot.docs;
     documents.forEach((document) {
-      saving = saving + int.parse(document['price']);
+      saving = saving + document['price'];
     });
     if (saving >= int.parse(wantThingPrice)) {
       saving = int.parse(wantThingPrice);
@@ -92,83 +88,12 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: AppColor.bgColor,
-      drawer:Drawer(
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            Card(
-              child: ListTile(
-                leading: Container(
-                  height: 65.0,
-                  width: 65.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image:NetworkImage(userPhoto),
-                    ),
-                  ),
-                ),
-                title: Text(userName),
-                subtitle: Text(userEmail),
-              )
-            ),
-            Padding(padding: EdgeInsets.all(5.0)),
-            ListTile(
-              title: Text('　タイムライン'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => PostViewPage()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('　アカウント設定'),
-              onTap: () async {
-                Navigator.of(context).pop();
-                await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SettingPage()),
-                );
-                setState(() {
-                  user = FirebaseAuth.instance.currentUser;
-                  userName = user.displayName;
-                  userPhoto = user.photoURL;
-                });
-              },
-            ),
-            ListTile(
-              title: Text('　目的一覧・変更'),
-              onTap: () async {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => GoalSelectPage()),
-                  (_) => false
-                );
-              },
-            ),
-            ListTile(
-              title: Text(''),
-            ),
-            ListTile(
-              title: Text('　サインアウト'),
-              onTap: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.of(context).pop();
-                await Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => StartPage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-
+      resizeToAvoidBottomInset: true,
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
+            iconTheme: IconThemeData(color: Colors.grey),
             expandedHeight: 200.0,
             backgroundColor: AppColor.wavecolor,
             floating: true,
@@ -186,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: <Widget>[
-                      Padding(padding: EdgeInsets.all(14.0)),
+                      Padding(padding: EdgeInsets.all(13.0)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                           Padding(padding: EdgeInsets.all(12.0)),
                         ],
                       ),
-                      Padding(padding: EdgeInsets.all(16.0)),
+                      (wantThingPrice.toString().length > 4) ? Padding(padding: EdgeInsets.all(12.0)) : Padding(padding: EdgeInsets.all(21.0)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
@@ -345,19 +270,19 @@ class _HomePageState extends State<HomePage> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: const Text('目的削除'),
-                                  content: Text('この目的を削除しますか？'),
+                                  title: const Text('我慢削除'),
+                                  content: Text('この我慢を削除しますか？'),
                                   actions: <Widget>[
                                     TextButton(
-                                      child: const Text('OK'),
+                                      child: const Text('Cancel'),
                                       onPressed: () {
-                                        deleteGoal(document.id);
                                         Navigator.of(context).pop();
                                       },
                                     ),
                                     TextButton(
-                                      child: const Text('Cancel'),
+                                      child: const Text('OK'),
                                       onPressed: () {
+                                        deleteGaman(document.id);
                                         Navigator.of(context).pop();
                                       },
                                     ),
@@ -396,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               trailing: Text(
-                                document['price'],
+                                document['price'].toString(),
                                 style: TextStyle(
                                   color: AppColor.priceColor,
                                   fontSize: 19.0,
@@ -422,11 +347,11 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           alignment: Alignment.center,
           child: Text(
-            '＋',
+            '￥',
             style: TextStyle(
               color: AppColor.white,
-              fontSize: 40.0,
-              fontWeight: FontWeight.w500,
+              fontSize: 35.0,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -442,69 +367,105 @@ class _HomePageState extends State<HomePage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      builder: (BuildContext context) => Container(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(
-              '価格',
-              style: TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.w500,
-                color: AppColor.shadow,
-              ),
-            ),
-            TextFormField(
-              controller: priceController,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w400,
-              ),
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              maxLength: 6,
-            ),
-            SizedBox(height: 40.0),
-            Text(
-              '内容',
-              style: TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.w500,
-                color: AppColor.shadow,
-              ),
-            ),
-            TextField(
-              controller: descriptionController,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w400,
-              ),
-              maxLength: 15,
-            ),
-            Padding(padding: EdgeInsets.all(60.0),),
-            Container(
-              alignment: Alignment.bottomRight,
-              padding: EdgeInsets.all(10.0),
-              child: RaisedButton(
-                child: Text(
-                  '登録',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.w600,
+      builder: (BuildContext context) => GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          child: Container(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Container(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    '価格',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w500,
+                      color: AppColor.shadow,
+                    ),
                   ),
-                ),
-                onPressed: submitPressed,
-                color: AppColor.priceColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          Text(
+                            '￥ ',
+                            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500, color: AppColor.textColor),
+                          ),
+                          SizedBox(height: 24.0),
+                        ],
+                      ),
+                      Flexible(
+                        child: TextFormField(
+                          controller: priceController,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          maxLength: 6,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 18.0),
+                  Text(
+                    '内容',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w500,
+                      color: AppColor.shadow,
+                    ),
+                  ),
+                  TextField(
+                    controller: descriptionController,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: '(例)買い食いを我慢した！',
+                      hintStyle: TextStyle(fontSize: 16.0,),
+                    ),
+                    maxLength: 20,
+                  ),
+                  Padding(padding: EdgeInsets.all(40.0),),
+                  Container(
+                    alignment: Alignment.bottomRight,
+                    padding: EdgeInsets.all(10.0),
+                    child: SizedBox(
+                      child: ElevatedButton(
+                        onPressed: submitPressed,
+                        style: ElevatedButton.styleFrom(
+                          primary: AppColor.priceColor,
+                          onPrimary: AppColor.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          '登録',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -517,7 +478,7 @@ class _HomePageState extends State<HomePage> {
       final time = DateTime.now();
       final createdAt = Timestamp.fromDate(time);
       final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
-      gamanPrice = priceController.text;
+      gamanPrice = int.parse(priceController.text);
 
       await cloud
         .collection('gamans')
@@ -534,7 +495,7 @@ class _HomePageState extends State<HomePage> {
       documents = gamanSnapshot.docs;
 
       setState(() {
-        saving = saving + int.parse(gamanPrice);
+        saving = saving + gamanPrice;
         if (saving >= int.parse(wantThingPrice)) {
           saving = int.parse(wantThingPrice);
         } 
@@ -557,7 +518,7 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Image.network(wantThingImg),
                     Text('おめでとうございます！実質貯金が貯まりました。'),
-                    Text('商品ページへ遷移しますか？'),
+                    (_url != null) ? Text('商品ページへ遷移しますか？') : Container(),
                   ],
                 ),
               ),
@@ -570,7 +531,10 @@ class _HomePageState extends State<HomePage> {
                 ),
                 TextButton(
                   child: const Text('OK'),
-                  onPressed: _launchURL,
+                  onPressed: () {
+                    (_url != null) ? _launchURL() : Container();
+                    Navigator.of(context).pop();
+                  },
                 ),
               ],
             );
@@ -588,14 +552,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void deleteGoal(String id) async {
+  void deleteGaman(String id) async {
     await cloud.collection('gamans').doc(id).delete();
     gamanSnapshot = await cloud.collection('gamans').where('goalId', isEqualTo: goalId).orderBy('createdAt', descending: true).get();
     setState(() {
       documents = gamanSnapshot.docs;
       saving = 0;
       documents.forEach((document) {
-        saving = saving + int.parse(document['price']);
+        saving = saving + document['price'];
       });
       _currentValue = (saving / int.parse(wantThingPrice)) * 100;
     });

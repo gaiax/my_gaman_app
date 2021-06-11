@@ -141,6 +141,9 @@ class _SettingPageState extends State<SettingPage> {
                 style: ElevatedButton.styleFrom(
                   primary: AppColor.priceColor,
                   onPrimary: AppColor.textColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
             ),
@@ -181,6 +184,9 @@ class _SettingPageState extends State<SettingPage> {
                 style: ElevatedButton.styleFrom(
                   primary: AppColor.shadow,
                   onPrimary: AppColor.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
                 child: Text("アカウント削除"),
               ),

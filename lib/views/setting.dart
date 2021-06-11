@@ -140,7 +140,7 @@ class _SettingPageState extends State<SettingPage> {
                 child: Text("保存"),
                 style: ElevatedButton.styleFrom(
                   primary: AppColor.priceColor,
-                  onPrimary: AppColor.textColor,
+                  onPrimary: AppColor.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

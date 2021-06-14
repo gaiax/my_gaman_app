@@ -401,7 +401,7 @@ class _HomePageState extends State<HomePage> {
                             '￥ ',
                             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500, color: AppColor.textColor),
                           ),
-                          SizedBox(height: 24.0),
+                          SizedBox(height: 22.5),
                         ],
                       ),
                       Flexible(
@@ -529,19 +529,19 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Image.network(wantThingImg),
                     Text('おめでとうございます！実質貯金が貯まりました。'),
-                    (_url != null) ? Text('商品ページへ遷移しますか？') : Container(),
+                    (_url != null) ? Text('商品ページへ遷移しますか？') : Text('我慢目的を叶えましょう！'),
                   ],
                 ),
               ),
               actions: <Widget>[
-                TextButton(
-                  child: const Text('Cancel'),
+                (_url != null) ? TextButton(
+                  child: const Text('もどる'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                ),
+                ) : Container(),
                 TextButton(
-                  child: const Text('OK'),
+                  child: const Text('はい'),
                   onPressed: () {
                     (_url != null) ? _launchURL() : Container();
                     Navigator.of(context).pop();

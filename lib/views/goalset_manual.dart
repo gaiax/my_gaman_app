@@ -88,7 +88,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                         ),
                         maxLength: 20,
                         decoration: InputDecoration(
-                          hintText: '(例)旅行に行きたい！',
+                          hintText: '(例)〇〇が欲しい！旅行に行きたい！',
                         ),
                       ),
                       SizedBox(height: 20.0),
@@ -110,7 +110,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                                 '￥ ',
                                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: AppColor.textColor),
                               ),
-                              SizedBox(height: 24.0),
+                              SizedBox(height: 21.0),
                             ],
                           ),
                           Flexible(

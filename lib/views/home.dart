@@ -29,10 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   var user = FirebaseAuth.instance.currentUser;
   var cloud = FirebaseFirestore.instance;
-  var userEmail;
   var userId;
-  var userName;
-  var userPhoto;
   var wantThingPrice;
   var wantThingImg;
   var wantThingText;
@@ -54,9 +51,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void setData() async {
-    userEmail = user.email;
-    userName = user.displayName;
-    userPhoto = user.photoURL;
     userId = user.uid;
     DocumentSnapshot goalSnapshot = await cloud.collection('goals').doc(goalId).get();
     wantThingPrice = goalSnapshot['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');

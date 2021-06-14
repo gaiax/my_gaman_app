@@ -30,8 +30,6 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
   @override
   void initState() {
     super.initState();
-    user.reload();
-    user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       setData();
     }
@@ -40,8 +38,9 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
   void setData() async {
     userId = user.uid;
     userEmail = user.email;
-    userName = user.displayName;
-    userPhoto = user.photoURL;
+    DocumentSnapshot userData = await cloud.collection('users').doc(userId).get();
+    userName = userData['userName'];
+    userPhoto = userData['userPhotoUrl'];
 
     setState(() {
       _loading = false;

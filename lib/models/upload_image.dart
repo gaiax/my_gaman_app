@@ -20,7 +20,9 @@ class UploadImage {
         source: ImageSource.camera,);
     }
 
-    return pickedFile.path;
+    if (pickedFile != null) {
+      return pickedFile.path;
+    }
   }
 
   static Future<String> uploadFile(imagePath, userId) async {

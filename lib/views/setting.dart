@@ -70,131 +70,139 @@ class _SettingPageState extends State<SettingPage> {
         onTap: () {
           FocusScope.of(context).unfocus();
         },
-        child: Container(
-          margin: EdgeInsets.only(top: 30),
-          padding: EdgeInsets.only(left: 20, right: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              GestureDetector(
-                onTap: uploadImage,
-                child: Stack(
-                  alignment: Alignment.center,
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child:  ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Container(
+                margin: EdgeInsets.only(top: 30),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
+                    GestureDetector(
+                      onTap: uploadImage,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: <Widget>[
+                          Container(
+                            height: 55.0,
+                            width: 55.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              image: DecorationImage(
+                                image: NetworkImage(userPhoto),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 55.0,
+                            height: 55.0,
+                            decoration: BoxDecoration(
+                              color: AppColor.curtain,
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          Text(
+                            '+',
+                            style: TextStyle(
+                              color: AppColor.textColor,
+                              fontSize: 40.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.all(10.0)),
+                    Text(
+                      'ユーザー名',
+                      style: TextStyle(
+                        color: AppColor.shadow,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w200,
+                      ),
+                    ),
+                    TextFormField(
+                      controller: userNameController,
+                      style: TextStyle(
+                        color: AppColor.textColor,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLength: 15,
+                      validator: (String value) {
+                        return (value == '') ? 'ユーザー名を入力してください。' : null;
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                    ),
+                    Padding(padding: EdgeInsets.all(15.0)),
                     Container(
-                      height: 55.0,
-                      width: 55.0,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        image: DecorationImage(
-                          image: NetworkImage(userPhoto),
-                          fit: BoxFit.cover,
+                      alignment: Alignment.bottomRight,
+                      child: ElevatedButton(
+                        onPressed: (userNameController.text.isNotEmpty) ? saveUsers : null,
+                        child: Text("保存"),
+                        style: ElevatedButton.styleFrom(
+                          primary: AppColor.priceColor,
+                          onPrimary: AppColor.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
                     ),
-                    Container(
-                      width: 55.0,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: AppColor.curtain,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    Text(
-                      '+',
-                      style: TextStyle(
-                        color: AppColor.textColor,
-                        fontSize: 40.0,
-                        fontWeight: FontWeight.w500,
+                    SizedBox(height: 30.0),
+                    SizedBox(
+                      width: 200,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('確認'),
+                                content: SingleChildScrollView(
+                                  child: ListBody(
+                                    children: <Widget>[
+                                      Text('本当に削除しますか？'),
+                                    ],
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: const Text('OK'),
+                                    onPressed: deleteUser,
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: AppColor.shadow,
+                          onPrimary: AppColor.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text("アカウント削除"),
                       ),
                     ),
                   ],
                 ),
               ),
-              Padding(padding: EdgeInsets.all(10.0)),
-              Text(
-                'ユーザー名',
-                style: TextStyle(
-                  color: AppColor.shadow,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w200,
-                ),
-              ),
-              TextFormField(
-                controller: userNameController,
-                style: TextStyle(
-                  color: AppColor.textColor,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w400,
-                ),
-                maxLength: 15,
-                validator: (String value) {
-                  return (value == '') ? 'ユーザー名を入力してください。' : null;
-                },
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-              ),
-              Padding(padding: EdgeInsets.all(15.0)),
-              Container(
-                alignment: Alignment.bottomRight,
-                child: ElevatedButton(
-                  onPressed: (userNameController.text.isNotEmpty) ? saveUsers : null,
-                  child: Text("保存"),
-                  style: ElevatedButton.styleFrom(
-                    primary: AppColor.priceColor,
-                    onPrimary: AppColor.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 30.0),
-              SizedBox(
-                width: 200,
-                child: ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('確認'),
-                          content: SingleChildScrollView(
-                            child: ListBody(
-                              children: <Widget>[
-                                Text('本当に削除しますか？'),
-                              ],
-                            ),
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: const Text('Cancel'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            TextButton(
-                              child: const Text('OK'),
-                              onPressed: deleteUser,
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: AppColor.shadow,
-                    onPrimary: AppColor.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Text("アカウント削除"),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

@@ -127,6 +127,7 @@ class _SettingPageState extends State<SettingPage> {
                 fontSize: 18.0,
                 fontWeight: FontWeight.w400,
               ),
+              maxLength: 15,
               validator: (String value) {
                 return (value == '') ? 'ユーザー名を入力してください。' : null;
               },

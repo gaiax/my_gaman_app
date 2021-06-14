@@ -22,8 +22,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
   var userId;
 
   bool _loading = true;
-  bool isGoalEmpty = false;
-  bool isWantThingEmpty = false;
 
   @override
   void initState() {
@@ -54,127 +52,126 @@ class _GoalSetPageState extends State<GoalSetPage> {
         ),
         backgroundColor: AppColor.white,
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) => SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: Center(
-              child: Container(
-                color: AppColor.white,
-                padding: EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      '我慢目的',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.shadow,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Center(
+                child: Container(
+                  color: AppColor.white,
+                  padding: EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        '我慢目的',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.shadow,
+                        ),
                       ),
-                    ),
-                    TextField(
-                      controller: goalTextController,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w400,
+                      TextFormField(
+                        controller: goalTextController,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        maxLength: 20,
+                        decoration: InputDecoration(
+                          hintText: '(例)ディスプレイが欲しい！',
+                        ),
+                        validator: (String value) {
+                          return (value == '') ? '我慢目的を入力してください。' : null;
+                        },
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                       ),
-                      maxLength: 15,
-                      decoration: InputDecoration(
-                        hintText: '(例)ディスプレイが欲しい！',
+                      SizedBox(height: 20.0),
+                      Text(
+                        '欲しいもの',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.shadow,
+                        ),
                       ),
-                    ),
-                    Visibility(
-                      visible: isGoalEmpty,
-                      child: Text(
-                        "我慢目的を入力してください。(例: ディスプレイが欲しい！）",
-                        style: TextStyle(color: Colors.red, fontSize: 12.0),
+                      Text(
+                        '※ Amazon商品リンクを貼り付けてください.',
+                        style: TextStyle(
+                          fontSize: 10.0,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.shadow,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 20.0),
-                    Text(
-                      '欲しいもの',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.shadow,
+                      TextFormField(
+                        controller: wantThingController,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        validator: (String value) {
+                          return (value == '') ? '欲しいもののAmazonリンクを貼り付けてください。' : null;
+                        },
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                       ),
-                    ),
-                    Text(
-                      '※ Amazon商品リンクを貼り付けてください.',
-                      style: TextStyle(
-                        fontSize: 10.0,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.shadow,
+                      Padding(padding: EdgeInsets.all(30.0),),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        padding: EdgeInsets.all(10.0),
+                        child: SizedBox(
+                          child: ElevatedButton(
+                            onPressed: (goalTextController.text.isNotEmpty && wantThingController.text.isNotEmpty) ? submitPressed : null,
+                            style: ElevatedButton.styleFrom(
+                              primary: AppColor.priceColor,
+                              onPrimary: AppColor.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              '登録',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    TextField(
-                      controller: wantThingController,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    Visibility(
-                      visible: isWantThingEmpty,
-                      child: Text(
-                        "欲しいモノのAmazon商品リンクを入力してください。",
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.all(30.0),),
-                    Container(
-                      alignment: Alignment.bottomRight,
-                      padding: EdgeInsets.all(10.0),
-                      child: SizedBox(
+                      Padding(padding: EdgeInsets.all(30.0)),
+                      SizedBox(
+                        width: 200.0,
                         child: ElevatedButton(
-                          onPressed: submitPressed,
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => GoalSetManualPage()),
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
-                            primary: AppColor.priceColor,
+                            primary: AppColor.shadow,
                             onPrimary: AppColor.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                           child: Text(
-                            '登録',
+                            '手動で登録する',
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.bold
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(padding: EdgeInsets.all(30.0)),
-                    SizedBox(
-                      width: 200.0,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => GoalSetManualPage()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: AppColor.shadow,
-                          onPrimary: AppColor.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Text(
-                          '手動で登録する',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -185,7 +182,7 @@ class _GoalSetPageState extends State<GoalSetPage> {
   }
 
   void submitPressed() async {
-    if (goalTextController.text.isNotEmpty && wantThingController.text.isNotEmpty) {
+    if (goalTextController.text.isNotEmpty && wantThingController.text.isNotEmpty && goalTextController.text.length < 21) {
       setState(() {
         _loading = true;
       });
@@ -264,11 +261,6 @@ class _GoalSetPageState extends State<GoalSetPage> {
       );
 
       _loading = false;
-    } else {
-      setState(() {
-        isGoalEmpty = goalTextController.text.isEmpty;
-        isWantThingEmpty = wantThingController.text.isEmpty;
-      });
     }
   }
 

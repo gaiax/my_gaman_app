@@ -414,6 +414,10 @@ class _HomePageState extends State<HomePage> {
                           keyboardType: TextInputType.number,
                           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           maxLength: 6,
+                          validator: (String value) {
+                            return (value == '') ? '価格を入力してください。' : null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
                     ],
@@ -427,7 +431,7 @@ class _HomePageState extends State<HomePage> {
                       color: AppColor.shadow,
                     ),
                   ),
-                  TextField(
+                  TextFormField(
                     controller: descriptionController,
                     style: TextStyle(
                       fontSize: 18.0,
@@ -438,6 +442,10 @@ class _HomePageState extends State<HomePage> {
                       hintStyle: TextStyle(fontSize: 16.0,),
                     ),
                     maxLength: 20,
+                    validator: (String value) {
+                      return (value == '') ? '内容を入力してください。' : null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
                   Padding(padding: EdgeInsets.all(40.0),),
                   Container(
@@ -445,7 +453,7 @@ class _HomePageState extends State<HomePage> {
                     padding: EdgeInsets.all(10.0),
                     child: SizedBox(
                       child: ElevatedButton(
-                        onPressed: submitPressed,
+                        onPressed: (priceController.text.isNotEmpty && descriptionController.text.isNotEmpty) ? submitPressed : null,
                         style: ElevatedButton.styleFrom(
                           primary: AppColor.priceColor,
                           onPrimary: AppColor.white,
@@ -474,9 +482,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void submitPressed() async {
-    Navigator.pop(context);
 
-    if(priceController.text != '' && descriptionController.text != '') {
+    if(priceController.text != '' && descriptionController.text != '' && priceController.text.length < 7 && descriptionController.text.length < 21) {
+      Navigator.pop(context);
+
       final time = DateTime.now();
       final createdAt = Timestamp.fromDate(time);
       final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();

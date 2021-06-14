@@ -225,10 +225,10 @@ class _PostViewPageState extends State<PostViewPage> {
                                   ],
                                 ),
                                 trailing: Text(
-                                  document['price'].toString(),
+                                  '¥' + document['price'].toString(),
                                   style: TextStyle(
                                     color: AppColor.priceColor,
-                                    fontSize: 20.0,
+                                    fontSize: 18.0,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),

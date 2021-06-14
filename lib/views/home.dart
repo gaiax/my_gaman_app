@@ -321,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               trailing: Text(
-                                document['price'].toString(),
+                                '¥' + document['price'].toString(),
                                 style: TextStyle(
                                   color: AppColor.priceColor,
                                   fontSize: 19.0,
@@ -334,6 +334,7 @@ class _HomePageState extends State<HomePage> {
                       )).toList(),
                   ),
                 ),
+                SizedBox(height: 100),
               ],
             ),
           ),

@@ -172,10 +172,11 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                         margin: EdgeInsets.all(0.5),
                         elevation: 2.0,
                         child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
+                          onTap: () async {
+                            await Navigator.of(context).push(
                               MaterialPageRoute(builder: (context) => HomePage(document.id)),
                             );
+                            setState(() {});
                           },
                           onLongPress: () {
                             showDialog(

@@ -574,6 +574,9 @@ class _HomePageState extends State<HomePage> {
       });
       _currentValue = (saving / int.parse(wantThingPrice)) * 100;
     });
+    if (saving < int.parse(wantThingPrice)) {
+      await cloud.collection('goals').doc(goalId).update({'achieve': false});
+    }
   }
 
   void errorDialog() {

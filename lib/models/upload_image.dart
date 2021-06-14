@@ -34,7 +34,6 @@ class UploadImage {
 
   static Future<String> uploadAmazonImg(imagePath, userId, date) async {
     final response = await http.get(Uri.parse(imagePath));
-    print(response);
     await storage.ref('user/'+userId+'/'+date).putData(response.bodyBytes);
 
     return await storage.ref('user/'+userId+'/'+date).getDownloadURL();

@@ -39,8 +39,8 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
     userId = user.uid;
     userEmail = user.email;
     DocumentSnapshot userData = await cloud.collection('users').doc(userId).get();
-    userName = userData['userName'];
-    userPhoto = userData['userPhotoUrl'];
+    userName = await userData['userName'];
+    userPhoto = await userData['userPhotoUrl'];
 
     setState(() {
       _loading = false;
@@ -80,11 +80,16 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
             label: 'みんなの我慢',
           ),
         ],
-        onTap: (int index) {
+        onTap: (int index) async {
           if (index == 1) {
-            Navigator.of(context).push(
+            await Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => PostViewPage()),
             );
+            setState(() {
+              user = FirebaseAuth.instance.currentUser;
+              userName = user.displayName;
+              userPhoto = user.photoURL;
+            });
           }
         },
         fixedColor: AppColor.priceColor,

@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:my_gaman_app/main.dart';
+import 'package:my_gaman_app/views/reset_password.dart';
 import 'login.dart';
 import '../configs/colors.dart';
 import '../models/upload_image.dart';
@@ -22,6 +24,8 @@ class _SettingPageState extends State<SettingPage> {
   var userId;
   var userName;
   var userPhoto;
+  var imagePath;
+  File newImage;
 
   bool _loading = true;
 
@@ -31,13 +35,14 @@ class _SettingPageState extends State<SettingPage> {
     if (user != null) {
       setData();
     }
-    userNameController = TextEditingController(text: userName);
   }
 
   void setData() async {
     userId = user.uid;
-    userName = user.displayName;
-    userPhoto = user.photoURL;
+    DocumentSnapshot userData = await cloud.collection('users').doc(userId).get();
+    userName = await userData['userName'];
+    userPhoto = await userData['userPhotoUrl'];
+    userNameController = TextEditingController(text: userName);
 
     setState(() {
       _loading = false;
@@ -94,7 +99,7 @@ class _SettingPageState extends State<SettingPage> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0),
                               image: DecorationImage(
-                                image: NetworkImage(userPhoto),
+                                image: (newImage == null) ? NetworkImage(userPhoto) : FileImage(newImage),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -155,7 +160,57 @@ class _SettingPageState extends State<SettingPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 30.0),
+                    SizedBox(height: 40.0),
+                    SizedBox(
+                      width: 200,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('確認'),
+                                content: SingleChildScrollView(
+                                  child: ListBody(
+                                    children: <Widget>[
+                                      Text('パスワード再設定メールを送信します。'),
+                                      Text('再設定後、再ログインが必要です。'),
+                                      Text('よろしいですか？'),
+                                    ],
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: const Text('OK'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) => ResetPassPage()),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: AppColor.shadow,
+                          onPrimary: AppColor.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text("パスワード再設定"),
+                      ),
+                    ),
                     SizedBox(
                       width: 200,
                       child: ElevatedButton(
@@ -182,7 +237,10 @@ class _SettingPageState extends State<SettingPage> {
                                   ),
                                   TextButton(
                                     child: const Text('OK'),
-                                    onPressed: deleteUser,
+                                    onPressed: () {
+                                      deleteUser();
+                                      Navigator.of(context).pop();
+                                    },
                                   ),
                                 ],
                               );
@@ -234,7 +292,7 @@ class _SettingPageState extends State<SettingPage> {
       });
 
       await cloud.collection('users').doc(userId).delete();
-
+      
       await FirebaseAuth.instance.currentUser.delete();
 
       await Navigator.of(context).pushAndRemoveUntil(
@@ -260,6 +318,7 @@ class _SettingPageState extends State<SettingPage> {
                 TextButton(
                   child: const Text('OK'),
                   onPressed: () {
+                    Navigator.of(context).pop();
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => MyLoginPage()),
                     );
@@ -275,21 +334,24 @@ class _SettingPageState extends State<SettingPage> {
 
   void uploadImage() async {
     ShowProgress.showProgressDialog(context);
-    var image = await UploadImage.getImage(true);
-    if (image != null) {
-      userPhoto = await UploadImage.uploadFile(image, userId);
+    imagePath = await UploadImage.getImage(true);
+    if (imagePath != null) {
+      newImage = File(imagePath);
     }
     Navigator.of(context).pop();
     setState(() {});
   }
 
   void saveUsers() async {
-    if (userNameController.text != '' && userNameController.text.length < 16) {
+    if (userNameController.text.isNotEmpty && userNameController.text.length < 16) {
       setState(() {
         _loading = true;
       });
+      if (imagePath != null) {
+        userPhoto = await UploadImage.uploadFile(imagePath, userId);
+        await user.updatePhotoURL(userPhoto);
+      }
       await user.updateDisplayName(userNameController.text);
-      await user.updatePhotoURL(userPhoto);
       await user.reload();
 
       await cloud

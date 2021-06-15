@@ -477,7 +477,7 @@ class _HomePageState extends State<HomePage> {
 
   void submitPressed() async {
 
-    if(priceController.text != '' && descriptionController.text != '' && priceController.text.length < 7 && descriptionController.text.length < 21) {
+    if(priceController.text.isNotEmpty && descriptionController.text.isNotEmpty && priceController.text.length < 7 && descriptionController.text.length < 21) {
       Navigator.pop(context);
 
       final time = DateTime.now();

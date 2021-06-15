@@ -197,7 +197,7 @@ class _PostViewPageState extends State<PostViewPage> {
                                     Text(
                                       userData['userName'],
                                       style: TextStyle(
-                                        fontSize: 16.0,
+                                        fontSize: 14.0,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
@@ -213,12 +213,12 @@ class _PostViewPageState extends State<PostViewPage> {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Padding(padding: EdgeInsets.all(3.0)),
+                                    Padding(padding: EdgeInsets.all(1.0)),
                                     Text(
                                       document['text'],
                                       style: TextStyle(
                                         color: AppColor.textColor,
-                                        fontSize: 15.0,
+                                        fontSize: 14.0,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
@@ -228,7 +228,7 @@ class _PostViewPageState extends State<PostViewPage> {
                                   '¥' + document['price'].toString(),
                                   style: TextStyle(
                                     color: AppColor.priceColor,
-                                    fontSize: 18.0,
+                                    fontSize: 16.0,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),

@@ -218,7 +218,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
   }
 
   void submitPressed() async {
-    if (goalTextController.text.isNotEmpty && wantThingController.text.isNotEmpty && wantThingImg != null && goalTextController.text.length < 8 && wantThingController.text.length < 21) {
+    if (goalTextController.text.isNotEmpty && wantThingController.text.isNotEmpty && wantThingImg != null && goalTextController.text.length < 21 && wantThingController.text.length < 8) {
       setState(() {
         _loading = true;
       });

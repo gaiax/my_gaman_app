@@ -20,6 +20,7 @@ class _Emailcheck extends State<Emailcheck> {
   final auth = FirebaseAuth.instance;
   String _sentEmailText;
   String _nocheckText = '';
+  String infoText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +33,15 @@ class _Emailcheck extends State<Emailcheck> {
         child:Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // 確認メール送信時のメッセージ
+            Text(_sentEmailText),
             Padding(
-              padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 20.0),
+              padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
               child: Text(
-                _nocheckText,
+                infoText,
                 style: TextStyle(color: Colors.red),
               ),
             ),
-
-            // 確認メール送信時のメッセージ
-            Text(_sentEmailText),
 
             // 確認メールの再送信ボタン
             Padding(
@@ -50,9 +50,16 @@ class _Emailcheck extends State<Emailcheck> {
                 width: 200.0,
                 child: ElevatedButton(
                   onPressed: () async {
-                    ShowProgress.showProgressDialog(context);
-                    await auth.currentUser.sendEmailVerification();
-                    Navigator.of(context).pop();
+                    try {
+                      ShowProgress.showProgressDialog(context);
+                      await auth.currentUser.sendEmailVerification();
+                      Navigator.of(context).pop();
+                    } on FirebaseAuthException {
+                      Navigator.of(context).pop();
+                      setState(() {
+                        infoText = '確認メールの送信上限に達しました。\nしばらく経ってからお試しください。';
+                      });
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     primary: AppColor.shadow,
@@ -68,7 +75,7 @@ class _Emailcheck extends State<Emailcheck> {
                 ),
               ),
             ),
-
+            
             // メール確認完了のボタン配置（Home画面に遷移）
             SizedBox(
               width: 350.0,
@@ -107,6 +114,13 @@ class _Emailcheck extends State<Emailcheck> {
                     fontWeight: FontWeight.bold
                   ),
                 ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 20.0),
+              child: Text(
+                _nocheckText,
+                style: TextStyle(color: Colors.red),
               ),
             ),
           ],

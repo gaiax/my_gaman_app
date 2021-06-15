@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
-import 'package:my_gaman_app/main.dart';
 import 'package:my_gaman_app/views/reset_password.dart';
-import 'login.dart';
+import 'delete.dart';
 import '../configs/colors.dart';
 import '../models/upload_image.dart';
 import '../views/show_progress.dart';
@@ -238,8 +236,8 @@ class _SettingPageState extends State<SettingPage> {
                                   TextButton(
                                     child: const Text('OK'),
                                     onPressed: () {
-                                      deleteUser();
                                       Navigator.of(context).pop();
+                                      deleteUser();
                                     },
                                   ),
                                 ],
@@ -267,69 +265,34 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  void deleteUser() async {
-    try {
-      final gamans = await cloud.collection('gamans').where('userId', isEqualTo: userId).get();
-      final gamandocs = gamans.docs;
-      gamandocs.forEach((gamandoc) async {
-        await cloud.collection('gamans').doc(gamandoc.id).delete();
-      });
-
-      final goals = await cloud.collection('goals').where('userId', isEqualTo: userId).get();
-      final goaldocs = goals.docs;
-      goaldocs.forEach((goaldoc) async {
-        await cloud.collection('goals').doc(goaldoc.id).delete();
-      });
-
-      firebase_storage.ListResult result = await firebase_storage.FirebaseStorage.instance.ref('user/'+userId).listAll();
-      result.items.forEach((firebase_storage.Reference ref) async {
-        await ref.delete();
-      });
-      result.prefixes.forEach((firebase_storage.Reference ref) async {
-        if (ref.name == userId) {
-          await ref.delete();
-        }
-      });
-
-      await cloud.collection('users').doc(userId).delete();
-      
-      await FirebaseAuth.instance.currentUser.delete();
-
-      await Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => StartPage()),
-        (_) => false
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'requires-recent-login') {
-        showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('注意'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    Text('再度ログインする必要があります。'),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => MyLoginPage()),
-                    );
-                  },
-                ),
+  void deleteUser() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('注意'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('再度ログインする必要があります。'),
               ],
-            );
-          },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => DeleteLoginPage()),
+                );
+              },
+            ),
+          ],
         );
-      }
-    }
+      },
+    );
   }
 
   void uploadImage() async {

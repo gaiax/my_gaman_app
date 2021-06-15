@@ -29,10 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   var user = FirebaseAuth.instance.currentUser;
   var cloud = FirebaseFirestore.instance;
-  var userEmail;
   var userId;
-  var userName;
-  var userPhoto;
   var wantThingPrice;
   var wantThingImg;
   var wantThingText;
@@ -54,9 +51,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void setData() async {
-    userEmail = user.email;
-    userName = user.displayName;
-    userPhoto = user.photoURL;
     userId = user.uid;
     DocumentSnapshot goalSnapshot = await cloud.collection('goals').doc(goalId).get();
     wantThingPrice = goalSnapshot['wantThingPrice'].replaceAll(',', '').replaceAll('￥', '');
@@ -321,7 +315,7 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               trailing: Text(
-                                document['price'].toString(),
+                                '¥' + document['price'].toString(),
                                 style: TextStyle(
                                   color: AppColor.priceColor,
                                   fontSize: 19.0,
@@ -334,6 +328,7 @@ class _HomePageState extends State<HomePage> {
                       )).toList(),
                   ),
                 ),
+                SizedBox(height: 100),
               ],
             ),
           ),
@@ -400,7 +395,7 @@ class _HomePageState extends State<HomePage> {
                             '￥ ',
                             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500, color: AppColor.textColor),
                           ),
-                          SizedBox(height: 24.0),
+                          SizedBox(height: 22.5),
                         ],
                       ),
                       Flexible(
@@ -413,6 +408,10 @@ class _HomePageState extends State<HomePage> {
                           keyboardType: TextInputType.number,
                           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           maxLength: 6,
+                          validator: (String value) {
+                            return (value == '') ? '価格を入力してください。' : null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
                     ],
@@ -426,7 +425,7 @@ class _HomePageState extends State<HomePage> {
                       color: AppColor.shadow,
                     ),
                   ),
-                  TextField(
+                  TextFormField(
                     controller: descriptionController,
                     style: TextStyle(
                       fontSize: 18.0,
@@ -437,6 +436,10 @@ class _HomePageState extends State<HomePage> {
                       hintStyle: TextStyle(fontSize: 16.0,),
                     ),
                     maxLength: 20,
+                    validator: (String value) {
+                      return (value == '') ? '内容を入力してください。' : null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
                   Padding(padding: EdgeInsets.all(40.0),),
                   Container(
@@ -444,7 +447,7 @@ class _HomePageState extends State<HomePage> {
                     padding: EdgeInsets.all(10.0),
                     child: SizedBox(
                       child: ElevatedButton(
-                        onPressed: submitPressed,
+                        onPressed: (priceController.text.isNotEmpty && descriptionController.text.isNotEmpty) ? submitPressed : null,
                         style: ElevatedButton.styleFrom(
                           primary: AppColor.priceColor,
                           onPrimary: AppColor.white,
@@ -473,9 +476,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void submitPressed() async {
-    Navigator.pop(context);
 
-    if(priceController.text != '' && descriptionController.text != '') {
+    if(priceController.text.isNotEmpty && descriptionController.text.isNotEmpty && priceController.text.length < 7 && descriptionController.text.length < 21) {
+      Navigator.pop(context);
+
       final time = DateTime.now();
       final createdAt = Timestamp.fromDate(time);
       final date = DateFormat('yyyy-MM-dd HH:mm').format(time).toString();
@@ -519,19 +523,19 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Image.network(wantThingImg),
                     Text('おめでとうございます！実質貯金が貯まりました。'),
-                    (_url != null) ? Text('商品ページへ遷移しますか？') : Container(),
+                    (_url != null) ? Text('商品ページへ遷移しますか？') : Text('我慢目的を叶えましょう！'),
                   ],
                 ),
               ),
               actions: <Widget>[
-                TextButton(
-                  child: const Text('Cancel'),
+                (_url != null) ? TextButton(
+                  child: const Text('もどる'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                ),
+                ) : Container(),
                 TextButton(
-                  child: const Text('OK'),
+                  child: const Text('はい'),
                   onPressed: () {
                     (_url != null) ? _launchURL() : Container();
                     Navigator.of(context).pop();
@@ -564,6 +568,9 @@ class _HomePageState extends State<HomePage> {
       });
       _currentValue = (saving / int.parse(wantThingPrice)) * 100;
     });
+    if (saving < int.parse(wantThingPrice)) {
+      await cloud.collection('goals').doc(goalId).update({'achieve': false});
+    }
   }
 
   void errorDialog() {

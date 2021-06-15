@@ -17,6 +17,7 @@ class _PostViewPageState extends State<PostViewPage> {
 
   var cloud = FirebaseFirestore.instance;
   var user = FirebaseAuth.instance.currentUser;
+  var userId;
   var userName;
   var userPhoto;
   var userEmail;
@@ -32,9 +33,11 @@ class _PostViewPageState extends State<PostViewPage> {
   }
 
   void setData() async {
-    userName = user.displayName;
-    userPhoto = user.photoURL;
+    userId = user.uid;
     userEmail = user.email;
+    DocumentSnapshot userData = await cloud.collection('users').doc(userId).get();
+    userName = await userData['userName'];
+    userPhoto = await userData['userPhotoUrl'];
 
     setState(() {
       _loading = false;
@@ -75,7 +78,7 @@ class _PostViewPageState extends State<PostViewPage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                       image:NetworkImage(userPhoto),
                     ),
                   ),
@@ -93,10 +96,10 @@ class _PostViewPageState extends State<PostViewPage> {
                 await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SettingPage()),
                 );
+                DocumentSnapshot userData = await cloud.collection('users').doc(userId).get();
                 setState(() {
-                  user = FirebaseAuth.instance.currentUser;
-                  userName = user.displayName;
-                  userPhoto = user.photoURL;
+                  userName = userData['userName'];
+                  userPhoto = userData['userPhotoUrl'];
                 });
               },
             ),
@@ -197,7 +200,7 @@ class _PostViewPageState extends State<PostViewPage> {
                                     Text(
                                       userData['userName'],
                                       style: TextStyle(
-                                        fontSize: 16.0,
+                                        fontSize: 14.0,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
@@ -213,22 +216,22 @@ class _PostViewPageState extends State<PostViewPage> {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Padding(padding: EdgeInsets.all(3.0)),
+                                    Padding(padding: EdgeInsets.all(1.0)),
                                     Text(
                                       document['text'],
                                       style: TextStyle(
                                         color: AppColor.textColor,
-                                        fontSize: 15.0,
+                                        fontSize: 14.0,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
                                   ],
                                 ),
                                 trailing: Text(
-                                  document['price'].toString(),
+                                  '¥' + document['price'].toString(),
                                   style: TextStyle(
                                     color: AppColor.priceColor,
-                                    fontSize: 20.0,
+                                    fontSize: 16.0,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),

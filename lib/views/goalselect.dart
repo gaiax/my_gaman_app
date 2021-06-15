@@ -30,8 +30,6 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
   @override
   void initState() {
     super.initState();
-    user.reload();
-    user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       setData();
     }
@@ -40,8 +38,9 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
   void setData() async {
     userId = user.uid;
     userEmail = user.email;
-    userName = user.displayName;
-    userPhoto = user.photoURL;
+    DocumentSnapshot userData = await cloud.collection('users').doc(userId).get();
+    userName = await userData['userName'];
+    userPhoto = await userData['userPhotoUrl'];
 
     setState(() {
       _loading = false;
@@ -81,11 +80,16 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
             label: 'みんなの我慢',
           ),
         ],
-        onTap: (int index) {
+        onTap: (int index) async {
           if (index == 1) {
-            Navigator.of(context).push(
+            await Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => PostViewPage()),
             );
+            DocumentSnapshot userData = await cloud.collection('users').doc(userId).get();
+            setState(() {
+              userName = userData['userName'];
+              userPhoto = userData['userPhotoUrl'];
+            });
           }
         },
         fixedColor: AppColor.priceColor,
@@ -103,7 +107,7 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                       image:NetworkImage(userPhoto),
                     ),
                   ),
@@ -121,10 +125,10 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                 await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SettingPage()),
                 );
+                DocumentSnapshot userData = await cloud.collection('users').doc(userId).get();
                 setState(() {
-                  user = FirebaseAuth.instance.currentUser;
-                  userName = user.displayName;
-                  userPhoto = user.photoURL;
+                  userName = userData['userName'];
+                  userPhoto = userData['userPhotoUrl'];
                 });
               },
             ),
@@ -172,10 +176,11 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                         margin: EdgeInsets.all(0.5),
                         elevation: 2.0,
                         child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
+                          onTap: () async {
+                            await Navigator.of(context).push(
                               MaterialPageRoute(builder: (context) => HomePage(document.id)),
                             );
+                            setState(() {});
                           },
                           onLongPress: () {
                             showDialog(

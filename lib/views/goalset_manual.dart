@@ -24,9 +24,6 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
   var wantThingImg;
 
   bool _loading = true;
-  bool isGoalEmpty = false;
-  bool isPriceEmpty = false;
-  bool isWantThingImgEmpty = false;
 
   @override
   void initState() {
@@ -57,166 +54,150 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
         ),
         backgroundColor: AppColor.white,
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) => SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: Center(
-              child: Container(
-                color: AppColor.white,
-                padding: EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      '我慢目的',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.shadow,
-                      ),
-                    ),
-                    TextField(
-                      controller: goalTextController,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      maxLength: 15,
-                      decoration: InputDecoration(
-                        hintText: '(例)旅行に行きたい！',
-                      ),
-                    ),
-                    Visibility(
-                      visible: isGoalEmpty,
-                      child: Text(
-                        "我慢目的を入力してください。",
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
-                    SizedBox(height: 20.0),
-                    Text(
-                      '欲しいものの値段',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.shadow,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Text(
-                              '￥ ',
-                              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: AppColor.textColor),
-                            ),
-                            SizedBox(height: 24.0),
-                          ],
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Center(
+                child: Container(
+                  color: AppColor.white,
+                  padding: EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        '我慢目的',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.shadow,
                         ),
-                        Flexible(
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            controller: wantThingController,
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            maxLength: 7,
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Visibility(
-                      visible: isPriceEmpty,
-                      child: Text(
-                        "欲しいものの値段を入力してください。",
-                        style: TextStyle(color: Colors.red),
                       ),
-                    ),
-                    SizedBox(height: 20.0),
-                    Text(
-                      '欲しいものの画像',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.shadow,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: uploadImage,
-                      child: (wantThingImg != null) ? Container(
-                        height: 200.0,
-                        width: 150.0,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          image: DecorationImage(
-                            image: FileImage(File(wantThingImg)),
-                            fit: BoxFit.contain,
-                          ),
+                      TextField(
+                        controller: goalTextController,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w400,
                         ),
-                      ) : Stack(
-                        alignment: Alignment.center,
+                        maxLength: 20,
+                        decoration: InputDecoration(
+                          hintText: '(例)〇〇が欲しい！旅行に行きたい！',
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+                      Text(
+                        '欲しいものの値段',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.shadow,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Container(
-                            width: 200.0,
-                            height: 150.0,
-                            decoration: BoxDecoration(
-                              color: AppColor.shadow,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
+                          Column(
+                            children: <Widget>[
+                              Text(
+                                '￥ ',
+                                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: AppColor.textColor),
+                              ),
+                              SizedBox(height: 21.0),
+                            ],
                           ),
-                          Text(
-                            '+',
-                            style: TextStyle(
-                              color: AppColor.white,
-                              fontSize: 40.0,
-                              fontWeight: FontWeight.w500,
+                          Flexible(
+                            child: TextField(
+                              keyboardType: TextInputType.number,
+                              controller: wantThingController,
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              maxLength: 7,
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    Visibility(
-                      visible: isWantThingImgEmpty,
-                      child: Text(
-                        "欲しいものの画像を選択してください。",
-                        style: TextStyle(color: Colors.red),
+                      SizedBox(height: 20.0),
+                      Text(
+                        '欲しいものの画像',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.shadow,
+                        ),
                       ),
-                    ),
-                    Padding(padding: EdgeInsets.all(20.0),),
-                    Container(
-                      alignment: Alignment.bottomRight,
-                      padding: EdgeInsets.all(10.0),
-                      child: SizedBox(
-                        child: ElevatedButton(
-                          onPressed: submitPressed,
-                          style: ElevatedButton.styleFrom(
-                            primary: AppColor.priceColor,
-                            onPrimary: AppColor.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                      GestureDetector(
+                        onTap: uploadImage,
+                        child: (wantThingImg != null) ? Container(
+                          height: 200.0,
+                          width: 150.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            image: DecorationImage(
+                              image: FileImage(File(wantThingImg)),
+                              fit: BoxFit.contain,
                             ),
                           ),
-                          child: Text(
-                            '登録',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.w700,
+                        ) : Stack(
+                          alignment: Alignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: 200.0,
+                              height: 150.0,
+                              decoration: BoxDecoration(
+                                color: AppColor.shadow,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            Text(
+                              '+',
+                              style: TextStyle(
+                                color: AppColor.white,
+                                fontSize: 40.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.all(20.0),),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        padding: EdgeInsets.all(10.0),
+                        child: SizedBox(
+                          child: ElevatedButton(
+                            onPressed: (goalTextController.text.isNotEmpty && wantThingController.text.isNotEmpty && wantThingImg != null) ? submitPressed : null,
+                            style: ElevatedButton.styleFrom(
+                              primary: AppColor.priceColor,
+                              onPrimary: AppColor.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              '登録',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(padding: EdgeInsets.all(30.0)),
-                  ],
+                      Padding(padding: EdgeInsets.all(30.0)),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -237,7 +218,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
   }
 
   void submitPressed() async {
-    if (goalTextController.text.isNotEmpty && wantThingController.text.isNotEmpty && wantThingImg != null) {
+    if (goalTextController.text.isNotEmpty && wantThingController.text.isNotEmpty && wantThingImg != null && goalTextController.text.length < 21 && wantThingController.text.length < 8) {
       setState(() {
         _loading = true;
       });
@@ -269,16 +250,6 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
       );
 
       _loading = false;
-    } else {
-      setState(() {
-        isGoalEmpty = goalTextController.text.isEmpty;
-        isPriceEmpty = wantThingController.text.isEmpty;
-        if (wantThingImg == null) {
-          isWantThingImgEmpty = true; 
-        } else {
-          isWantThingImgEmpty = false;
-        }
-      });
     }
   }
 }

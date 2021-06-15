@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:my_gaman_app/models/firebase_error.dart';
 import '../configs/colors.dart';
 import '../main.dart';
-import 'goalselect.dart';
+import 'login.dart';
 
 class ResetPassPage extends StatefulWidget {
   @override
@@ -54,9 +54,11 @@ class _ResetPassPageState extends State<ResetPassPage> {
                           isEmailEmpty = false;
                           try {
                             final FirebaseAuth auth = FirebaseAuth.instance;
+                            await auth.sendPasswordResetEmail(email: emailController.text);
                             if (auth.currentUser != null) {
+                              await auth.signOut();
                               Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(builder: (context) => GoalSelectPage()),
+                                MaterialPageRoute(builder: (context) => MyLoginPage()),
                                 (_) => false,
                               );
                             } else {
@@ -65,16 +67,15 @@ class _ResetPassPageState extends State<ResetPassPage> {
                                 (_) => false,
                               );
                             }
-                            await auth.sendPasswordResetEmail(email: emailController.text);
-                          } on PlatformException catch (error) {
+                          } on FirebaseAuthException catch (error) {
                             // 登録に失敗した場合
                             setState(() {
-                              infoText = "登録NG：${error.message}";
+                              infoText = FirebaseAuthExceptionHandler.exceptionMessage(FirebaseAuthExceptionHandler.handleException(error));
                             });
                           } on Exception catch (e) {
                             // 登録に失敗した場合
                             setState(() {
-                              infoText = "登録NG: $e";
+                              infoText = "認証NG: $e";
                             });
                           }
                         } else {

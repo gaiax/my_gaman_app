@@ -114,7 +114,7 @@ class _MyAuthPageState extends State<MyAuthPage> {
                       Padding(padding: EdgeInsets.all(30.0)),
                       ElevatedButton(
                         onPressed: () async {
-                          if (emailController.text.isNotEmpty && passController.text.isNotEmpty && userNameController.text.isNotEmpty && passController.text == checkPassController.text && passController.text.length > 7) {
+                          if (emailController.text.isNotEmpty && passController.text.isNotEmpty && userNameController.text.isNotEmpty && passController.text == checkPassController.text && passController.text.length > 7 && userNameController.text.length < 16 && passController.text.length < 31) {
                             isEmailEmpty = false;
                             isPassEmpty = false;
                             isUserNameEmpty = false;

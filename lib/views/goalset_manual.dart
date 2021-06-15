@@ -97,7 +97,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                       ),
                       SizedBox(height: 20.0),
                       Text(
-                        '目的の金額',
+                        '目標金額',
                         style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w500,
@@ -128,7 +128,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                               maxLength: 7,
                               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                               validator: (String value) {
-                                return (value == '') ? '目的の金額を入力してください。' : null;
+                                return (value == '') ? '目標金額を入力してください。' : null;
                               },
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                             ),

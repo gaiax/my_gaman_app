@@ -17,6 +17,7 @@ class _PostViewPageState extends State<PostViewPage> {
 
   var cloud = FirebaseFirestore.instance;
   var user = FirebaseAuth.instance.currentUser;
+  var userId;
   var userName;
   var userPhoto;
   var userEmail;
@@ -32,9 +33,11 @@ class _PostViewPageState extends State<PostViewPage> {
   }
 
   void setData() async {
-    userName = user.displayName;
-    userPhoto = user.photoURL;
+    userId = user.uid;
     userEmail = user.email;
+    DocumentSnapshot userData = await cloud.collection('users').doc(userId).get();
+    userName = await userData['userName'];
+    userPhoto = await userData['userPhotoUrl'];
 
     setState(() {
       _loading = false;

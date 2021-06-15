@@ -126,7 +126,7 @@ class _DeleteLoginPageState extends State<DeleteLoginPage> {
                                 
                                 await auth.currentUser.delete();
 
-                                await Navigator.of(context).pushAndRemoveUntil(
+                                Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(builder: (context) => StartPage()),
                                   (_) => false
                                 );

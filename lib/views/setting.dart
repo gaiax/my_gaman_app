@@ -219,13 +219,7 @@ class _SettingPageState extends State<SettingPage> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: Text('確認'),
-                                content: SingleChildScrollView(
-                                  child: ListBody(
-                                    children: <Widget>[
-                                      Text('本当に削除しますか？'),
-                                    ],
-                                  ),
-                                ),
+                                content: Text('本当に削除しますか？'),
                                 actions: <Widget>[
                                   TextButton(
                                     child: const Text('Cancel'),
@@ -272,13 +266,7 @@ class _SettingPageState extends State<SettingPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('注意'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('再度ログインする必要があります。'),
-              ],
-            ),
-          ),
+          content: Text('再度ログインする必要があります。'),
           actions: <Widget>[
             TextButton(
               child: const Text('OK'),

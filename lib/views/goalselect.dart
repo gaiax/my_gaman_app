@@ -85,10 +85,10 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
             await Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => PostViewPage()),
             );
+            DocumentSnapshot userData = await cloud.collection('users').doc(userId).get();
             setState(() {
-              user = FirebaseAuth.instance.currentUser;
-              userName = user.displayName;
-              userPhoto = user.photoURL;
+              userName = userData['userName'];
+              userPhoto = userData['userPhotoUrl'];
             });
           }
         },
@@ -125,10 +125,10 @@ class _GoalSelectPageState extends State<GoalSelectPage> {
                 await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SettingPage()),
                 );
+                DocumentSnapshot userData = await cloud.collection('users').doc(userId).get();
                 setState(() {
-                  user = FirebaseAuth.instance.currentUser;
-                  userName = user.displayName;
-                  userPhoto = user.photoURL;
+                  userName = userData['userName'];
+                  userPhoto = userData['userPhotoUrl'];
                 });
               },
             ),

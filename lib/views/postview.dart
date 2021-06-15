@@ -96,10 +96,10 @@ class _PostViewPageState extends State<PostViewPage> {
                 await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SettingPage()),
                 );
+                DocumentSnapshot userData = await cloud.collection('users').doc(userId).get();
                 setState(() {
-                  user = FirebaseAuth.instance.currentUser;
-                  userName = user.displayName;
-                  userPhoto = user.photoURL;
+                  userName = userData['userName'];
+                  userPhoto = userData['userPhotoUrl'];
                 });
               },
             ),

@@ -80,7 +80,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                           color: AppColor.shadow,
                         ),
                       ),
-                      TextField(
+                      TextFormField(
                         controller: goalTextController,
                         style: TextStyle(
                           fontSize: 18.0,
@@ -90,10 +90,14 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                         decoration: InputDecoration(
                           hintText: '(例)〇〇が欲しい！旅行に行きたい！',
                         ),
+                        validator: (String value) {
+                          return (value == '') ? '我慢目的を入力してください。' : null;
+                        },
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                       ),
                       SizedBox(height: 20.0),
                       Text(
-                        '欲しいものの値段',
+                        '目的の金額',
                         style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w500,
@@ -114,7 +118,7 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                             ],
                           ),
                           Flexible(
-                            child: TextField(
+                            child: TextFormField(
                               keyboardType: TextInputType.number,
                               controller: wantThingController,
                               style: TextStyle(
@@ -123,6 +127,10 @@ class _GoalSetManualPageState extends State<GoalSetManualPage> {
                               ),
                               maxLength: 7,
                               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                              validator: (String value) {
+                                return (value == '') ? '目的の金額を入力してください。' : null;
+                              },
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
                             ),
                           ),
                         ],
